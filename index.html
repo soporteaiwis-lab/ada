@@ -1,0 +1,1907 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADA Ltda - Portal de Adopción IA | AIWIS</title>
+    <style>
+        :root {
+            --azul-principal: #1e40af;
+            --violeta-mentor: #7c3aed;
+            --azul-claro: #3b82f6;
+            --violeta-claro: #8b5cf6;
+            --verde-exito: #10b981;
+            --naranja: #f59e0b;
+            --rojo: #ef4444;
+            --gris-texto: #64748b;
+            --fondo-claro: #f8fafc;
+            --blanco: #ffffff;
+            --negro: #0f172a;
+            --borde: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+            color: var(--blanco);
+        }
+
+        /* === NAVEGACIÓN === */
+        .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--azul-claro), var(--violeta-claro));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 0.5rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            padding: 0.7rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--blanco);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, var(--azul-claro), var(--violeta-claro));
+            color: var(--blanco);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+        }
+
+        /* === CONTENEDOR PRINCIPAL === */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* === HERO === */
+        .hero {
+            background: linear-gradient(135deg, var(--azul-principal), var(--violeta-mentor));
+            color: var(--blanco);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* === SECCIÓN CLASES TIPO NETFLIX === */
+        .netflix-section {
+            margin-bottom: 3rem;
+        }
+
+        .week-carousel {
+            margin-bottom: 3rem;
+        }
+
+        .week-carousel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .week-carousel-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--blanco);
+        }
+
+        .carousel-nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .carousel-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--blanco);
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .carousel-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.1);
+        }
+
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 1rem;
+            transition: transform 0.5s ease;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .carousel-track::-webkit-scrollbar {
+            display: none;
+        }
+
+        .video-card {
+            min-width: 320px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .video-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            background: rgba(255,255,255,0.1);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, var(--azul-principal), var(--violeta-mentor));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-button {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--negro);
+            transition: all 0.3s;
+        }
+
+        .video-card:hover .play-button {
+            transform: scale(1.2);
+            background: var(--blanco);
+        }
+
+        .video-info {
+            padding: 1rem;
+        }
+
+        .video-day {
+            color: var(--azul-claro);
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .video-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--blanco);
+        }
+
+        .video-description {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-meta {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.8rem;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .video-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* === MODAL DE CLASE === */
+        .class-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .class-modal.active {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--negro);
+            border-radius: 20px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 2rem auto;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: var(--blanco);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.2);
+            transform: rotate(90deg);
+        }
+
+        .modal-video-section {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 20px 20px 0 0;
+            overflow: hidden;
+        }
+
+        .modal-video-section iframe {
+            width: 100%;
+            height: 100%;
+        }
+
+        .modal-tabs {
+            display: flex;
+            gap: 0;
+            background: rgba(255,255,255,0.05);
+            padding: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .modal-tab {
+            flex: 1;
+            padding: 1rem;
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .modal-tab:hover {
+            color: var(--blanco);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .modal-tab.active {
+            color: var(--blanco);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .modal-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--azul-claro), var(--violeta-claro));
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* === TAB DESCRIPCIÓN === */
+        .class-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .class-header h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .class-meta {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .transcript {
+            line-height: 1.8;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .transcript h4 {
+            color: var(--azul-claro);
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .transcript p {
+            margin-bottom: 1rem;
+        }
+
+        .content-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, var(--azul-claro), var(--violeta-claro));
+            color: var(--blanco);
+            border-radius: 10px;
+            text-decoration: none;
+            margin-top: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .content-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        /* === TAB QUIZ === */
+        .quiz-container {
+            max-width: 800px;
+        }
+
+        .quiz-question {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--azul-claro);
+        }
+
+        .question-number {
+            color: var(--azul-claro);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: var(--blanco);
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 0.8rem;
+        }
+
+        .quiz-option {
+            padding: 1rem 1.5rem;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .quiz-option:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--azul-claro);
+        }
+
+        .quiz-option.selected {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: var(--azul-claro);
+            color: var(--blanco);
+        }
+
+        .quiz-option.correct {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--verde-exito);
+        }
+
+        .quiz-option.incorrect {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: var(--rojo);
+        }
+
+        .submit-quiz {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--azul-claro), var(--violeta-claro));
+            border: none;
+            border-radius: 10px;
+            color: var(--blanco);
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .submit-quiz:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .quiz-result {
+            background: linear-gradient(135deg, var(--verde-exito), var(--azul-claro));
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        .quiz-result.show {
+            display: block;
+        }
+
+        .quiz-score {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        /* === FICHAS FIFA === */
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .fifa-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .fifa-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+        }
+
+        .fifa-card-header {
+            background: linear-gradient(135deg, var(--azul-claro), var(--violeta-claro));
+            padding: 2rem 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .fifa-rating {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .student-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--blanco);
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            border: 4px solid rgba(255,255,255,0.3);
+            color: var(--azul-principal);
+        }
+
+        .student-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .student-role {
+            opacity: 0.9;
+        }
+
+        .fifa-card-body {
+            padding: 1.5rem;
+        }
+
+        .stats-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .stats-section h4 {
+            color: var(--azul-claro);
+            margin-bottom: 1rem;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .stat-name {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        .stat-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            margin: 0 1rem;
+            overflow: hidden;
+        }
+
+        .stat-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--azul-claro), var(--violeta-claro));
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            color: var(--azul-claro);
+            min-width: 30px;
+            text-align: right;
+        }
+
+        /* === CONTENIDO GUÍA DE ESTUDIOS === */
+        .fase-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .fase-btn {
+            padding: 1rem 2rem;
+            border: 2px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--blanco);
+        }
+
+        .fase-btn.active {
+            background: linear-gradient(135deg, var(--azul-claro), var(--violeta-claro));
+            border-color: transparent;
+        }
+
+        .week-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .week-btn {
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .week-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .week-btn.active {
+            background: linear-gradient(135deg, var(--azul-claro), var(--violeta-claro));
+        }
+
+        .week-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .week-content {
+            display: none;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .week-content.active {
+            display: block;
+        }
+
+        .week-header {
+            border-bottom: 3px solid rgba(255,255,255,0.1);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .week-header h3 {
+            font-size: 2rem;
+            color: var(--blanco);
+            margin-bottom: 0.5rem;
+        }
+
+        .week-objective {
+            color: rgba(255,255,255,0.7);
+            font-size: 1.1rem;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .day-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border-left: 5px solid var(--azul-claro);
+        }
+
+        .day-card.lunes { border-left-color: #3b82f6; }
+        .day-card.martes { border-left-color: #8b5cf6; }
+        .day-card.miercoles { border-left-color: #10b981; }
+        .day-card.jueves { border-left-color: #f59e0b; }
+        .day-card.viernes { border-left-color: #ec4899; }
+
+        .day-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--blanco);
+            margin-bottom: 1rem;
+        }
+
+        .day-card p {
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* === GITHUB === */
+        .github-section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #24292e, #000000);
+            color: var(--blanco);
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .github-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .navbar-content {
+                flex-direction: column;
+            }
+
+            .nav-menu {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+
+            .video-card {
+                min-width: 280px;
+            }
+
+            .modal-content {
+                margin: 1rem;
+            }
+
+            .modal-tabs {
+                flex-direction: column;
+            }
+
+            .class-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        /* === LOADING === */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top: 4px solid var(--azul-claro);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* === FASE 2 === */
+        .fase2-content {
+            display: none;
+        }
+
+        .fase2-content.active {
+            display: block;
+        }
+
+        .fase2-header {
+            background: linear-gradient(135deg, var(--violeta-claro), #ec4899);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .fase2-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .fase2-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+        }
+
+        .fase2-tasks {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .fase2-task {
+            background: rgba(255,255,255,0.05);
+            padding: 1.5rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVEGACIÓN -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo">
+                <span style="font-size: 2rem;">🚀</span>
+                <h1>ADA Ltda - Portal IA</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-link active" data-section="inicio">Inicio</a></li>
+                <li><a href="#" class="nav-link" data-section="clases">🎬 Clases</a></li>
+                <li><a href="#" class="nav-link" data-section="estudiantes">Estudiantes</a></li>
+                <li><a href="#" class="nav-link" data-section="contenido">Guía de Estudios</a></li>
+                <li><a href="#" class="nav-link" data-section="github">GitHub</a></li>
+            </ul>
+            <div class="user-info">
+                <span>👤</span>
+                <span id="userName">Cargando...</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- SECCIÓN INICIO -->
+        <section id="inicio" class="section active">
+            <div class="hero">
+                <h2>🎓 Bienvenido al Programa de Adopción de IA</h2>
+                <p>ADA Ltda x AIWIS | Mentor: Armin Salazar San Martín</p>
+                <p style="margin-top: 1rem; font-size: 1rem;">Transformando tu empresa con Inteligencia Artificial</p>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.05); border-radius: 20px; padding: 2rem; box-shadow: 0 8px 30px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);">
+                <h3 style="color: var(--azul-claro); margin-bottom: 1.5rem; font-size: 1.8rem;">📋 Resumen del Programa</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                    <div style="background: linear-gradient(135deg, #3b82f6, #2563eb); padding: 1.5rem; border-radius: 15px;">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📚</div>
+                        <h4 style="margin-bottom: 0.5rem;">Fase 1</h4>
+                        <p>4 Semanas de Capacitación</p>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); padding: 1.5rem; border-radius: 15px;">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🚀</div>
+                        <h4 style="margin-bottom: 0.5rem;">Fase 2</h4>
+                        <p>2 Semanas de Desarrollo</p>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #10b981, #059669); padding: 1.5rem; border-radius: 15px;">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎯</div>
+                        <h4 style="margin-bottom: 0.5rem;">Proyecto Piloto</h4>
+                        <p>Implementación Real</p>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #f59e0b, #d97706); padding: 1.5rem; border-radius: 15px;">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">💼</div>
+                        <h4 style="margin-bottom: 0.5rem;">Propuestas BCI</h4>
+                        <p>Estrategia Comercial</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN CLASES (TIPO NETFLIX) -->
+        <section id="clases" class="section">
+            <div class="hero">
+                <h2>🎬 Clases FASE 1</h2>
+                <p>Videoclases, transcripciones y evaluaciones</p>
+            </div>
+
+            <div id="classesLoading" class="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 1rem;">Cargando clases...</p>
+            </div>
+
+            <div id="classesContent" class="netflix-section" style="display: none;">
+                <!-- Semana 1 -->
+                <div class="week-carousel">
+                    <div class="week-carousel-header">
+                        <div class="week-carousel-title">📘 Semana 1: Fundamentos y Visión</div>
+                    </div>
+                    <div class="carousel-container">
+                        <div class="carousel-track" id="carousel-week1">
+                            <!-- Videos se cargan dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Semana 2 -->
+                <div class="week-carousel">
+                    <div class="week-carousel-header">
+                        <div class="week-carousel-title">🛠️ Semana 2: Herramientas Prácticas</div>
+                    </div>
+                    <div class="carousel-container">
+                        <div class="carousel-track" id="carousel-week2">
+                            <!-- Videos se cargan dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Semana 3 -->
+                <div class="week-carousel">
+                    <div class="week-carousel-header">
+                        <div class="week-carousel-title">💡 Semana 3: Oportunidades para ADA</div>
+                    </div>
+                    <div class="carousel-container">
+                        <div class="carousel-track" id="carousel-week3">
+                            <!-- Videos se cargan dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Semana 4 -->
+                <div class="week-carousel">
+                    <div class="week-carousel-header">
+                        <div class="week-carousel-title">🎯 Semana 4: Definiendo la Estrategia</div>
+                    </div>
+                    <div class="carousel-container">
+                        <div class="carousel-track" id="carousel-week4">
+                            <!-- Videos se cargan dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODAL DE CLASE -->
+        <div id="classModal" class="class-modal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeClassModal()">✕</button>
+                
+                <div class="modal-video-section">
+                    <iframe id="modalVideo" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+
+                <div class="modal-tabs">
+                    <button class="modal-tab active" onclick="switchTab('description')">📝 Descripción</button>
+                    <button class="modal-tab" onclick="switchTab('transcript')">📄 Transcripción</button>
+                    <button class="modal-tab" onclick="switchTab('quiz')">✅ Quiz</button>
+                </div>
+
+                <div class="modal-body">
+                    <!-- Tab Descripción -->
+                    <div id="tab-description" class="tab-content active">
+                        <div class="class-header">
+                            <h3 id="modalTitle">Clase</h3>
+                            <div class="class-meta">
+                                <span id="modalWeek">📅 Semana 1</span>
+                                <span id="modalDay">🗓️ Lunes</span>
+                                <span>⏱️ 60 minutos</span>
+                            </div>
+                        </div>
+                        <div id="modalDescription" class="transcript">
+                            <!-- Descripción se carga dinámicamente -->
+                        </div>
+                        <a href="#" id="contentLink" class="content-link" onclick="goToContent(event)">
+                            📚 Ver en Guía de Estudios →
+                        </a>
+                    </div>
+
+                    <!-- Tab Transcripción -->
+                    <div id="tab-transcript" class="tab-content">
+                        <div class="transcript" id="modalTranscript">
+                            <!-- Transcripción se carga desde GitHub -->
+                        </div>
+                    </div>
+
+                    <!-- Tab Quiz -->
+                    <div id="tab-quiz" class="tab-content">
+                        <div class="quiz-container" id="modalQuiz">
+                            <!-- Quiz se carga dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN ESTUDIANTES -->
+        <section id="estudiantes" class="section">
+            <div class="hero">
+                <h2>👥 Equipo ADA Ltda</h2>
+                <p>Conoce a los participantes del programa</p>
+            </div>
+
+            <div id="studentsLoading" class="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 1rem;">Cargando estudiantes...</p>
+            </div>
+
+            <div id="studentsGrid" class="students-grid"></div>
+        </section>
+
+        <!-- SECCIÓN CONTENIDO (GUÍA DE ESTUDIOS) -->
+        <section id="contenido" class="section">
+            <div class="hero">
+                <h2>📚 Guía de Estudios</h2>
+                <p>Contenido estructurado del programa</p>
+            </div>
+
+            <div class="fase-selector">
+                <button class="fase-btn active" onclick="mostrarFase(1)">
+                    <span style="font-size: 1.5rem;">📚</span> Fase 1: Capacitación
+                </button>
+                <button class="fase-btn" onclick="mostrarFase(2)">
+                    <span style="font-size: 1.5rem;">🚀</span> Fase 2: Desarrollo
+                </button>
+            </div>
+
+            <!-- FASE 1 -->
+            <div id="fase1-content" class="fase-content">
+                <div class="week-selector">
+                    <div class="week-btn active" onclick="mostrarSemana(1)">
+                        <div class="week-number">Semana 1</div>
+                        <div class="week-title">Fundamentos de IA</div>
+                    </div>
+                    <div class="week-btn" onclick="mostrarSemana(2)">
+                        <div class="week-number">Semana 2</div>
+                        <div class="week-title">Herramientas Prácticas</div>
+                    </div>
+                    <div class="week-btn" onclick="mostrarSemana(3)">
+                        <div class="week-number">Semana 3</div>
+                        <div class="week-title">Oportunidades ADA</div>
+                    </div>
+                    <div class="week-btn" onclick="mostrarSemana(4)">
+                        <div class="week-number">Semana 4</div>
+                        <div class="week-title">Estrategia</div>
+                    </div>
+                </div>
+
+                <!-- Semana 1 -->
+                <div id="week1" class="week-content active">
+                    <div class="week-header">
+                        <h3>Semana 1: Fundamentos y Visión</h3>
+                        <p class="week-objective">🎯 Construir una base sólida sobre qué es la IA y cómo puede transformar ADA.</p>
+                    </div>
+
+                    <div class="days-grid">
+                        <div class="day-card lunes">
+                            <div class="day-name">Lunes: Kick-off e Introducción</div>
+                            <p>Nos conocemos y establecemos la visión del programa. ¿Qué es la IA y por qué importa para ADA?</p>
+                            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.9rem; color: rgba(255,255,255,0.6);">
+                                Bloque 1: Clase (1h) | Bloque 2: Q&A (hasta 1h)
+                            </div>
+                        </div>
+                        <div class="day-card martes">
+                            <div class="day-name">Martes: Historia y Evolución de la IA</div>
+                            <p>De los inicios hasta ChatGPT: entenderemos el contexto y la "revolución" actual.</p>
+                        </div>
+                        <div class="day-card miercoles" style="background: linear-gradient(135deg, #1e3a8a, #5b21b6);">
+                            <div class="day-name">🌟 WEBINAR ESPECIAL 🌟</div>
+                            <p style="font-weight: bold; margin-bottom: 0.5rem;">Desarrollos Reales en IA (Parte 1)</p>
+                            <p>Casos prácticos de proyectos que he liderado.</p>
+                        </div>
+                        <div class="day-card jueves">
+                            <div class="day-name">Jueves: Tipos de IA y sus Aplicaciones</div>
+                            <p>IA generativa, predictiva, de clasificación. ¿Cuál sirve para qué?</p>
+                        </div>
+                        <div class="day-card viernes">
+                            <div class="day-name">Viernes: Workshop Práctico</div>
+                            <p>Manos a la obra: primeros prompts y experimentos con ChatGPT.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Semana 2 -->
+                <div id="week2" class="week-content">
+                    <div class="week-header">
+                        <h3>Semana 2: Herramientas Prácticas</h3>
+                        <p class="week-objective">🎯 Dominar las herramientas de IA más relevantes.</p>
+                    </div>
+                    <div class="days-grid">
+                        <div class="day-card lunes">
+                            <div class="day-name">Lunes: ChatGPT Pro Tips</div>
+                            <p>Técnicas avanzadas de prompting.</p>
+                        </div>
+                        <div class="day-card martes">
+                            <div class="day-name">Martes: Herramientas de Productividad</div>
+                            <p>Notion AI, Jasper, Copy.ai...</p>
+                        </div>
+                        <div class="day-card miercoles">
+                            <div class="day-name">Miércoles: IA Generativa Visual</div>
+                            <p>Midjourney, DALL-E, Stable Diffusion.</p>
+                        </div>
+                        <div class="day-card jueves">
+                            <div class="day-name">Jueves: IA para Ventas y Marketing</div>
+                            <p>Análisis de competencia e identificación de clientes.</p>
+                        </div>
+                        <div class="day-card viernes">
+                            <div class="day-name">Viernes: Ética y Uso Responsable</div>
+                            <p>Privacidad de datos y sesgos.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Semana 3 -->
+                <div id="week3" class="week-content">
+                    <div class="week-header">
+                        <h3>Semana 3: Oportunidades para ADA</h3>
+                        <p class="week-objective">🎯 Identificar áreas clave de impacto.</p>
+                    </div>
+                    <div class="days-grid">
+                        <div class="day-card lunes">
+                            <div class="day-name">Lunes: Análisis de Operaciones</div>
+                            <p>Mapeo de procesos internos.</p>
+                        </div>
+                        <div class="day-card martes">
+                            <div class="day-name">Martes: Análisis del Área Comercial</div>
+                            <p>De captación al soporte post-venta.</p>
+                        </div>
+                        <div class="day-card miercoles" style="background: linear-gradient(135deg, #1e3a8a, #5b21b6);">
+                            <div class="day-name">🌟 WEBINAR ESPECIAL 🌟</div>
+                            <p>Desarrollos Reales (Parte 2)</p>
+                        </div>
+                        <div class="day-card jueves">
+                            <div class="day-name">Jueves: Taller de Ideación</div>
+                            <p>Brainstorming de proyectos.</p>
+                        </div>
+                        <div class="day-card viernes">
+                            <div class="day-name">Viernes: Documentando Proyectos</div>
+                            <p>De ideas a casos de negocio.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Semana 4 -->
+                <div id="week4" class="week-content">
+                    <div class="week-header">
+                        <h3>Semana 4: Definiendo la Estrategia</h3>
+                        <p class="week-objective">🎯 Seleccionar el primer proyecto.</p>
+                    </div>
+                    <div class="days-grid">
+                        <div class="day-card lunes">
+                            <div class="day-name">Lunes: Matriz de Priorización</div>
+                            <p>Impacto vs. Esfuerzo.</p>
+                        </div>
+                        <div class="day-card martes">
+                            <div class="day-name">Martes: Estimación de Costos y ROI</div>
+                            <p>Análisis financiero de proyectos.</p>
+                        </div>
+                        <div class="day-card miercoles">
+                            <div class="day-name">Miércoles: Defensa de Proyectos</div>
+                            <p>Presentación a gerencia.</p>
+                        </div>
+                        <div class="day-card jueves">
+                            <div class="day-name">Jueves: Decisión y Comunicación</div>
+                            <p>Selección del proyecto piloto.</p>
+                        </div>
+                        <div class="day-card viernes">
+                            <div class="day-name">Viernes: Kick-off Fase 2</div>
+                            <p>Definir roadmap y próximos pasos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FASE 2 -->
+            <div id="fase2-content" class="fase2-content">
+                <div class="fase2-header">
+                    <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">🚀 Fase 2: Desarrollo y Estrategia Comercial</h2>
+                    <p style="font-size: 1.2rem; margin-bottom: 1.5rem;">Duración: 2 Semanas</p>
+                    
+                    <div class="fase2-grid">
+                        <div class="fase2-card">
+                            <h3 style="margin-bottom: 1rem;">👥 Equipo Dedicado</h3>
+                            <p>✓ Armin Salazar (Líder de Proyecto)</p>
+                            <p>✓ Developer IA Senior (Ejecución)</p>
+                        </div>
+                        <div class="fase2-card">
+                            <h3 style="margin-bottom: 1rem;">🎯 Objetivos</h3>
+                            <p><strong>Piloto ADA:</strong> Desarrollar el proyecto piloto</p>
+                            <p><strong>Propuestas BCI:</strong> Estructurar propuestas de IA</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.05); border-radius: 20px; padding: 2rem; border: 1px solid rgba(255,255,255,0.1);">
+                    <h3 style="color: var(--violeta-claro); margin-bottom: 1.5rem; font-size: 1.8rem;">📅 Semanas 1-2: Ejecución Ágil</h3>
+                    
+                    <div class="fase2-tasks">
+                        <div class="fase2-task">
+                            <span style="font-size: 2rem;">⚙️</span>
+                            <div>
+                                <strong>(Piloto ADA)</strong> Desarrollo del prototipo funcional
+                            </div>
+                        </div>
+                        <div class="fase2-task">
+                            <span style="font-size: 2rem;">📊</span>
+                            <div>
+                                <strong>(BCI)</strong> Análisis de requerimientos y definición de alcance
+                            </div>
+                        </div>
+                        <div class="fase2-task">
+                            <span style="font-size: 2rem;">🧪</span>
+                            <div>
+                                <strong>(Piloto ADA)</strong> Pruebas internas y ciclos de feedback
+                            </div>
+                        </div>
+                        <div class="fase2-task">
+                            <span style="font-size: 2rem;">📝</span>
+                            <div>
+                                <strong>(BCI)</strong> Redacción y diseño de presentaciones comerciales
+                            </div>
+                        </div>
+                        <div class="fase2-task">
+                            <span style="font-size: 2rem;">👨‍🏫</span>
+                            <div>
+                                <strong>(Piloto ADA)</strong> Capacitación final y entrega de solución
+                            </div>
+                        </div>
+                        <div class="fase2-task">
+                            <span style="font-size: 2rem;">✅</span>
+                            <div>
+                                <strong>(BCI)</strong> Entrega final de propuestas de valor
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN GITHUB -->
+        <section id="github" class="section">
+            <div class="hero">
+                <h2>💻 Repositorio GitHub</h2>
+                <p>Acceso al código y recursos del programa</p>
+            </div>
+
+            <div class="github-section">
+                <h3 style="color: var(--azul-claro); margin-bottom: 1.5rem; font-size: 1.8rem;">📦 Repositorio del Proyecto</h3>
+                <p style="margin-bottom: 2rem; color: rgba(255,255,255,0.8); line-height: 1.8;">
+                    Aquí encontrarás transcripciones de clases, quizzes, código de ejemplo y recursos técnicos del programa.
+                </p>
+
+                <a href="https://github.com/soporteaiwis-lab/ada" target="_blank" class="github-link">
+                    <svg width="32" height="32" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                    </svg>
+                    <span>Abrir Repositorio GitHub</span>
+                    <span>→</span>
+                </a>
+
+                <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                    <h4 style="color: var(--azul-claro); margin-bottom: 1rem;">📚 Contenido del Repositorio</h4>
+                    <ul style="list-style: none; display: grid; gap: 0.5rem; color: rgba(255,255,255,0.8);">
+                        <li>✓ Transcripciones de todas las clases</li>
+                        <li>✓ Quizzes interactivos en formato JSON</li>
+                        <li>✓ Notebooks de Jupyter con ejemplos</li>
+                        <li>✓ Scripts de Python para automatización</li>
+                        <li>✓ Plantillas de prompts optimizados</li>
+                        <li>✓ Casos de uso reales implementados</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // === CONFIGURACIÓN DE GOOGLE SHEETS ===
+        const SPREADSHEET_ID = '13rQdIhzb-Ve9GAClQwopVtS9u2CpGTj2aUy528a7YSw';
+        const API_KEY = 'AIzaSyAMr9Hq63aKqMjdOp6syBh2mbYE_OzFV7c';
+
+        // === GITHUB REPO ===
+        const GITHUB_REPO = 'https://raw.githubusercontent.com/soporteaiwis-lab/ada/main';
+
+        // === DATOS DE CLASES ===
+        const clasesData = {
+            1: {
+                lunes: { title: "Kick-off e Introducción", desc: "Nos conocemos y establecemos la visión del programa. ¿Qué es la IA y por qué importa para ADA?" },
+                martes: { title: "Historia y Evolución de la IA", desc: "De los inicios hasta ChatGPT: entenderemos el contexto y la revolución actual." },
+                miercoles: { title: "WEBINAR: Desarrollos Reales (Parte 1)", desc: "Casos prácticos de proyectos que he liderado. Verán cómo la IA resuelve problemas reales." },
+                jueves: { title: "Tipos de IA y sus Aplicaciones", desc: "IA generativa, predictiva, de clasificación. ¿Cuál sirve para qué?" },
+                viernes: { title: "Workshop Práctico", desc: "Manos a la obra: primeros prompts y experimentos con ChatGPT." }
+            },
+            2: {
+                lunes: { title: "ChatGPT Pro Tips", desc: "Técnicas avanzadas de prompting y cómo sacarle el máximo provecho." },
+                martes: { title: "Herramientas de Productividad", desc: "Notion AI, Jasper, Copy.ai... ¿Cuál es mejor para cada tarea?" },
+                miercoles: { title: "IA Generativa Visual", desc: "Midjourney, DALL-E, Stable Diffusion. Creando imágenes profesionales." },
+                jueves: { title: "IA para Ventas y Marketing", desc: "Análisis de competencia e identificación de perfiles de clientes." },
+                viernes: { title: "Ética y Uso Responsable", desc: "Privacidad de datos, sesgos y uso profesional de herramientas." }
+            },
+            3: {
+                lunes: { title: "Análisis de Operaciones", desc: "Mapearemos los procesos internos. ¿Dónde están los cuellos de botella?" },
+                martes: { title: "Análisis del Área Comercial", desc: "De la captación de clientes hasta el soporte post-venta." },
+                miercoles: { title: "WEBINAR: Desarrollos Reales (Parte 2)", desc: "El detrás de cámaras de proyectos de IA reales: arquitectura, costos y resultados." },
+                jueves: { title: "Taller de Ideación", desc: "Brainstorming guiado para generar proyectos de IA para ADA." },
+                viernes: { title: "Documentando Proyectos", desc: "Transformar ideas en casos de negocio: problema, solución, métricas." }
+            },
+            4: {
+                lunes: { title: "Matriz de Priorización", desc: "Clasificar proyectos en matriz Impacto vs. Esfuerzo." },
+                martes: { title: "Estimación de Costos y ROI", desc: "Analizar necesidades y medir retorno de inversión potencial." },
+                miercoles: { title: "Defensa de Proyectos", desc: "Presentar 2-3 proyectos finalistas a la gerencia." },
+                jueves: { title: "Decisión y Comunicación", desc: "¡Día de la selección! Elegimos el proyecto piloto." },
+                viernes: { title: "Kick-off Fase 2", desc: "Definir hoja de ruta, roles y próximos pasos." }
+            }
+        };
+
+        const diasSemana = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes'];
+
+        // === NAVEGACIÓN ===
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = link.dataset.section;
+                
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.getElementById(section).classList.add('active');
+            });
+        });
+
+        // === CARGAR DATOS DE ESTUDIANTES ===
+        async function cargarDatosUsuarios() {
+            try {
+                const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Usuarios!A:C?key=${API_KEY}`);
+                const data = await response.json();
+                
+                if (data.values) {
+                    const usuarios = data.values.slice(1);
+                    renderizarEstudiantes(usuarios);
+                }
+            } catch (error) {
+                console.error('Error cargando usuarios:', error);
+                document.getElementById('studentsLoading').innerHTML = '<p style="color: var(--rojo);">Error al cargar datos.</p>';
+            }
+        }
+
+        async function cargarHabilidades() {
+            try {
+                const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Habilidades!A:Z?key=${API_KEY}`);
+                const data = await response.json();
+                return data.values || [];
+            } catch (error) {
+                console.error('Error cargando habilidades:', error);
+                return [];
+            }
+        }
+
+        async function renderizarEstudiantes(usuarios) {
+            const habilidades = await cargarHabilidades();
+            const container = document.getElementById('studentsGrid');
+            const loading = document.getElementById('studentsLoading');
+            
+            container.innerHTML = '';
+            loading.style.display = 'none';
+
+            usuarios.forEach((usuario, index) => {
+                const [email, nombre, rol] = usuario;
+                const iniciales = nombre.split(' ').map(n => n[0]).join('');
+                
+                const userSkills = habilidades[index + 1] || [];
+                const skillsData = {
+                    prompting: userSkills[3] || 0,
+                    herramientas: userSkills[4] || 0,
+                    analisis: userSkills[5] || 0,
+                    creatividad: userSkills[6] || 0,
+                    etica: userSkills[7] || 0,
+                    estrategia: userSkills[8] || 0
+                };
+
+                const rating = Math.round(Object.values(skillsData).reduce((a, b) => parseInt(a) + parseInt(b), 0) / 6);
+
+                const card = document.createElement('div');
+                card.className = 'fifa-card';
+                card.innerHTML = `
+                    <div class="fifa-card-header">
+                        <div class="fifa-rating">${rating}</div>
+                        <div class="student-avatar">${iniciales}</div>
+                        <div class="student-name">${nombre}</div>
+                        <div class="student-role">${rol}</div>
+                    </div>
+                    <div class="fifa-card-body">
+                        <div class="stats-section">
+                            <h4>💪 Fortalezas</h4>
+                            ${renderizarStat('Prompting', skillsData.prompting)}
+                            ${renderizarStat('Herramientas IA', skillsData.herramientas)}
+                            ${renderizarStat('Análisis', skillsData.analisis)}
+                        </div>
+                        <div class="stats-section">
+                            <h4>🎯 Áreas de Desarrollo</h4>
+                            ${renderizarStat('Creatividad', skillsData.creatividad)}
+                            ${renderizarStat('Ética IA', skillsData.etica)}
+                            ${renderizarStat('Estrategia', skillsData.estrategia)}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderizarStat(nombre, valor) {
+            return `
+                <div class="stat-item">
+                    <span class="stat-name">${nombre}</span>
+                    <div class="stat-bar">
+                        <div class="stat-fill" style="width: ${valor}%"></div>
+                    </div>
+                    <span class="stat-value">${valor}</span>
+                </div>
+            `;
+        }
+
+        // === CARGAR VIDEOS DESDE GOOGLE SHEETS ===
+        async function cargarVideos() {
+            try {
+                const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Videos!A:D?key=${API_KEY}`);
+                const data = await response.json();
+                
+                if (data.values) {
+                    const videos = data.values.slice(1); // Skip headers
+                    renderizarVideos(videos);
+                    document.getElementById('classesLoading').style.display = 'none';
+                    document.getElementById('classesContent').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error cargando videos:', error);
+                // Si falla, cargar estructura por defecto
+                renderizarVideosDefault();
+                document.getElementById('classesLoading').style.display = 'none';
+                document.getElementById('classesContent').style.display = 'block';
+            }
+        }
+
+        function renderizarVideos(videos) {
+            // Agrupar videos por semana
+            const videosPorSemana = {1: [], 2: [], 3: [], 4: []};
+            
+            videos.forEach(video => {
+                const [fase, semana, dia, url] = video;
+                if (fase == 1 && semana >= 1 && semana <= 4) {
+                    videosPorSemana[semana].push({dia, url});
+                }
+            });
+
+            // Renderizar cada semana
+            for (let semana = 1; semana <= 4; semana++) {
+                const carousel = document.getElementById(`carousel-week${semana}`);
+                carousel.innerHTML = '';
+                
+                diasSemana.forEach(dia => {
+                    const videoData = videosPorSemana[semana].find(v => v.dia.toLowerCase() === dia);
+                    const claseInfo = clasesData[semana][dia];
+                    
+                    if (claseInfo) {
+                        const videoUrl = videoData ? videoData.url : '';
+                        const videoId = extraerVideoId(videoUrl);
+                        
+                        carousel.innerHTML += crearVideoCard(semana, dia, claseInfo, videoId);
+                    }
+                });
+            }
+        }
+
+        function renderizarVideosDefault() {
+            for (let semana = 1; semana <= 4; semana++) {
+                const carousel = document.getElementById(`carousel-week${semana}`);
+                carousel.innerHTML = '';
+                
+                diasSemana.forEach(dia => {
+                    const claseInfo = clasesData[semana][dia];
+                    if (claseInfo) {
+                        carousel.innerHTML += crearVideoCard(semana, dia, claseInfo, '');
+                    }
+                });
+            }
+        }
+
+        function extraerVideoId(url) {
+            if (!url) return '';
+            // Extrae el ID de diferentes formatos de URL de YouTube
+            const patterns = [
+                /youtube\.com\/embed\/([^?]+)/,
+                /youtube\.com\/watch\?v=([^&]+)/,
+                /youtu\.be\/([^?]+)/
+            ];
+            
+            for (const pattern of patterns) {
+                const match = url.match(pattern);
+                if (match) return match[1];
+            }
+            return '';
+        }
+
+        function crearVideoCard(semana, dia, claseInfo, videoId) {
+            const diaCapitalizado = dia.charAt(0).toUpperCase() + dia.slice(1);
+            const thumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : '';
+            const hasVideo = videoId !== '';
+            
+            return `
+                <div class="video-card" onclick="openClassModal(${semana}, '${dia}', '${videoId}')">
+                    <div class="video-thumbnail">
+                        ${thumbnail ? `<img src="${thumbnail}" alt="${claseInfo.title}">` : '<span style="font-size: 3rem;">🎬</span>'}
+                        ${hasVideo ? '<div class="play-button">▶</div>' : ''}
+                    </div>
+                    <div class="video-info">
+                        <div class="video-day">${diaCapitalizado}</div>
+                        <div class="video-title">${claseInfo.title}</div>
+                        <div class="video-description">${claseInfo.desc}</div>
+                        <div class="video-meta">
+                            <span>⏱️ 60 min</span>
+                            ${hasVideo ? '<span>✅ Disponible</span>' : '<span style="color: var(--naranja);">📅 Próximamente</span>'}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // === MODAL DE CLASE ===
+        let currentWeek, currentDay;
+
+        async function openClassModal(semana, dia, videoId) {
+            currentWeek = semana;
+            currentDay = dia;
+            
+            const modal = document.getElementById('classModal');
+            const claseInfo = clasesData[semana][dia];
+            const diaCapitalizado = dia.charAt(0).toUpperCase() + dia.slice(1);
+            
+            // Video
+            const videoFrame = document.getElementById('modalVideo');
+            if (videoId) {
+                videoFrame.src = `https://www.youtube.com/embed/${videoId}`;
+            } else {
+                videoFrame.src = '';
+            }
+            
+            // Título y meta
+            document.getElementById('modalTitle').textContent = claseInfo.title;
+            document.getElementById('modalWeek').textContent = `📅 Semana ${semana}`;
+            document.getElementById('modalDay').textContent = `🗓️ ${diaCapitalizado}`;
+            
+            // Descripción
+            document.getElementById('modalDescription').innerHTML = `<p>${claseInfo.desc}</p>`;
+            
+            // Link a contenido
+            const contentLink = document.getElementById('contentLink');
+            contentLink.setAttribute('data-week', semana);
+            contentLink.setAttribute('data-day', dia);
+            
+            // Cargar transcripción desde GitHub
+            await cargarTranscripcion(semana, dia);
+            
+            // Cargar quiz desde GitHub
+            await cargarQuiz(semana, dia);
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeClassModal() {
+            const modal = document.getElementById('classModal');
+            modal.classList.remove('active');
+            document.getElementById('modalVideo').src = '';
+            document.body.style.overflow = 'auto';
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.modal-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
+        async function cargarTranscripcion(semana, dia) {
+            const transcriptDiv = document.getElementById('modalTranscript');
+            transcriptDiv.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.5);">Cargando transcripción...</p>';
+            
+            try {
+                const url = `${GITHUB_REPO}/transcripts/fase1-semana${semana}-${dia}.md`;
+                const response = await fetch(url);
+                
+                if (response.ok) {
+                    const text = await response.text();
+                    // Convertir markdown simple a HTML
+                    const html = text
+                        .replace(/## (.*)/g, '<h4>$1</h4>')
+                        .replace(/\n\n/g, '</p><p>')
+                        .replace(/^(.+)$/gm, '<p>$1</p>');
+                    transcriptDiv.innerHTML = html;
+                } else {
+                    transcriptDiv.innerHTML = `
+                        <p style="text-align: center; color: rgba(255,255,255,0.6);">
+                            📝 Transcripción no disponible aún.<br>
+                            <small>Se agregará después de la clase.</small>
+                        </p>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error cargando transcripción:', error);
+                transcriptDiv.innerHTML = '<p style="text-align: center; color: var(--naranja);">Error al cargar transcripción</p>';
+            }
+        }
+
+        async function cargarQuiz(semana, dia) {
+            const quizDiv = document.getElementById('modalQuiz');
+            quizDiv.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.5);">Cargando quiz...</p>';
+            
+            try {
+                const url = `${GITHUB_REPO}/quizzes/fase1-semana${semana}-${dia}.json`;
+                const response = await fetch(url);
+                
+                if (response.ok) {
+                    const quizData = await response.json();
+                    renderizarQuiz(quizData);
+                } else {
+                    quizDiv.innerHTML = `
+                        <p style="text-align: center; color: rgba(255,255,255,0.6);">
+                            ✅ Quiz no disponible aún.<br>
+                            <small>Se agregará después de la clase.</small>
+                        </p>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error cargando quiz:', error);
+                quizDiv.innerHTML = '<p style="text-align: center; color: var(--naranja);">Error al cargar quiz</p>';
+            }
+        }
+
+        function renderizarQuiz(quizData) {
+            const quizDiv = document.getElementById('modalQuiz');
+            let html = '';
+            
+            quizData.questions.forEach((q, index) => {
+                html += `
+                    <div class="quiz-question">
+                        <div class="question-number">Pregunta ${index + 1} de ${quizData.questions.length}</div>
+                        <div class="question-text">${q.question}</div>
+                        <div class="quiz-options">
+                            ${q.options.map((opt, i) => `
+                                <div class="quiz-option" onclick="selectOption(${index}, ${i})" data-question="${index}" data-option="${i}">
+                                    ${String.fromCharCode(65 + i)}. ${opt}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                <button class="submit-quiz" onclick="submitQuiz()">Enviar Respuestas</button>
+                <div class="quiz-result" id="quizResult">
+                    <div class="quiz-score" id="quizScore"></div>
+                    <div id="quizMessage"></div>
+                </div>
+            `;
+            
+            quizDiv.innerHTML = html;
+            quizDiv.setAttribute('data-quiz', JSON.stringify(quizData));
+        }
+
+        let selectedAnswers = {};
+
+        function selectOption(questionIndex, optionIndex) {
+            // Deseleccionar otras opciones de la misma pregunta
+            document.querySelectorAll(`.quiz-option[data-question="${questionIndex}"]`).forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Seleccionar la opción clickeada
+            event.target.classList.add('selected');
+            selectedAnswers[questionIndex] = optionIndex;
+        }
+
+        function submitQuiz() {
+            const quizDiv = document.getElementById('modalQuiz');
+            const quizData = JSON.parse(quizDiv.getAttribute('data-quiz'));
+            
+            let correctCount = 0;
+            const totalQuestions = quizData.questions.length;
+            
+            quizData.questions.forEach((q, index) => {
+                const correctAnswer = q.correctAnswer;
+                const userAnswer = selectedAnswers[index];
+                const options = document.querySelectorAll(`.quiz-option[data-question="${index}"]`);
+                
+                options.forEach((opt, i) => {
+                    if (i === correctAnswer) {
+                        opt.classList.add('correct');
+                    }
+                    if (i === userAnswer && userAnswer !== correctAnswer) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+                
+                if (userAnswer === correctAnswer) {
+                    correctCount++;
+                }
+            });
+            
+            const percentage = Math.round((correctCount / totalQuestions) * 100);
+            const resultDiv = document.getElementById('quizResult');
+            const scoreDiv = document.getElementById('quizScore');
+            const messageDiv = document.getElementById('quizMessage');
+            
+            scoreDiv.textContent = `${correctCount}/${totalQuestions}`;
+            
+            if (percentage >= 80) {
+                messageDiv.textContent = '¡Excelente! 🎉 Dominas el contenido.';
+            } else if (percentage >= 60) {
+                messageDiv.textContent = '¡Bien hecho! 👍 Sigue practicando.';
+            } else {
+                messageDiv.textContent = 'Revisa el material 📚 y vuelve a intentarlo.';
+            }
+            
+            resultDiv.classList.add('show');
+            
+            // Desactivar opciones después de enviar
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.style.cursor = 'default';
+                opt.onclick = null;
+            });
+        }
+
+        function goToContent(e) {
+            e.preventDefault();
+            const week = e.target.getAttribute('data-week');
+            
+            // Cerrar modal
+            closeClassModal();
+            
+            // Ir a sección de contenido
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.querySelector('.nav-link[data-section="contenido"]').classList.add('active');
+            
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById('contenido').classList.add('active');
+            
+            // Mostrar semana correcta
+            mostrarSemana(parseInt(week));
+        }
+
+        // === NAVEGACIÓN DE FASES Y SEMANAS ===
+        function mostrarFase(faseNum) {
+            document.querySelectorAll('.fase-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.fase-btn')[faseNum - 1].classList.add('active');
+            
+            if (faseNum === 1) {
+                document.getElementById('fase1-content').style.display = 'block';
+                document.getElementById('fase2-content').classList.remove('active');
+            } else {
+                document.getElementById('fase1-content').style.display = 'none';
+                document.getElementById('fase2-content').classList.add('active');
+            }
+        }
+
+        function mostrarSemana(semanaNum) {
+            document.querySelectorAll('.week-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.week-btn')[semanaNum - 1].classList.add('active');
+            
+            document.querySelectorAll('.week-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(`week${semanaNum}`).classList.add('active');
+        }
+
+        // === AUTENTICACIÓN ===
+        function verificarUsuario() {
+            const userEmail = localStorage.getItem('userEmail') || 'invitado@ada.cl';
+            const userName = localStorage.getItem('userName') || 'Invitado';
+            document.getElementById('userName').textContent = userName;
+        }
+
+        // === INICIALIZACIÓN ===
+        document.addEventListener('DOMContentLoaded', () => {
+            verificarUsuario();
+            
+            if (SPREADSHEET_ID !== 'TU_SPREADSHEET_ID_AQUI' && API_KEY !== 'TU_API_KEY_AQUI') {
+                cargarDatosUsuarios();
+                cargarVideos();
+            } else {
+                document.getElementById('studentsLoading').innerHTML = '<p style="color: var(--naranja);">⚠️ Configura tu Google Sheets API</p>';
+                document.getElementById('classesLoading').innerHTML = '<p style="color: var(--naranja);">⚠️ Configura tu Google Sheets API</p>';
+            }
+        });
+
+        // Cerrar modal con ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeClassModal();
+            }
+        });
+    </script>
+</body>
+</html>
