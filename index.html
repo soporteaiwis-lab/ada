@@ -1332,7 +1332,7 @@
         // =====================================================
         const SPREADSHEET_ID = '13rQdIhzb-Ve9GAClQwopVtS9u2CpGTj2aUy528a7YSw'; // TU ID AQUÍ
         const API_KEY = 'AIzaSyCzPHhigfOD6oHw26JftVg3YyKLijwbyY4'; // TU API KEY AQUÍ
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzr2zmg-0XDRZEPbO9jYLnicB-rGRjjfnWqRR9eY2-ZCB5SCW1ZDQf5QYNRiO8MalRbvw/exec'; // TU URL DEL APPS SCRIPT AQUÍ (para guardar progreso)
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwxHzlEhCYVZaPSJl4V6ptxcDkefM_SUJbwqpgVB9gZV3SGVbWYB3EGMf6tHP0PfET62w/exec'; // TU URL DEL APPS SCRIPT AQUÍ (para guardar progreso)
         const GITHUB_REPO = 'https://raw.githubusercontent.com/soporteaiwis-lab/ada/main';
 
         // =====================================================
@@ -1495,11 +1495,11 @@
             document.getElementById('loginOverlay').classList.add('hidden');
             document.getElementById('userName').textContent = nombre;
             document.getElementById('userAvatar').textContent = nombre.charAt(0).toUpperCase();
-
-            cargarProgreso();
+            
             if (SPREADSHEET_ID && API_KEY) {
-                cargarDatosUsuarios();
-                cargarVideos();
+                cargarDatosUsuarios().then(() => {
+                    cargarVideos();
+                });
             }
 
             showToast('success', '¡Bienvenido/a!', `Hola ${nombre.split(' ')[0]}, es un placer verte de nuevo 👋`);
@@ -1531,27 +1531,28 @@
         // =====================================================
         async function cargarDatosUsuarios() {
             if (!SPREADSHEET_ID || !API_KEY) return;
+            
+            cargarProgreso(); // Cargar respaldo local primero
 
             try {
-                // Cargar datos de Usuarios
+                // Cargar todas las hojas en paralelo
                 const urlUsuarios = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Usuarios?key=${API_KEY}`;
-                const responseUsuarios = await fetch(urlUsuarios);
-                const dataUsuarios = await responseUsuarios.json();
-
-                // Cargar datos de Habilidades
                 const urlHabilidades = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Habilidades?key=${API_KEY}`;
-                const responseHabilidades = await fetch(urlHabilidades);
-                const dataHabilidades = await responseHabilidades.json();
-
-                // Cargar datos de Progreso
                 const urlProgreso = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Progreso?key=${API_KEY}`;
-                const responseProgreso = await fetch(urlProgreso);
+
+                const [responseUsuarios, responseHabilidades, responseProgreso] = await Promise.all([
+                    fetch(urlUsuarios),
+                    fetch(urlHabilidades),
+                    fetch(urlProgreso)
+                ]);
+
+                const dataUsuarios = await responseUsuarios.json();
+                const dataHabilidades = await responseHabilidades.json();
                 const dataProgreso = await responseProgreso.json();
 
                 if (dataUsuarios.values && dataUsuarios.values.length > 1) {
                     allUsers = [];
                     
-                    // Crear mapa de habilidades
                     const habilidadesMap = {};
                     if (dataHabilidades.values && dataHabilidades.values.length > 1) {
                         for (let i = 1; i < dataHabilidades.values.length; i++) {
@@ -1566,17 +1567,28 @@
                         }
                     }
 
-                    // Crear mapa de progreso
                     const progresoMap = {};
                     if (dataProgreso.values && dataProgreso.values.length > 1) {
                         for (let i = 1; i < dataProgreso.values.length; i++) {
                             const row = dataProgreso.values[i];
                             if (row[0]) {
+                                // Mapeo para el dashboard de estudiantes (agregado)
                                 progresoMap[row[0]] = {
                                     porcentaje: parseInt(row[3]) || 0,
                                     completados: parseInt(row[4]) || 0,
                                     pendientes: parseInt(row[5]) || 20
                                 };
+
+                                // Lógica para cargar el progreso detallado del usuario actual
+                                if (currentUser && row[0] === currentUser.email && row[6]) { // Columna G (índice 6) para el JSON
+                                    try {
+                                        userProgress = JSON.parse(row[6]);
+                                        localStorage.setItem('ada_progress', row[6]); // Sincronizar con localStorage
+                                        console.log('✅ Progreso detallado de ADA cargado desde Google Sheets.');
+                                    } catch (e) {
+                                        console.error('Error al parsear el JSON de progreso (ADA) desde Google Sheets.', e);
+                                    }
+                                }
                             }
                         }
                     }
@@ -1586,22 +1598,13 @@
                         const row = dataUsuarios.values[i];
                         if (row[0] && row[1]) {
                             const email = row[0];
-                            const usuario = {
+                            allUsers.push({
                                 email: email,
                                 nombre: row[1],
                                 rol: row[2] || 'Usuario',
-                                habilidades: habilidadesMap[email] || {
-                                    prompting: 0,
-                                    herramientas: 0,
-                                    analisis: 0
-                                },
-                                progreso: progresoMap[email] || {
-                                    porcentaje: 0,
-                                    completados: 0,
-                                    pendientes: 20
-                                }
-                            };
-                            allUsers.push(usuario);
+                                habilidades: habilidadesMap[email] || { prompting: 0, herramientas: 0, analisis: 0 },
+                                progreso: progresoMap[email] || { porcentaje: 0, completados: 0, pendientes: 20 }
+                            });
                         }
                     }
 
@@ -1609,7 +1612,7 @@
                     renderizarCurrentUser();
                 }
             } catch (error) {
-                console.error('Error cargando datos:', error);
+                console.error('Error cargando datos de ADA:', error);
                 showToast('error', 'Error', 'No se pudieron cargar los datos de estudiantes');
             }
         }
@@ -1656,19 +1659,18 @@
 
             const progresoJSON = JSON.stringify(userProgress);
 
-            // Guardar en localStorage (para visualización inmediata)
             localStorage.setItem('ada_progress', progresoJSON);
 
-            // Guardar en Google Sheets via Apps Script
             if (APPS_SCRIPT_URL) {
                 try {
                     const response = await fetch(APPS_SCRIPT_URL, {
                         method: 'POST',
-                        mode: 'no-cors', // Importante para Apps Script
+                        mode: 'no-cors',
                         headers: {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
+                            // No enviamos 'portal' para que el script universal use las hojas por defecto (ADA)
                             email: currentUser.email,
                             nombre: currentUser.nombre,
                             rol: currentUser.rol,
@@ -1685,20 +1687,11 @@
                     showToast('warning', 'Guardado local', `${completadas} clases completadas (${porcentaje}%) - Solo en navegador`);
                 }
             } else {
-                // Si no hay URL del script, solo mostrar guardado local
                 showToast('info', 'Guardado local', `${completadas} clases completadas (${porcentaje}%)`);
             }
 
-            // Actualizar UI
             renderizarCurrentUser();
             renderizarEstudiantes();
-
-            console.log('Progreso:', {
-                email: currentUser.email,
-                porcentaje,
-                completadas,
-                pendientes
-            });
         }
 
         // =====================================================
@@ -1707,7 +1700,12 @@
         function cargarProgreso() {
             const saved = localStorage.getItem('ada_progress');
             if (saved) {
-                userProgress = JSON.parse(saved);
+                try {
+                    userProgress = JSON.parse(saved);
+                } catch(e) {
+                    console.error("Error parseando progreso local de ADA", e);
+                    userProgress = {};
+                }
             } else {
                 userProgress = {};
             }
@@ -2104,11 +2102,10 @@
             const isLoggedIn = verificarUsuario();
             
             if (isLoggedIn) {
-                cargarProgreso();
-                
                 if (SPREADSHEET_ID && API_KEY) {
-                    cargarDatosUsuarios();
-                    cargarVideos();
+                    cargarDatosUsuarios().then(() => {
+                        cargarVideos();
+                    });
                 } else {
                     document.getElementById('studentsLoading').innerHTML = '<p style="color: var(--naranja);">⚠️ Configura tu Google Sheets API</p>';
                     document.getElementById('classesLoading').innerHTML = '<p style="color: var(--naranja);">⚠️ Configura tu Google Sheets API</p>';
