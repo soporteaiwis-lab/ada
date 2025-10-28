@@ -467,41 +467,69 @@
         }
 
         .carousel-nav-btn {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
             color: var(--blanco);
-            font-size: 1.2rem;
+            font-size: 1.5rem;
+            font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(10px);
         }
 
         .carousel-nav-btn:hover:not(:disabled) {
             background: var(--azul-claro);
             border-color: var(--azul-claro);
-            transform: scale(1.1);
+            transform: scale(1.15);
+            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .carousel-nav-btn:active:not(:disabled) {
+            transform: scale(1.05);
         }
 
         .carousel-nav-btn:disabled {
-            opacity: 0.3;
+            opacity: 0.2;
             cursor: not-allowed;
         }
 
         .carousel-wrapper {
             position: relative;
-            overflow: hidden;
+            overflow-x: auto;
+            overflow-y: hidden;
             border-radius: 15px;
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.2) transparent;
+        }
+
+        .carousel-wrapper::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .carousel-wrapper::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+
+        .carousel-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+        }
+
+        .carousel-wrapper::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.3);
         }
 
         .carousel-track {
             display: flex;
             gap: 1rem;
-            transition: transform 0.5s ease;
             padding: 0.5rem;
         }
 
@@ -1017,8 +1045,8 @@
                                 <button class="carousel-nav-btn" onclick="scrollCarousel('carousel-week1', 'right')">▶</button>
                             </div>
                         </div>
-                        <div class="carousel-wrapper">
-                            <div class="carousel-track" id="carousel-week1"></div>
+                        <div class="carousel-wrapper" id="carousel-week1">
+                            <div class="carousel-track"></div>
                         </div>
                     </div>
                 </div>
@@ -1033,8 +1061,8 @@
                                 <button class="carousel-nav-btn" onclick="scrollCarousel('carousel-week2', 'right')">▶</button>
                             </div>
                         </div>
-                        <div class="carousel-wrapper">
-                            <div class="carousel-track" id="carousel-week2"></div>
+                        <div class="carousel-wrapper" id="carousel-week2">
+                            <div class="carousel-track"></div>
                         </div>
                     </div>
                 </div>
@@ -1049,8 +1077,8 @@
                                 <button class="carousel-nav-btn" onclick="scrollCarousel('carousel-week3', 'right')">▶</button>
                             </div>
                         </div>
-                        <div class="carousel-wrapper">
-                            <div class="carousel-track" id="carousel-week3"></div>
+                        <div class="carousel-wrapper" id="carousel-week3">
+                            <div class="carousel-track"></div>
                         </div>
                     </div>
                 </div>
@@ -1065,8 +1093,8 @@
                                 <button class="carousel-nav-btn" onclick="scrollCarousel('carousel-week4', 'right')">▶</button>
                             </div>
                         </div>
-                        <div class="carousel-wrapper">
-                            <div class="carousel-track" id="carousel-week4"></div>
+                        <div class="carousel-wrapper" id="carousel-week4">
+                            <div class="carousel-track"></div>
                         </div>
                     </div>
                 </div>
@@ -1845,8 +1873,13 @@
 
         function renderizarVideos() {
             for (let semana = 1; semana <= 4; semana++) {
-                const carousel = document.getElementById(`carousel-week${semana}`);
-                carousel.innerHTML = '';
+                const wrapper = document.getElementById(`carousel-week${semana}`);
+                if (!wrapper) continue;
+                
+                const track = wrapper.querySelector('.carousel-track');
+                if (!track) continue;
+                
+                track.innerHTML = '';
                 
                 diasSemana.forEach(dia => {
                     const claseInfo = clasesData[semana][dia];
@@ -1856,7 +1889,7 @@
                         const videoUrl = videoData ? videoData.url : '';
                         const videoId = extraerVideoId(videoUrl);
                         
-                        carousel.innerHTML += crearVideoCard(semana, dia, claseInfo, videoId);
+                        track.innerHTML += crearVideoCard(semana, dia, claseInfo, videoId);
                     }
                 });
             }
@@ -1918,13 +1951,15 @@
         // FUNCIONES DE CARRUSEL
         // =====================================================
         function scrollCarousel(carouselId, direction) {
-            const carousel = document.getElementById(carouselId);
-            const scrollAmount = 320; // Ancho de tarjeta + gap
+            const wrapper = document.getElementById(carouselId);
+            if (!wrapper) return;
+            
+            const scrollAmount = 330; // Ancho de tarjeta (300px) + gap (30px)
             
             if (direction === 'left') {
-                carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                wrapper.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
             } else {
-                carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                wrapper.scrollBy({ left: scrollAmount, behavior: 'smooth' });
             }
         }
 
