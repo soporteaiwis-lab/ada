@@ -945,7 +945,6 @@
     </style>
 </head>
 <body>
-    <!-- PANTALLA DE LOGIN -->
     <div class="login-overlay" id="loginOverlay">
         <div class="login-box">
             <div class="login-logo">
@@ -965,7 +964,6 @@
         </div>
     </div>
 
-    <!-- NAVEGACIÓN -->
     <nav class="navbar">
         <div class="navbar-content">
             <div class="logo">
@@ -987,9 +985,7 @@
         </div>
     </nav>
 
-    <!-- CONTENEDOR PRINCIPAL -->
     <div class="container">
-        <!-- PÁGINA: INICIO -->
         <section id="inicio" class="page-section active">
             <h2 style="text-align: center; margin-bottom: 2rem; font-size: 2rem;">
                 Bienvenido al Programa de Adopción IA 🚀
@@ -997,7 +993,6 @@
             <div class="students-grid" id="currentUserCard"></div>
         </section>
 
-        <!-- PÁGINA: ESTUDIANTES -->
         <section id="estudiantes" class="page-section">
             <h2 style="margin-bottom: 2rem; font-size: 2rem;">📊 Dashboard de Estudiantes</h2>
             <div class="loading" id="studentsLoading">
@@ -1007,11 +1002,9 @@
             <div class="students-grid" id="studentsGrid"></div>
         </section>
 
-        <!-- PÁGINA: CLASES -->
         <section id="clases" class="page-section">
             <h2 style="text-align: center; margin-bottom: 1rem; font-size: 2rem;">📚 Mis Clases</h2>
             
-            <!-- Selector de Fases -->
             <div class="phase-selector">
                 <button class="fase-btn active" onclick="mostrarFase(1)">
                     📅 Fase 1: Fundamentos e IA Aplicada
@@ -1021,7 +1014,6 @@
                 </button>
             </div>
 
-            <!-- FASE 1 -->
             <div id="fase1-content" class="fase-content active">
                 <div class="week-selector">
                     <button class="week-btn active" onclick="mostrarSemana(1)">Semana 1</button>
@@ -1035,7 +1027,6 @@
                     <span>Cargando clases...</span>
                 </div>
 
-                <!-- Semana 1 -->
                 <div id="week1" class="week-content active">
                     <div class="carousel-container">
                         <div class="carousel-header">
@@ -1051,7 +1042,6 @@
                     </div>
                 </div>
 
-                <!-- Semana 2 -->
                 <div id="week2" class="week-content">
                     <div class="carousel-container">
                         <div class="carousel-header">
@@ -1067,7 +1057,6 @@
                     </div>
                 </div>
 
-                <!-- Semana 3 -->
                 <div id="week3" class="week-content">
                     <div class="carousel-container">
                         <div class="carousel-header">
@@ -1083,7 +1072,6 @@
                     </div>
                 </div>
 
-                <!-- Semana 4 -->
                 <div id="week4" class="week-content">
                     <div class="carousel-container">
                         <div class="carousel-header">
@@ -1100,7 +1088,6 @@
                 </div>
             </div>
 
-            <!-- FASE 2 -->
             <div id="fase2-content" class="fase-content">
                 <div class="guide-section">
                     <h2>🚀 Fase 2: Sprint de Desarrollo del Proyecto Final</h2>
@@ -1163,7 +1150,6 @@
             </div>
         </section>
 
-        <!-- PÁGINA: GUÍA DE ESTUDIOS -->
         <section id="guia" class="page-section">
             <div class="study-guide">
                 <h1 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem; background: linear-gradient(135deg, var(--azul-claro), var(--violeta-claro)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
@@ -1289,7 +1275,6 @@
         </section>
     </div>
 
-    <!-- MODAL DE CLASE -->
     <div class="class-modal" id="classModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1323,7 +1308,6 @@
         </div>
     </div>
 
-    <!-- TOAST CONTAINER -->
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
@@ -1332,7 +1316,7 @@
         // =====================================================
         const SPREADSHEET_ID = '13rQdIhzb-Ve9GAClQwopVtS9u2CpGTj2aUy528a7YSw'; // TU ID AQUÍ
         const API_KEY = 'AIzaSyCzPHhigfOD6oHw26JftVg3YyKLijwbyY4'; // TU API KEY AQUÍ
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwxHzlEhCYVZaPSJl4V6ptxcDkefM_SUJbwqpgVB9gZV3SGVbWYB3EGMf6tHP0PfET62w/exec'; // TU URL DEL APPS SCRIPT AQUÍ (para guardar progreso)
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzr2zmg-0XDRZEPbO9jYLnicB-rGRjjfnWqRR9eY2-ZCB5SCW1ZDQf5QYNRiO8MalRbvw/exec'; // TU URL DEL APPS SCRIPT AQUÍ (para guardar progreso)
         const GITHUB_REPO = 'https://raw.githubusercontent.com/soporteaiwis-lab/ada/main';
 
         // =====================================================
@@ -1495,10 +1479,11 @@
             document.getElementById('loginOverlay').classList.add('hidden');
             document.getElementById('userName').textContent = nombre;
             document.getElementById('userAvatar').textContent = nombre.charAt(0).toUpperCase();
-            
+
+            // Carga de datos robusta (la Corrección 2 está en cargarDatosUsuarios)
             if (SPREADSHEET_ID && API_KEY) {
                 cargarDatosUsuarios().then(() => {
-                    cargarVideos();
+                    cargarVideos(); // Cargar videos después de tener el progreso correcto
                 });
             }
 
@@ -1532,27 +1517,29 @@
         async function cargarDatosUsuarios() {
             if (!SPREADSHEET_ID || !API_KEY) return;
             
-            cargarProgreso(); // Cargar respaldo local primero
+            // Primero, cargamos el progreso local como respaldo inicial
+            cargarProgreso();
 
             try {
-                // Cargar todas las hojas en paralelo
+                // Cargar datos de Usuarios
                 const urlUsuarios = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Usuarios?key=${API_KEY}`;
-                const urlHabilidades = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Habilidades?key=${API_KEY}`;
-                const urlProgreso = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Progreso?key=${API_KEY}`;
-
-                const [responseUsuarios, responseHabilidades, responseProgreso] = await Promise.all([
-                    fetch(urlUsuarios),
-                    fetch(urlHabilidades),
-                    fetch(urlProgreso)
-                ]);
-
+                const responseUsuarios = await fetch(urlUsuarios);
                 const dataUsuarios = await responseUsuarios.json();
+
+                // Cargar datos de Habilidades
+                const urlHabilidades = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Habilidades?key=${API_KEY}`;
+                const responseHabilidades = await fetch(urlHabilidades);
                 const dataHabilidades = await responseHabilidades.json();
+
+                // Cargar datos de Progreso
+                const urlProgreso = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Progreso?key=${API_KEY}`;
+                const responseProgreso = await fetch(urlProgreso);
                 const dataProgreso = await responseProgreso.json();
 
                 if (dataUsuarios.values && dataUsuarios.values.length > 1) {
                     allUsers = [];
                     
+                    // Crear mapa de habilidades
                     const habilidadesMap = {};
                     if (dataHabilidades.values && dataHabilidades.values.length > 1) {
                         for (let i = 1; i < dataHabilidades.values.length; i++) {
@@ -1567,44 +1554,63 @@
                         }
                     }
 
+                    // --- INICIO DE CORRECCIÓN 2 ---
+                    // Crear mapa de progreso (Lógica robusta)
                     const progresoMap = {};
                     if (dataProgreso.values && dataProgreso.values.length > 1) {
                         for (let i = 1; i < dataProgreso.values.length; i++) {
                             const row = dataProgreso.values[i];
-                            if (row[0]) {
-                                // Mapeo para el dashboard de estudiantes (agregado)
+                            if (row[0]) { // row[0] es email
+                                // Esto construye el progreso agregado para la vista de "Estudiantes"
+                                // Asumimos que las columnas son D=porcentaje(3), E=completados(4), F=pendientes(5)
                                 progresoMap[row[0]] = {
                                     porcentaje: parseInt(row[3]) || 0,
                                     completados: parseInt(row[4]) || 0,
                                     pendientes: parseInt(row[5]) || 20
                                 };
 
-                                // Lógica para cargar el progreso detallado del usuario actual
-                                if (currentUser && row[0] === currentUser.email && row[6]) { // Columna G (índice 6) para el JSON
+                                // --- ¡AQUÍ ESTÁ LA LÓGICA DE SINCRONIZACIÓN! ---
+                                // Si esta fila pertenece al usuario que inició sesión...
+                                // y asumimos que el JSON está en la columna G (índice 6)
+                                if (currentUser && row[0] === currentUser.email && row[6]) {
                                     try {
+                                        // ...cargamos el JSON detallado desde la hoja (columna G, índice 6).
                                         userProgress = JSON.parse(row[6]);
-                                        localStorage.setItem('ada_progress', row[6]); // Sincronizar con localStorage
-                                        console.log('✅ Progreso detallado de ADA cargado desde Google Sheets.');
+                                        // Actualizamos el localStorage para que esté sincronizado.
+                                        localStorage.setItem('ada_progress', row[6]);
+                                        console.log('✅ Progreso detallado del usuario cargado desde Google Sheets.');
                                     } catch (e) {
-                                        console.error('Error al parsear el JSON de progreso (ADA) desde Google Sheets.', e);
+                                        console.error('Error al parsear el JSON de progreso desde Google Sheets. Se usará el progreso local.', e);
+                                        // Si falla, se queda con lo que cargó 'cargarProgreso()' desde localStorage
                                     }
                                 }
                             }
                         }
                     }
+                    // --- FIN DE CORRECCIÓN 2 ---
+
 
                     // Combinar datos
                     for (let i = 1; i < dataUsuarios.values.length; i++) {
                         const row = dataUsuarios.values[i];
                         if (row[0] && row[1]) {
                             const email = row[0];
-                            allUsers.push({
+                            const usuario = {
                                 email: email,
                                 nombre: row[1],
                                 rol: row[2] || 'Usuario',
-                                habilidades: habilidadesMap[email] || { prompting: 0, herramientas: 0, analisis: 0 },
-                                progreso: progresoMap[email] || { porcentaje: 0, completados: 0, pendientes: 20 }
-                            });
+                                habilidades: habilidadesMap[email] || {
+                                    prompting: 0,
+                                    herramientas: 0,
+                                    analisis: 0
+                                },
+                                progreso: progresoMap[email] || {
+                                    porcentaje: 0,
+                                    completados: 0,
+                                    pendientes: 20
+                                }
+                            };
+                            allUsers.push(usuario);
                         }
                     }
 
@@ -1612,7 +1618,7 @@
                     renderizarCurrentUser();
                 }
             } catch (error) {
-                console.error('Error cargando datos de ADA:', error);
+                console.error('Error cargando datos:', error);
                 showToast('error', 'Error', 'No se pudieron cargar los datos de estudiantes');
             }
         }
@@ -1659,24 +1665,28 @@
 
             const progresoJSON = JSON.stringify(userProgress);
 
+            // Guardar en localStorage (para visualización inmediata)
             localStorage.setItem('ada_progress', progresoJSON);
 
+            // Guardar en Google Sheets via Apps Script
             if (APPS_SCRIPT_URL) {
                 try {
                     const response = await fetch(APPS_SCRIPT_URL, {
                         method: 'POST',
-                        mode: 'no-cors',
+                        mode: 'no-cors', // Importante para Apps Script
                         headers: {
                             'Content-Type': 'application/json',
                         },
+                        // --- INICIO DE CORRECCIÓN 1 ---
                         body: JSON.stringify({
-                            // No enviamos 'portal' para que el script universal use las hojas por defecto (ADA)
+                            portal: 'ada', // <-- CAMPO AÑADIDO!
                             email: currentUser.email,
                             nombre: currentUser.nombre,
                             rol: currentUser.rol,
                             completadas: completadas,
                             progresoJSON: progresoJSON
                         })
+                        // --- FIN DE CORRECCIÓN 1 ---
                     });
 
                     console.log('✅ Datos enviados a Google Sheets');
@@ -1687,11 +1697,23 @@
                     showToast('warning', 'Guardado local', `${completadas} clases completadas (${porcentaje}%) - Solo en navegador`);
                 }
             } else {
+                // Si no hay URL del script, solo mostrar guardado local
                 showToast('info', 'Guardado local', `${completadas} clases completadas (${porcentaje}%)`);
             }
 
+            // Actualizar UI
             renderizarCurrentUser();
-            renderizarEstudiantes();
+            // No es necesario llamar a renderizarEstudiantes() aquí si el progreso de otros no cambia
+            // Pero si la hoja de cálculo se actualiza y se vuelve a cargar, es bueno tenerlo.
+            // Para optimizar, solo actualizamos el usuario actual.
+            // renderizarEstudiantes(); // Puedes descomentar si quieres forzar la recarga de todos
+
+            console.log('Progreso:', {
+                email: currentUser.email,
+                porcentaje,
+                completadas,
+                pendientes
+            });
         }
 
         // =====================================================
@@ -1702,9 +1724,9 @@
             if (saved) {
                 try {
                     userProgress = JSON.parse(saved);
-                } catch(e) {
-                    console.error("Error parseando progreso local de ADA", e);
-                    userProgress = {};
+                } catch (e) {
+                    userProgress = {}; // Si el JSON es inválido, empezar de cero
+                    console.error("Error al parsear progreso local", e);
                 }
             } else {
                 userProgress = {};
@@ -1987,6 +2009,7 @@
             document.body.style.overflow = 'hidden';
         }
 
+
         function closeClassModal() {
             const modal = document.getElementById('classModal');
             modal.classList.remove('active');
@@ -2102,9 +2125,10 @@
             const isLoggedIn = verificarUsuario();
             
             if (isLoggedIn) {
+                // La carga de datos ahora es más robusta y sincroniza el progreso detallado
                 if (SPREADSHEET_ID && API_KEY) {
                     cargarDatosUsuarios().then(() => {
-                        cargarVideos();
+                        cargarVideos(); // Cargar videos después de tener el progreso correcto
                     });
                 } else {
                     document.getElementById('studentsLoading').innerHTML = '<p style="color: var(--naranja);">⚠️ Configura tu Google Sheets API</p>';
