@@ -94,7 +94,9 @@
             font-weight: 500;
         }
 
-        .form-group select {
+        .form-group select,
+        .form-group input,
+        .form-group textarea {
             padding: 1rem;
             border-radius: 10px;
             border: 2px solid rgba(255,255,255,0.1);
@@ -102,14 +104,17 @@
             color: var(--blanco);
             font-size: 1rem;
             transition: all 0.3s;
+            font-family: inherit;
         }
 
-        .form-group select:focus {
+        .form-group select:focus,
+        .form-group input:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: var(--azul-claro);
             background: rgba(255,255,255,0.1);
         }
-
+        
         .form-group select option {
             background: var(--negro);
             color: var(--blanco);
@@ -257,6 +262,14 @@
             display: block;
         }
 
+        /* === PÁGINA INICIO LAYOUT === */
+        .home-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+        
         /* === TARJETAS DE ESTUDIANTES === */
         .students-grid {
             display: grid;
@@ -272,7 +285,6 @@
             padding: 1.5rem;
             border: 1px solid rgba(255,255,255,0.1);
             transition: all 0.3s;
-            cursor: pointer;
         }
 
         .student-card:hover {
@@ -654,6 +666,34 @@
             color: rgba(255,255,255,0.6);
         }
 
+        /* === ESTILOS PARA BOTONES DE ACCIÓN (TEXTO/QUIZ) === */
+        .video-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.6rem;
+            text-align: center;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .action-btn:hover {
+            background: var(--azul-claro);
+            color: var(--blanco);
+            border-color: var(--azul-claro);
+            transform: translateY(-2px);
+        }
+
         /* === MODAL DE CLASE === */
         .class-modal {
             display: none;
@@ -829,6 +869,148 @@
             display: block;
             margin-bottom: 0.5rem;
         }
+        
+        /* === FORMULARIO DE REPORTE === */
+        .report-generator-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .report-generator-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--blanco);
+        }
+
+        .idea-form {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+        }
+        
+        .idea-form .form-group {
+            gap: 1rem;
+        }
+        
+        .idea-list-container {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .idea-list-container h4 {
+            margin-bottom: 1rem;
+        }
+        
+        .idea-list-filters {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .filter-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: var(--blanco);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .filter-btn.active {
+            background: var(--azul-claro);
+            border-color: var(--azul-claro);
+        }
+        
+        .idea-list {
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+        
+        .idea-item {
+            background: rgba(255,255,255,0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            border-left: 3px solid var(--azul-claro);
+        }
+        
+        .idea-item.pregunta {
+            border-left-color: var(--naranja);
+        }
+        
+        .idea-item-content {
+            flex: 1;
+            word-break: break-word;
+        }
+        
+        .idea-item-content span {
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+        
+        .idea-item-content p {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+            margin-top: 0.3rem;
+        }
+        
+        .delete-idea-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .delete-idea-btn:hover {
+            color: var(--rojo);
+            transform: scale(1.1);
+        }
+        
+        .report-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .report-btn {
+            flex: 1;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--azul-claro), var(--violeta-claro));
+            border: none;
+            border-radius: 10px;
+            color: var(--blanco);
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .report-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+        
+        .report-btn.secondary {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--azul-claro);
+        }
 
         /* === TOAST NOTIFICATIONS === */
         .toast-container {
@@ -915,6 +1097,12 @@
         }
 
         /* === RESPONSIVE === */
+        @media (max-width: 1200px) {
+            .home-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 768px) {
             .navbar-content {
                 flex-direction: column;
@@ -945,6 +1133,7 @@
     </style>
 </head>
 <body>
+    <!-- PANTALLA DE LOGIN -->
     <div class="login-overlay" id="loginOverlay">
         <div class="login-box">
             <div class="login-logo">
@@ -964,6 +1153,7 @@
         </div>
     </div>
 
+    <!-- NAVEGACIÓN -->
     <nav class="navbar">
         <div class="navbar-content">
             <div class="logo">
@@ -975,6 +1165,7 @@
                 <li><a class="nav-link" onclick="showPage('clases')">📚 Clases</a></li>
                 <li><a class="nav-link" onclick="showPage('estudiantes')">👥 Estudiantes</a></li>
                 <li><a class="nav-link" onclick="showPage('guia')">📖 Guía de Estudios</a></li>
+                <li><a class="nav-link" href="https://drive.google.com/drive/folders/14-PsRxjl31lnh4LwkZ3FJrVD_QW06SWz?usp=drive_link" target="_blank" rel="noopener noreferrer">📂 Aula Virtual</a></li>
                 <li><a class="nav-link" href="https://github.com/soporteaiwis-lab/ada" target="_blank">🐙 GitHub</a></li>
             </ul>
             <div class="user-info">
@@ -985,14 +1176,65 @@
         </div>
     </nav>
 
+    <!-- CONTENEDOR PRINCIPAL -->
     <div class="container">
+        <!-- PÁGINA: INICIO -->
         <section id="inicio" class="page-section active">
             <h2 style="text-align: center; margin-bottom: 2rem; font-size: 2rem;">
                 Bienvenido al Programa de Adopción IA 🚀
             </h2>
-            <div class="students-grid" id="currentUserCard"></div>
+            <div class="home-layout">
+                <div id="currentUserCardContainer">
+                    <!-- El perfil del usuario se renderizará aquí -->
+                </div>
+                
+                <!-- Formulario de Generador de Reporte -->
+                <div class="report-generator-card">
+                    <h3>Generar Reporte</h3>
+                    <form id="reportForm">
+                        <div class="form-group">
+                            <label for="reportName">Tu Nombre</label>
+                            <input type="text" id="reportName" placeholder="Ingresa tu nombre completo">
+                        </div>
+                        <div class="form-group" style="margin-top: 1rem;">
+                            <label for="reportCompany">Empresa (Opcional)</label>
+                            <input type="text" id="reportCompany" placeholder="Nombre de la empresa">
+                        </div>
+                    </form>
+
+                    <form id="ideaForm" class="idea-form" onsubmit="handleIdeaSubmit(event)">
+                        <div class="form-group">
+                             <label for="ideaType">Agregar Idea o Pregunta</label>
+                            <select id="ideaType">
+                                <option value="idea">💡 Idea</option>
+                                <option value="pregunta">❓ Pregunta</option>
+                            </select>
+                            <textarea id="ideaText" rows="3" placeholder="Describe tu idea o pregunta aquí..." required></textarea>
+                        </div>
+                         <button type="submit" class="login-btn" style="width: 100%;">Agregar</button>
+                    </form>
+                    
+                    <div class="idea-list-container">
+                        <h4>Mis Ideas y Preguntas Guardadas</h4>
+                        <div class="idea-list-filters">
+                            <button class="filter-btn active" onclick="filterIdeas('all')">Todas</button>
+                            <button class="filter-btn" onclick="filterIdeas('idea')">💡 Ideas</button>
+                            <button class="filter-btn" onclick="filterIdeas('pregunta')">❓ Preguntas</button>
+                        </div>
+                        <div class="idea-list" id="ideaList">
+                            <!-- Las ideas y preguntas se renderizarán aquí -->
+                        </div>
+                    </div>
+
+                    <div class="report-buttons">
+                        <button class="report-btn" onclick="generarReportePDF()">🖨️ Generar PDF / Imprimir</button>
+                        <button class="report-btn secondary" onclick="generarReporteHTML()">📄 Generar HTML</button>
+                    </div>
+                </div>
+            </div>
         </section>
 
+        <!-- PÁGINA: ESTUDIANTES -->
         <section id="estudiantes" class="page-section">
             <h2 style="margin-bottom: 2rem; font-size: 2rem;">📊 Dashboard de Estudiantes</h2>
             <div class="loading" id="studentsLoading">
@@ -1002,6 +1244,7 @@
             <div class="students-grid" id="studentsGrid"></div>
         </section>
 
+        <!-- PÁGINA: CLASES -->
         <section id="clases" class="page-section">
             <h2 style="text-align: center; margin-bottom: 1rem; font-size: 2rem;">📚 Mis Clases</h2>
             
@@ -1150,6 +1393,7 @@
             </div>
         </section>
 
+        <!-- PÁGINA: GUÍA DE ESTUDIOS -->
         <section id="guia" class="page-section">
             <div class="study-guide">
                 <h1 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem; background: linear-gradient(135deg, var(--azul-claro), var(--violeta-claro)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
@@ -1275,6 +1519,7 @@
         </section>
     </div>
 
+    <!-- MODAL DE CLASE -->
     <div class="class-modal" id="classModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1308,6 +1553,7 @@
         </div>
     </div>
 
+    <!-- TOAST CONTAINER -->
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
@@ -1422,6 +1668,7 @@
         let currentUser = null;
         let userProgress = {};
         let videosMap = {};
+        let userIdeas = [];
 
         // =====================================================
         // FUNCIONES DE AUTENTICACIÓN
@@ -1441,14 +1688,13 @@
                     const select = document.getElementById('userSelect');
                     select.innerHTML = '<option value="">-- Selecciona tu nombre --</option>';
                     
-                    // Saltar la primera fila (encabezados)
                     for (let i = 1; i < data.values.length; i++) {
                         const row = data.values[i];
-                        if (row[0] && row[1]) { // Email y Nombre
+                        if (row[0] && row[1]) { 
                             const option = document.createElement('option');
-                            option.value = row[0]; // Email
-                            option.textContent = row[1]; // Nombre
-                            option.dataset.rol = row[2] || 'Usuario'; // Rol
+                            option.value = row[0];
+                            option.textContent = row[1];
+                            option.dataset.rol = row[2] || 'Usuario';
                             select.appendChild(option);
                         }
                     }
@@ -1479,14 +1725,15 @@
             document.getElementById('loginOverlay').classList.add('hidden');
             document.getElementById('userName').textContent = nombre;
             document.getElementById('userAvatar').textContent = nombre.charAt(0).toUpperCase();
+            document.getElementById('reportName').value = nombre;
 
-            // Carga de datos robusta (la Corrección 2 está en cargarDatosUsuarios)
             if (SPREADSHEET_ID && API_KEY) {
                 cargarDatosUsuarios().then(() => {
-                    cargarVideos(); // Cargar videos después de tener el progreso correcto
+                    cargarVideos();
                 });
             }
-
+            
+            loadIdeas();
             showToast('success', '¡Bienvenido/a!', `Hola ${nombre.split(' ')[0]}, es un placer verte de nuevo 👋`);
         }
 
@@ -1497,6 +1744,7 @@
                 document.getElementById('loginOverlay').classList.add('hidden');
                 document.getElementById('userName').textContent = currentUser.nombre;
                 document.getElementById('userAvatar').textContent = currentUser.nombre.charAt(0).toUpperCase();
+                document.getElementById('reportName').value = currentUser.nombre;
                 return true;
             }
             return false;
@@ -1505,8 +1753,10 @@
         function logout() {
             localStorage.removeItem('ada_user');
             localStorage.removeItem('ada_progress');
+            localStorage.removeItem('ada_ideas');
             currentUser = null;
             userProgress = {};
+            userIdeas = [];
             document.getElementById('loginOverlay').classList.remove('hidden');
             showToast('info', 'Sesión cerrada', 'Has cerrado sesión correctamente');
         }
@@ -1517,29 +1767,24 @@
         async function cargarDatosUsuarios() {
             if (!SPREADSHEET_ID || !API_KEY) return;
             
-            // Primero, cargamos el progreso local como respaldo inicial
             cargarProgreso();
 
             try {
-                // Cargar datos de Usuarios
                 const urlUsuarios = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Usuarios?key=${API_KEY}`;
-                const responseUsuarios = await fetch(urlUsuarios);
-                const dataUsuarios = await responseUsuarios.json();
-
-                // Cargar datos de Habilidades
                 const urlHabilidades = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Habilidades?key=${API_KEY}`;
-                const responseHabilidades = await fetch(urlHabilidades);
-                const dataHabilidades = await responseHabilidades.json();
-
-                // Cargar datos de Progreso
                 const urlProgreso = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Progreso?key=${API_KEY}`;
-                const responseProgreso = await fetch(urlProgreso);
+
+                const [responseUsuarios, responseHabilidades, responseProgreso] = await Promise.all([
+                    fetch(urlUsuarios), fetch(urlHabilidades), fetch(urlProgreso)
+                ]);
+
+                const dataUsuarios = await responseUsuarios.json();
+                const dataHabilidades = await responseHabilidades.json();
                 const dataProgreso = await responseProgreso.json();
 
                 if (dataUsuarios.values && dataUsuarios.values.length > 1) {
                     allUsers = [];
                     
-                    // Crear mapa de habilidades
                     const habilidadesMap = {};
                     if (dataHabilidades.values && dataHabilidades.values.length > 1) {
                         for (let i = 1; i < dataHabilidades.values.length; i++) {
@@ -1554,63 +1799,41 @@
                         }
                     }
 
-                    // --- INICIO DE CORRECCIÓN 2 ---
-                    // Crear mapa de progreso (Lógica robusta)
                     const progresoMap = {};
                     if (dataProgreso.values && dataProgreso.values.length > 1) {
                         for (let i = 1; i < dataProgreso.values.length; i++) {
                             const row = dataProgreso.values[i];
-                            if (row[0]) { // row[0] es email
-                                // Esto construye el progreso agregado para la vista de "Estudiantes"
-                                // Asumimos que las columnas son D=porcentaje(3), E=completados(4), F=pendientes(5)
+                            if (row[0]) { 
                                 progresoMap[row[0]] = {
                                     porcentaje: parseInt(row[3]) || 0,
                                     completados: parseInt(row[4]) || 0,
                                     pendientes: parseInt(row[5]) || 20
                                 };
 
-                                // --- ¡AQUÍ ESTÁ LA LÓGICA DE SINCRONIZACIÓN! ---
-                                // Si esta fila pertenece al usuario que inició sesión...
-                                // y asumimos que el JSON está en la columna G (índice 6)
                                 if (currentUser && row[0] === currentUser.email && row[6]) {
                                     try {
-                                        // ...cargamos el JSON detallado desde la hoja (columna G, índice 6).
                                         userProgress = JSON.parse(row[6]);
-                                        // Actualizamos el localStorage para que esté sincronizado.
                                         localStorage.setItem('ada_progress', row[6]);
                                         console.log('✅ Progreso detallado del usuario cargado desde Google Sheets.');
                                     } catch (e) {
                                         console.error('Error al parsear el JSON de progreso desde Google Sheets. Se usará el progreso local.', e);
-                                        // Si falla, se queda con lo que cargó 'cargarProgreso()' desde localStorage
                                     }
                                 }
                             }
                         }
                     }
-                    // --- FIN DE CORRECCIÓN 2 ---
 
-
-                    // Combinar datos
                     for (let i = 1; i < dataUsuarios.values.length; i++) {
                         const row = dataUsuarios.values[i];
                         if (row[0] && row[1]) {
                             const email = row[0];
-                            const usuario = {
+                            allUsers.push({
                                 email: email,
                                 nombre: row[1],
                                 rol: row[2] || 'Usuario',
-                                habilidades: habilidadesMap[email] || {
-                                    prompting: 0,
-                                    herramientas: 0,
-                                    analisis: 0
-                                },
-                                progreso: progresoMap[email] || {
-                                    porcentaje: 0,
-                                    completados: 0,
-                                    pendientes: 20
-                                }
-                            };
-                            allUsers.push(usuario);
+                                habilidades: habilidadesMap[email] || { prompting: 0, herramientas: 0, analisis: 0 },
+                                progreso: progresoMap[email] || { porcentaje: 0, completados: 0, pendientes: 20 }
+                            });
                         }
                     }
 
@@ -1658,62 +1881,38 @@
         async function guardarProgreso() {
             if (!currentUser) return;
 
-            const totalClases = 20; // Total de clases en Fase 1
+            const totalClases = 20;
             const completadas = Object.values(userProgress).filter(v => v).length;
             const porcentaje = Math.round((completadas / totalClases) * 100);
-            const pendientes = totalClases - completadas;
-
             const progresoJSON = JSON.stringify(userProgress);
 
-            // Guardar en localStorage (para visualización inmediata)
             localStorage.setItem('ada_progress', progresoJSON);
 
-            // Guardar en Google Sheets via Apps Script
             if (APPS_SCRIPT_URL) {
                 try {
-                    const response = await fetch(APPS_SCRIPT_URL, {
+                    await fetch(APPS_SCRIPT_URL, {
                         method: 'POST',
-                        mode: 'no-cors', // Importante para Apps Script
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        // --- INICIO DE CORRECCIÓN 1 ---
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            portal: 'ada', // <-- CAMPO AÑADIDO!
+                            portal: 'ada',
                             email: currentUser.email,
                             nombre: currentUser.nombre,
                             rol: currentUser.rol,
                             completadas: completadas,
                             progresoJSON: progresoJSON
                         })
-                        // --- FIN DE CORRECCIÓN 1 ---
                     });
-
                     console.log('✅ Datos enviados a Google Sheets');
                     showToast('success', 'Progreso guardado', `${completadas} clases completadas (${porcentaje}%) - Sincronizado ☁️`);
-                    
                 } catch (error) {
                     console.error('❌ Error conectando con Google Sheets:', error);
                     showToast('warning', 'Guardado local', `${completadas} clases completadas (${porcentaje}%) - Solo en navegador`);
                 }
             } else {
-                // Si no hay URL del script, solo mostrar guardado local
                 showToast('info', 'Guardado local', `${completadas} clases completadas (${porcentaje}%)`);
             }
-
-            // Actualizar UI
             renderizarCurrentUser();
-            // No es necesario llamar a renderizarEstudiantes() aquí si el progreso de otros no cambia
-            // Pero si la hoja de cálculo se actualiza y se vuelve a cargar, es bueno tenerlo.
-            // Para optimizar, solo actualizamos el usuario actual.
-            // renderizarEstudiantes(); // Puedes descomentar si quieres forzar la recarga de todos
-
-            console.log('Progreso:', {
-                email: currentUser.email,
-                porcentaje,
-                completadas,
-                pendientes
-            });
         }
 
         // =====================================================
@@ -1721,23 +1920,13 @@
         // =====================================================
         function cargarProgreso() {
             const saved = localStorage.getItem('ada_progress');
-            if (saved) {
-                try {
-                    userProgress = JSON.parse(saved);
-                } catch (e) {
-                    userProgress = {}; // Si el JSON es inválido, empezar de cero
-                    console.error("Error al parsear progreso local", e);
-                }
-            } else {
-                userProgress = {};
-            }
+            userProgress = saved ? JSON.parse(saved) : {};
         }
 
         function marcarProgreso(event, semana, dia) {
             event.stopPropagation();
             const videoKey = `s${semana}-${dia}`;
             userProgress[videoKey] = event.target.checked;
-            
             guardarProgreso();
             renderizarVideos();
         }
@@ -1754,14 +1943,10 @@
             const pendientes = totalClases - completadas;
 
             const userData = allUsers.find(u => u.email === currentUser.email);
-            const habilidades = userData ? userData.habilidades : {
-                prompting: 0,
-                herramientas: 0,
-                analisis: 0
-            };
+            const habilidades = userData ? userData.habilidades : { prompting: 0, herramientas: 0, analisis: 0 };
 
-            document.getElementById('currentUserCard').innerHTML = `
-                <div class="student-card" style="max-width: 600px; margin: 0 auto;">
+            document.getElementById('currentUserCardContainer').innerHTML = `
+                <div class="student-card">
                     <div class="student-header">
                         <div class="student-avatar">${currentUser.nombre.charAt(0).toUpperCase()}</div>
                         <div class="student-info">
@@ -1769,50 +1954,22 @@
                             <div class="student-role">${currentUser.rol}</div>
                         </div>
                     </div>
-
                     <div class="student-stats">
                         <div class="stat-section">
                             <h4>💪 Fortalezas</h4>
-                            <div class="stat-item">
-                                <span class="stat-label">Prompting</span>
-                                <span class="stat-value">${habilidades.prompting}</span>
-                            </div>
-                            <div class="stat-bar">
-                                <div class="stat-fill" style="width: ${habilidades.prompting}%"></div>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-label">Herramientas IA</span>
-                                <span class="stat-value">${habilidades.herramientas}</span>
-                            </div>
-                            <div class="stat-bar">
-                                <div class="stat-fill" style="width: ${habilidades.herramientas}%"></div>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-label">Análisis</span>
-                                <span class="stat-value">${habilidades.analisis}</span>
-                            </div>
-                            <div class="stat-bar">
-                                <div class="stat-fill" style="width: ${habilidades.analisis}%"></div>
-                            </div>
+                            <div class="stat-item"><span class="stat-label">Prompting</span><span class="stat-value">${habilidades.prompting}</span></div>
+                            <div class="stat-bar"><div class="stat-fill" style="width: ${habilidades.prompting}%"></div></div>
+                            <div class="stat-item"><span class="stat-label">Herramientas IA</span><span class="stat-value">${habilidades.herramientas}</span></div>
+                            <div class="stat-bar"><div class="stat-fill" style="width: ${habilidades.herramientas}%"></div></div>
+                            <div class="stat-item"><span class="stat-label">Análisis</span><span class="stat-value">${habilidades.analisis}</span></div>
+                            <div class="stat-bar"><div class="stat-fill" style="width: ${habilidades.analisis}%"></div></div>
                         </div>
-
                         <div class="stat-section">
                             <h4>📊 Progreso de Clases Alumno</h4>
-                            <div class="stat-item">
-                                <span class="stat-label">Porcentaje</span>
-                                <span class="stat-value">${porcentaje}%</span>
-                            </div>
-                            <div class="stat-bar">
-                                <div class="stat-fill" style="width: ${porcentaje}%"></div>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-label">Clases Realizadas</span>
-                                <span class="stat-value">${completadas}</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-label">Clases Pendientes</span>
-                                <span class="stat-value">${pendientes}</span>
-                            </div>
+                            <div class="stat-item"><span class="stat-label">Porcentaje</span><span class="stat-value">${porcentaje}%</span></div>
+                            <div class="stat-bar"><div class="stat-fill" style="width: ${porcentaje}%"></div></div>
+                            <div class="stat-item"><span class="stat-label">Clases Realizadas</span><span class="stat-value">${completadas}</span></div>
+                            <div class="stat-item"><span class="stat-label">Clases Pendientes</span><span class="stat-value">${pendientes}</span></div>
                         </div>
                     </div>
                 </div>
@@ -1827,102 +1984,58 @@
                 return;
             }
 
-            grid.innerHTML = allUsers.map(user => {
-                const inicial = user.nombre.charAt(0).toUpperCase();
-                return `
-                    <div class="student-card">
-                        <div class="student-header">
-                            <div class="student-avatar">${inicial}</div>
-                            <div class="student-info">
-                                <h3>${user.nombre}</h3>
-                                <div class="student-role">${user.rol}</div>
-                            </div>
-                        </div>
-
-                        <div class="student-stats">
-                            <div class="stat-section">
-                                <h4>💪 Fortalezas</h4>
-                                <div class="stat-item">
-                                    <span class="stat-label">Prompting</span>
-                                    <span class="stat-value">${user.habilidades.prompting}</span>
-                                </div>
-                                <div class="stat-bar">
-                                    <div class="stat-fill" style="width: ${user.habilidades.prompting}%"></div>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-label">Herramientas IA</span>
-                                    <span class="stat-value">${user.habilidades.herramientas}</span>
-                                </div>
-                                <div class="stat-bar">
-                                    <div class="stat-fill" style="width: ${user.habilidades.herramientas}%"></div>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-label">Análisis</span>
-                                    <span class="stat-value">${user.habilidades.analisis}</span>
-                                </div>
-                                <div class="stat-bar">
-                                    <div class="stat-fill" style="width: ${user.habilidades.analisis}%"></div>
-                                </div>
-                            </div>
-
-                            <div class="stat-section">
-                                <h4>📊 Progreso de Clases Alumno</h4>
-                                <div class="stat-item">
-                                    <span class="stat-label">Porcentaje</span>
-                                    <span class="stat-value">${user.progreso.porcentaje}%</span>
-                                </div>
-                                <div class="stat-bar">
-                                    <div class="stat-fill" style="width: ${user.progreso.porcentaje}%"></div>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-label">Clases Realizadas</span>
-                                    <span class="stat-value">${user.progreso.completados}</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-label">Clases Pendientes</span>
-                                    <span class="stat-value">${user.progreso.pendientes}</span>
-                                </div>
-                            </div>
+            grid.innerHTML = allUsers.map(user => `
+                <div class="student-card" style="cursor: default;">
+                    <div class="student-header">
+                        <div class="student-avatar">${user.nombre.charAt(0).toUpperCase()}</div>
+                        <div class="student-info">
+                            <h3>${user.nombre}</h3>
+                            <div class="student-role">${user.rol}</div>
                         </div>
                     </div>
-                `;
-            }).join('');
-
+                    <div class="student-stats">
+                        <div class="stat-section">
+                            <h4>💪 Fortalezas</h4>
+                            <div class="stat-item"><span class="stat-label">Prompting</span><span class="stat-value">${user.habilidades.prompting}</span></div>
+                            <div class="stat-bar"><div class="stat-fill" style="width: ${user.habilidades.prompting}%"></div></div>
+                            <div class="stat-item"><span class="stat-label">Herramientas IA</span><span class="stat-value">${user.habilidades.herramientas}</span></div>
+                            <div class="stat-bar"><div class="stat-fill" style="width: ${user.habilidades.herramientas}%"></div></div>
+                            <div class="stat-item"><span class="stat-label">Análisis</span><span class="stat-value">${user.habilidades.analisis}</span></div>
+                            <div class="stat-bar"><div class="stat-fill" style="width: ${user.habilidades.analisis}%"></div></div>
+                        </div>
+                        <div class="stat-section">
+                            <h4>📊 Progreso de Clases Alumno</h4>
+                            <div class="stat-item"><span class="stat-label">Porcentaje</span><span class="stat-value">${user.progreso.porcentaje}%</span></div>
+                            <div class="stat-bar"><div class="stat-fill" style="width: ${user.progreso.porcentaje}%"></div></div>
+                            <div class="stat-item"><span class="stat-label">Clases Realizadas</span><span class="stat-value">${user.progreso.completados}</span></div>
+                            <div class="stat-item"><span class="stat-label">Clases Pendientes</span><span class="stat-value">${user.progreso.pendientes}</span></div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
             document.getElementById('studentsLoading').style.display = 'none';
         }
 
         function renderizarVideos() {
             for (let semana = 1; semana <= 4; semana++) {
-                const wrapper = document.getElementById(`carousel-week${semana}`);
-                if (!wrapper) continue;
-                
-                const track = wrapper.querySelector('.carousel-track');
-                if (!track) continue;
-                
-                track.innerHTML = '';
-                
-                diasSemana.forEach(dia => {
-                    const claseInfo = clasesData[semana][dia];
-                    if (claseInfo) {
+                const track = document.querySelector(`#carousel-week${semana} .carousel-track`);
+                if (track) {
+                    track.innerHTML = diasSemana.map(dia => {
+                        const claseInfo = clasesData[semana][dia];
+                        if (!claseInfo) return '';
                         const videoKey = `1-${semana}-${dia}`;
                         const videoData = videosMap[videoKey];
                         const videoUrl = videoData ? videoData.url : '';
                         const videoId = extraerVideoId(videoUrl);
-                        
-                        track.innerHTML += crearVideoCard(semana, dia, claseInfo, videoId);
-                    }
-                });
+                        return crearVideoCard(semana, dia, claseInfo, videoId);
+                    }).join('');
+                }
             }
         }
 
         function extraerVideoId(url) {
             if (!url) return '';
-            const patterns = [
-                /youtube\.com\/embed\/([^?]+)/,
-                /youtube\.com\/watch\?v=([^&]+)/,
-                /youtu\.be\/([^?]+)/
-            ];
-            
+            const patterns = [ /youtube\.com\/embed\/([^?]+)/, /youtube\.com\/watch\?v=([^&]+)/, /youtu\.be\/([^?]+)/ ];
             for (const pattern of patterns) {
                 const match = url.match(pattern);
                 if (match) return match[1];
@@ -1933,11 +2046,15 @@
         function crearVideoCard(semana, dia, claseInfo, videoId) {
             const diaCapitalizado = dia.charAt(0).toUpperCase() + dia.slice(1);
             const thumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : '';
-            const hasVideo = videoId !== '';
-            
+            const hasVideo = !!videoId;
             const videoKey = `s${semana}-${dia}`;
             const isCompleted = userProgress[videoKey] || false;
-            
+            const classNumber = (semana - 1) * 5 + (diasSemana.indexOf(dia) + 1);
+            const formattedClassNumber = String(classNumber).padStart(2, '0');
+            const repoBaseUrl = 'https://raw.githack.com/soporteaiwis-lab/ada/main';
+            const textoUrl = `${repoBaseUrl}/clase${formattedClassNumber}.html`;
+            const quizUrl = `${repoBaseUrl}/quiz${formattedClassNumber}.html`;
+
             return `
                 <div class="video-card" onclick="openClassModal(${semana}, '${dia}', '${videoId}')">
                     <div class="video-thumbnail">
@@ -1945,13 +2062,8 @@
                         ${hasVideo ? '<div class="play-button">▶</div>' : ''}
                         ${hasVideo ? `
                             <div class="video-progress">
-                                <input type="checkbox" 
-                                       class="progress-checkbox" 
-                                       ${isCompleted ? 'checked' : ''} 
-                                       onchange="marcarProgreso(event, ${semana}, '${dia}')"
-                                       onclick="event.stopPropagation()">
-                            </div>
-                        ` : ''}
+                                <input type="checkbox" class="progress-checkbox" ${isCompleted ? 'checked' : ''} onchange="marcarProgreso(event, ${semana}, '${dia}')" onclick="event.stopPropagation()">
+                            </div>` : ''}
                         ${isCompleted ? '<div class="progress-badge">✓ Visto</div>' : ''}
                     </div>
                     <div class="video-info">
@@ -1962,53 +2074,38 @@
                             <span>⏱️ 60 min</span>
                             ${hasVideo ? '<span>✅ Disponible</span>' : '<span style="color: var(--naranja);">📅 Próximamente</span>'}
                         </div>
+                        <div class="video-actions">
+                            <a href="${textoUrl}" class="action-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">📝 Texto</a>
+                            <a href="${quizUrl}" class="action-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🧠 Quiz</a>
+                        </div>
                     </div>
                 </div>
             `;
         }
 
         // =====================================================
-        // FUNCIONES DE CARRUSEL
+        // FUNCIONES DE CARRUSEL Y MODAL
         // =====================================================
         function scrollCarousel(carouselId, direction) {
             const wrapper = document.getElementById(carouselId);
-            if (!wrapper) return;
-            
-            const scrollAmount = 330; // Ancho de tarjeta (300px) + gap (30px)
-            
-            if (direction === 'left') {
-                wrapper.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-            } else {
-                wrapper.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            if (wrapper) {
+                const scrollAmount = 330;
+                wrapper.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
             }
         }
 
-        // =====================================================
-        // MODAL DE CLASE
-        // =====================================================
         async function openClassModal(semana, dia, videoId) {
             const modal = document.getElementById('classModal');
             const claseInfo = clasesData[semana][dia];
-            const diaCapitalizado = dia.charAt(0).toUpperCase() + dia.slice(1);
-            
-            const videoFrame = document.getElementById('modalVideo');
-            if (videoId) {
-                videoFrame.src = `https://www.youtube.com/embed/${videoId}`;
-            } else {
-                videoFrame.src = '';
-            }
-            
+            document.getElementById('modalVideo').src = videoId ? `https://www.youtube.com/embed/${videoId}` : '';
             document.getElementById('modalTitle').textContent = claseInfo.title;
             document.getElementById('modalWeek').textContent = `📅 Semana ${semana}`;
-            document.getElementById('modalDay').textContent = `🗓️ ${diaCapitalizado}`;
+            document.getElementById('modalDay').textContent = `🗓️ ${dia.charAt(0).toUpperCase() + dia.slice(1)}`;
             document.getElementById('modalDescription').innerHTML = `<p>${claseInfo.desc}</p>`;
-            
             await cargarTranscripcion(semana, dia);
-            
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
-
 
         function closeClassModal() {
             const modal = document.getElementById('classModal');
@@ -2018,134 +2115,236 @@
         }
 
         function switchTab(tabName) {
-            document.querySelectorAll('.modal-tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
-            event.target.classList.add('active');
+            document.querySelectorAll('.modal-tab, .tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelector(`.modal-tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
             document.getElementById(`tab-${tabName}`).classList.add('active');
         }
 
         async function cargarTranscripcion(semana, dia) {
             const transcriptDiv = document.getElementById('modalTranscript');
-            transcriptDiv.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.5);">Cargando transcripción...</p>';
-            
+            transcriptDiv.innerHTML = '<p>Cargando transcripción...</p>';
             try {
                 const url = `${GITHUB_REPO}/transcripts/fase1-semana${semana}-${dia}.md`;
                 const response = await fetch(url);
-                
                 if (response.ok) {
                     const text = await response.text();
-                    const html = text
-                        .replace(/## (.*)/g, '<h4>$1</h4>')
-                        .replace(/\n\n/g, '</p><p>')
-                        .replace(/^(.+)$/gm, '<p>$1</p>');
-                    transcriptDiv.innerHTML = html;
+                    transcriptDiv.innerHTML = text.replace(/## (.*)/g, '<h4>$1</h4>').replace(/\n/g, '<br>');
                 } else {
-                    transcriptDiv.innerHTML = `
-                        <p style="text-align: center; color: rgba(255,255,255,0.6);">
-                            📝 Transcripción no disponible aún.<br>
-                            <small>Se agregará después de la clase.</small>
-                        </p>
-                    `;
+                    transcriptDiv.innerHTML = '<p>📝 Transcripción no disponible aún.</p>';
                 }
             } catch (error) {
                 console.error('Error cargando transcripción:', error);
-                transcriptDiv.innerHTML = '<p style="text-align: center; color: var(--naranja);">Error al cargar transcripción</p>';
+                transcriptDiv.innerHTML = '<p>Error al cargar transcripción.</p>';
             }
         }
 
         // =====================================================
-        // NAVEGACIÓN
+        // GESTOR DE IDEAS Y REPORTES
+        // =====================================================
+        function loadIdeas() {
+            const savedIdeas = localStorage.getItem('ada_ideas');
+            userIdeas = savedIdeas ? JSON.parse(savedIdeas) : [];
+            renderIdeas();
+        }
+
+        function saveIdeas() {
+            localStorage.setItem('ada_ideas', JSON.stringify(userIdeas));
+        }
+        
+        function handleIdeaSubmit(event) {
+            event.preventDefault();
+            const type = document.getElementById('ideaType').value;
+            const text = document.getElementById('ideaText').value;
+
+            if (!text.trim()) {
+                showToast('error', 'Campo vacío', 'Por favor, escribe tu idea o pregunta.');
+                return;
+            }
+
+            userIdeas.push({ id: Date.now(), type, text });
+            saveIdeas();
+            renderIdeas();
+            
+            document.getElementById('ideaText').value = '';
+            showToast('success', 'Agregado', `Tu ${type} ha sido guardada.`);
+        }
+
+        function deleteIdea(id) {
+            userIdeas = userIdeas.filter(idea => idea.id !== id);
+            saveIdeas();
+            renderIdeas();
+            showToast('info', 'Eliminado', 'El ítem ha sido eliminado.');
+        }
+
+        function renderIdeas(filter = 'all') {
+            const listContainer = document.getElementById('ideaList');
+            const filteredIdeas = userIdeas.filter(idea => filter === 'all' || idea.type === filter);
+            
+            if (filteredIdeas.length === 0) {
+                listContainer.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.5);">No hay items guardados.</p>';
+                return;
+            }
+
+            listContainer.innerHTML = filteredIdeas.map(idea => `
+                <div class="idea-item ${idea.type}">
+                    <div class="idea-item-content">
+                        <span>${idea.type === 'idea' ? '💡 Idea' : '❓ Pregunta'}:</span>
+                        <p>${idea.text.replace(/\n/g, '<br>')}</p>
+                    </div>
+                    <button class="delete-idea-btn" onclick="deleteIdea(${idea.id})" title="Eliminar">🗑️</button>
+                </div>
+            `).join('');
+        }
+        
+        function filterIdeas(filter) {
+             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+             document.querySelector(`.filter-btn[onclick="filterIdeas('${filter}')"]`).classList.add('active');
+             renderIdeas(filter);
+        }
+        
+        function generarReporteContenido() {
+            if (!currentUser) return '<p>Error: Usuario no encontrado.</p>';
+            
+            const reportName = document.getElementById('reportName').value || currentUser.nombre;
+            const reportCompany = document.getElementById('reportCompany').value;
+            
+            const userData = allUsers.find(u => u.email === currentUser.email);
+            if (!userData) return '<p>Error: Datos del usuario no encontrados.</p>';
+            
+            const completadas = Object.values(userProgress).filter(v => v).length;
+            const porcentaje = Math.round((completadas / 20) * 100);
+
+            const ideasHTML = userIdeas.length > 0 ? userIdeas.map(idea => `
+                <div class="idea-item ${idea.type}">
+                    <strong>${idea.type === 'idea' ? '💡 Idea' : '❓ Pregunta'}:</strong>
+                    <p>${idea.text}</p>
+                </div>
+            `).join('') : '<p>No se registraron ideas o preguntas.</p>';
+
+            return `
+                <div class="report-header">
+                    <h1>Reporte de Progreso - ADA Ltda.</h1>
+                    <p><strong>Estudiante:</strong> ${reportName}</p>
+                    ${reportCompany ? `<p><strong>Empresa:</strong> ${reportCompany}</p>` : ''}
+                    <p><strong>Fecha:</strong> ${new Date().toLocaleDateString()}</p>
+                </div>
+                <div class="report-section">
+                    <h2>📊 Resumen de Progreso</h2>
+                    <div class="stat-item"><span>Porcentaje Completado:</span> <strong>${porcentaje}%</strong></div>
+                    <div class="stat-item"><span>Clases Realizadas:</span> <strong>${completadas} de 20</strong></div>
+                </div>
+                <div class="report-section">
+                    <h2>💪 Perfil de Fortalezas</h2>
+                    <div class="stat-item"><span>Prompting:</span> <strong>${userData.habilidades.prompting}%</strong></div>
+                    <div class="stat-item"><span>Herramientas IA:</span> <strong>${userData.habilidades.herramientas}%</strong></div>
+                    <div class="stat-item"><span>Análisis:</span> <strong>${userData.habilidades.analisis}%</strong></div>
+                </div>
+                <div class="report-section">
+                    <h2>💡 Mis Ideas y Preguntas</h2>
+                    ${ideasHTML}
+                </div>
+            `;
+        }
+
+        function generarReporteHTML() {
+            const reportContent = generarReporteContenido();
+            const reportWindow = window.open('', '_blank');
+            reportWindow.document.write(`
+                <html>
+                    <head><title>Reporte - ${currentUser.nombre}</title>
+                    <style>
+                        body { font-family: sans-serif; margin: 0; padding: 2rem; background: #f4f7f6; color: #333; }
+                        .container { max-width: 800px; margin: auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+                        h1, h2 { color: #1e40af; border-bottom: 2px solid #3b82f6; padding-bottom: 0.5rem; }
+                        .report-header { text-align: center; margin-bottom: 2rem; }
+                        .report-section { margin-bottom: 2rem; }
+                        .stat-item { display: flex; justify-content: space-between; padding: 0.8rem; border-bottom: 1px solid #eee; }
+                        .idea-item { background: #f9f9f9; border-left: 4px solid #3b82f6; padding: 1rem; margin-top: 1rem; border-radius: 4px; }
+                        .idea-item.pregunta { border-left-color: #f59e0b; }
+                    </style></head>
+                    <body><div class="container">${reportContent}</div></body>
+                </html>`);
+            reportWindow.document.close();
+        }
+
+        function generarReportePDF() {
+            const reportContent = generarReporteContenido();
+            const iframe = document.createElement('iframe');
+            iframe.style.position = 'fixed'; iframe.style.width = '0'; iframe.style.height = '0'; iframe.style.border = 'none';
+            document.body.appendChild(iframe);
+            const doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write(`
+                <html><head><title>Reporte de Progreso</title>
+                <style>
+                    body { font-family: sans-serif; margin: 0; padding: 1rem; color: #333; }
+                    h1, h2 { color: #1e40af; border-bottom: 2px solid #3b82f6; }
+                    .report-header { text-align: center; } .report-section { page-break-inside: avoid; }
+                    .stat-item { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #ccc; }
+                    .idea-item { border: 1px solid #ddd; border-left: 4px solid #3b82f6; padding: 1rem; margin-top: 1rem; page-break-inside: avoid; }
+                    .idea-item.pregunta { border-left-color: #f59e0b; }
+                </style></head><body>${reportContent}</body></html>`);
+            doc.close();
+            setTimeout(() => {
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+                document.body.removeChild(iframe);
+            }, 500);
+        }
+
+        // =====================================================
+        // NAVEGACIÓN Y INICIALIZACIÓN
         // =====================================================
         function showPage(pageId) {
-            document.querySelectorAll('.page-section').forEach(section => {
-                section.classList.remove('active');
-            });
+            document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
-
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            event.target.classList.add('active');
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            const activeLink = Array.from(document.querySelectorAll('.nav-link')).find(link => link.getAttribute('onclick') === `showPage('${pageId}')`);
+            if (activeLink) activeLink.classList.add('active');
         }
 
         function mostrarFase(faseNum) {
             document.querySelectorAll('.fase-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.fase-btn')[faseNum - 1].classList.add('active');
-            
-            if (faseNum === 1) {
-                document.getElementById('fase1-content').classList.add('active');
-                document.getElementById('fase2-content').classList.remove('active');
-            } else {
-                document.getElementById('fase1-content').classList.remove('active');
-                document.getElementById('fase2-content').classList.add('active');
-            }
+            document.getElementById('fase1-content').style.display = faseNum === 1 ? 'block' : 'none';
+            document.getElementById('fase2-content').style.display = faseNum === 2 ? 'block' : 'none';
         }
 
         function mostrarSemana(semanaNum) {
             document.querySelectorAll('.week-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.week-btn')[semanaNum - 1].classList.add('active');
-            
             document.querySelectorAll('.week-content').forEach(content => content.classList.remove('active'));
             document.getElementById(`week${semanaNum}`).classList.add('active');
         }
 
-        // =====================================================
-        // TOAST NOTIFICATIONS
-        // =====================================================
         function showToast(type, title, message) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            
             const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
-            
-            toast.innerHTML = `
-                <div class="toast-icon">${icon}</div>
-                <div class="toast-content">
-                    <h4>${title}</h4>
-                    <p>${message}</p>
-                </div>
-            `;
-            
+            toast.innerHTML = `<div class="toast-icon">${icon}</div><div class="toast-content"><h4>${title}</h4><p>${message}</p></div>`;
             container.appendChild(toast);
-            
             setTimeout(() => {
-                toast.style.animation = 'slideIn 0.3s ease reverse';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+                toast.style.animation = 'slideOut 0.3s ease forwards';
+                toast.addEventListener('animationend', () => toast.remove());
+            }, 4000);
         }
 
-        // =====================================================
-        // INICIALIZACIÓN
-        // =====================================================
         document.addEventListener('DOMContentLoaded', () => {
             cargarUsuariosLogin();
-            
-            const isLoggedIn = verificarUsuario();
-            
-            if (isLoggedIn) {
-                // La carga de datos ahora es más robusta y sincroniza el progreso detallado
+            if (verificarUsuario()) {
                 if (SPREADSHEET_ID && API_KEY) {
-                    cargarDatosUsuarios().then(() => {
-                        cargarVideos(); // Cargar videos después de tener el progreso correcto
-                    });
+                    cargarDatosUsuarios().then(cargarVideos);
                 } else {
-                    document.getElementById('studentsLoading').innerHTML = '<p style="color: var(--naranja);">⚠️ Configura tu Google Sheets API</p>';
-                    document.getElementById('classesLoading').innerHTML = '<p style="color: var(--naranja);">⚠️ Configura tu Google Sheets API</p>';
+                    document.getElementById('studentsLoading').innerHTML = '<p>⚠️ Configura tu Google Sheets API</p>';
+                    document.getElementById('classesLoading').innerHTML = '<p>⚠️ Configura tu Google Sheets API</p>';
                 }
-                
-                setTimeout(() => {
-                    showToast('success', '¡Bienvenido/a!', `Hola ${currentUser.nombre.split(' ')[0]}, es un placer verte de nuevo 👋`);
-                }, 500);
+                loadIdeas();
+                setTimeout(() => showToast('success', '¡Bienvenido/a!', `Hola ${currentUser.nombre.split(' ')[0]}, es un placer verte de nuevo 👋`), 500);
             }
         });
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeClassModal();
-            }
-        });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeClassModal(); });
     </script>
 </body>
 </html>
