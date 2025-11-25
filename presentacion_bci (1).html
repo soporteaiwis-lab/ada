@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estrategia de Generación de Código COBOL - BCI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f5f7fa;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: #1a365d;
+            color: white;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            background: #0f2744;
+            border-bottom: 2px solid #2d5f8d;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .sidebar-header .subtitle {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .sidebar nav {
+            padding: 1rem 0;
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+        }
+
+        .sidebar nav li {
+            margin: 0;
+        }
+
+        .sidebar nav a {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar nav a:hover,
+        .sidebar nav a.active {
+            background: rgba(255,255,255,0.1);
+            border-left-color: #3182ce;
+            padding-left: 2rem;
+        }
+
+        /* Mobile menu toggle */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: #1a365d;
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            transition: margin-left 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Sections */
+        section {
+            background: white;
+            margin: 2rem 0;
+            padding: 3rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        section h2 {
+            color: #1a365d;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #3182ce;
+            padding-bottom: 0.5rem;
+        }
+
+        section h3 {
+            color: #2d3748;
+            font-size: 1.4rem;
+            margin: 2rem 0 1rem 0;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1a365d 0%, #2d5f8d 100%);
+            color: white;
+            text-align: center;
+            padding: 4rem 2rem;
+            border-radius: 8px;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .hero .client-info {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .hero .info-card {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero .info-card strong {
+            display: block;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 0.3rem;
+        }
+
+        /* Content boxes */
+        .info-box {
+            background: #f7fafc;
+            border-left: 4px solid #3182ce;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .info-box.warning {
+            border-left-color: #e53e3e;
+            background: #fff5f5;
+        }
+
+        .info-box.success {
+            border-left-color: #38a169;
+            background: #f0fff4;
+        }
+
+        /* Agents Grid */
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .agent-card {
+            background: #f7fafc;
+            padding: 2rem;
+            border-radius: 8px;
+            border-top: 4px solid #3182ce;
+            transition: transform 0.3s;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .agent-card h4 {
+            color: #1a365d;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .agent-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #3182ce;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.6rem;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3182ce;
+            border: 4px solid white;
+            box-shadow: 0 0 0 3px #3182ce;
+        }
+
+        .timeline-item h4 {
+            color: #1a365d;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-item .date {
+            color: #718096;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        /* Benefits Grid */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .benefit-item {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 1.5rem;
+            border-radius: 6px;
+            border-left: 3px solid #38a169;
+        }
+
+        .benefit-item h4 {
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .benefit-item p {
+            color: #4a5568;
+            font-size: 0.95rem;
+        }
+
+        /* Lists */
+        ul.feature-list {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        ul.feature-list li {
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        ul.feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #38a169;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        ul.exclude-list li::before {
+            content: '✗';
+            color: #e53e3e;
+        }
+
+        /* SVG Flow Diagram Container */
+        .flow-diagram-container {
+            background: #f7fafc;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .flow-diagram-container h4 {
+            color: #1a365d;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .flow-diagram-container svg {
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto;
+            display: block;
+        }
+
+        /* Gallery Styles */
+        .gallery-container {
+            margin: 2rem 0;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .gallery-item {
+            background: #f7fafc;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-item .caption {
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .gallery-item .caption h4 {
+            color: #1a365d;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .gallery-item .caption p {
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        /* Modal for Image Zoom */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            animation: zoomIn 0.3s;
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            background: rgba(0,0,0,0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(0,0,0,0.8);
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Footer */
+        footer {
+            background: #1a365d;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero .client-info {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            section {
+                padding: 2rem 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            section h2 {
+                font-size: 1.5rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Scrollbar styling for sidebar */
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: #0f2744;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #2d5f8d;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1>Estrategia COBOL IA</h1>
+            <p class="subtitle">Banco BCI - ADA LTDA</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#inicio" onclick="closeMenuMobile()">Inicio</a></li>
+                <li><a href="#requerimiento" onclick="closeMenuMobile()">Requerimiento BCI</a></li>
+                <li><a href="#solucion" onclick="closeMenuMobile()">Arquitectura de Solución</a></li>
+                <li><a href="#flujo" onclick="closeMenuMobile()">Flujo de Trabajo</a></li>
+                <li><a href="#fases" onclick="closeMenuMobile()">Fases del Prototipo</a></li>
+                <li><a href="#mockups" onclick="closeMenuMobile()">Galería de Mockups</a></li>
+                <li><a href="#beneficios" onclick="closeMenuMobile()">Beneficios</a></li>
+                <li><a href="#alcance" onclick="closeMenuMobile()">Alcance y Visión</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Hero Section -->
+            <section id="inicio" class="hero">
+                <h1>Estrategia de Generación de Código COBOL</h1>
+                <p class="subtitle">Asistido por Inteligencia Artificial</p>
+                <div class="client-info">
+                    <div class="info-card">
+                        <strong>Cliente</strong>
+                        <div>Banco BCI</div>
+                    </div>
+                    <div class="info-card">
+                        <strong>Desarrollador</strong>
+                        <div>ADA LTDA</div>
+                    </div>
+                    <div class="info-card">
+                        <strong>CEO</strong>
+                        <div>Julio Sepúlveda</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Requerimiento -->
+            <section id="requerimiento">
+                <h2>Requerimiento BCI</h2>
+                <p>Banco BCI ha solicitado el desarrollo de un prototipo experimental que permita <strong>generar código COBOL batch desde cero utilizando lenguaje natural</strong>.</p>
+                
+                <h3>Objetivo Principal</h3>
+                <div class="info-box">
+                    <p>Permitir que desarrolladores, incluso aquellos con menos experiencia directa en COBOL o JCL, puedan avanzar en tareas de codificación simplemente describiendo la lógica de negocio en lenguaje natural (español).</p>
+                    <p style="margin-top: 1rem;"><strong>Esto democratizaría el desarrollo mainframe y aceleraría la entrega de funcionalidades.</strong></p>
+                </div>
+
+                <h3>Alcance del Prototipo</h3>
+                <p>El prototipo se enfoca en:</p>
+                <ul class="feature-list">
+                    <li>Creación de programas COBOL batch desde cero</li>
+                    <li>Uso de lenguaje natural en español para definir requerimientos</li>
+                    <li>Generación automática de código siguiendo estándares empresariales</li>
+                    <li>Validación del código generado en entorno mainframe</li>
+                </ul>
+
+                <h3>Exclusiones del Prototipo</h3>
+                <div class="info-box warning">
+                    <p><strong>Lo que NO incluye el prototipo:</strong></p>
+                    <ul class="feature-list exclude-list">
+                        <li>Modificaciones o refactorización de código antiguo</li>
+                        <li>Conexión a bases de datos Datacom de IBM en BCI</li>
+                        <li>Acceso a librerías de copys, módulos SORT o rutinas especiales</li>
+                    </ul>
+                    <p style="margin-top: 1rem; font-size: 0.9rem;"><em>Estas funcionalidades serán evaluadas para el producto final según las necesidades de BCI.</em></p>
+                </div>
+            </section>
+
+            <!-- Solución -->
+            <section id="solucion">
+                <h2>Arquitectura de la Solución</h2>
+                <p>La estrategia propuesta se centra en el uso de <strong>Agentes de IA de Code-Gen asistidos por Lenguaje Natural</strong>, orquestados por LangChain y LangGraph.</p>
+
+                <h3>Agentes Especializados</h3>
+                <div class="agents-grid">
+                    <div class="agent-card">
+                        <div class="icon">📋</div>
+                        <h4>Agente Planificador</h4>
+                        <p><strong>Función:</strong> Convierte las solicitudes en lenguaje natural en pasos de programación formales y estructurados.</p>
+                        <p style="margin-top: 0.5rem;"><strong>Herramienta:</strong> LLM (Modelo de Lenguaje)</p>
+                    </div>
+
+                    <div class="agent-card">
+                        <div class="icon">💻</div>
+                        <h4>Agente Codificador</h4>
+                        <p><strong>Función:</strong> Escribe el código COBOL/JCL siguiendo el plan generado por el Agente Planificador.</p>
+                        <p style="margin-top: 0.5rem;"><strong>Herramienta:</strong> Code_Edit_Tool, Inject, Snippet</p>
+                    </div>
+
+                    <div class="agent-card">
+                        <div class="icon">✅</div>
+                        <h4>Agente Validador</h4>
+                        <p><strong>Función:</strong> Ejecuta el código generado en el mainframe usando Py3270 y verifica su comportamiento en tiempo real.</p>
+                        <p style="margin-top: 0.5rem;"><strong>Herramienta:</strong> Py3270_Tool (Conexión al mainframe)</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Flujo de Trabajo -->
+            <section id="flujo">
+                <h2>Flujo de Trabajo del Sistema</h2>
+                <p>El siguiente diagrama muestra cómo interactúan los tres agentes en un flujo iterativo de generación y validación de código COBOL.</p>
+                
+                <div class="flow-diagram-container">
+                    <h4>Ciclo Completo: Planificar → Codificar → Validar → Corregir</h4>
+                    <svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+                        <style>
+                            text { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; fill: #333; font-weight: 600; }
+                            .subtext { font-size: 11px; fill: #666; font-weight: 400; }
+                            .path-flow { fill: none; stroke: #cbd5e1; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+                            .path-error { fill: none; stroke: #ef4444; stroke-width: 3; stroke-dasharray: 8,4; opacity: 0.8; }
+                            .path-success { fill: none; stroke: #22c55e; stroke-width: 4; }
+                            
+                            .particle { fill: #3b82f6; animation: flow 3s infinite linear; }
+                            .particle-error { fill: #ef4444; animation: flow-error 3s infinite linear; }
+                            @keyframes flow {
+                                0% { offset-distance: 0%; opacity: 0; }
+                                10% { opacity: 1; }
+                                90% { opacity: 1; }
+                                100% { offset-distance: 100%; opacity: 0; }
+                            }
+                            @keyframes flow-error {
+                                0% { offset-distance: 0%; opacity: 0; }
+                                50% { opacity: 1; }
+                                100% { offset-distance: 100%; opacity: 0; }
+                            }
+                        </style>
+
+                        <defs>
+                            <marker id="arrow-grey" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <path d="M0,0 L0,6 L9,3 z" fill="#cbd5e1" />
+                            </marker>
+                            <marker id="arrow-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <path d="M0,0 L0,6 L9,3 z" fill="#ef4444" />
+                            </marker>
+                            <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <path d="M0,0 L0,6 L9,3 z" fill="#22c55e" />
+                            </marker>
+                        </defs>
+
+                        <path d="M100 300 L400 150 L700 300 L400 450 Z" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+
+                        <path id="p1" class="path-flow" d="M160 360 L260 310" marker-end="url(#arrow-grey)"/>
+                        <path id="p2" class="path-flow" d="M340 270 L460 210" marker-end="url(#arrow-grey)"/>
+                        <path id="p3" class="path-flow" d="M540 210 L660 270" marker-end="url(#arrow-grey)"/>
+                        <path id="p4" class="path-success" d="M660 310 L400 480 L160 380" marker-end="url(#arrow-green)"/>
+                        <path id="p5" class="path-error" d="M660 290 Q 400 100 340 250" marker-end="url(#arrow-red)"/>
+
+                        <g transform="translate(100, 340)">
+                            <path d="M0 20 L40 40 L80 20 L40 0 Z" fill="#94a3b8"/>
+                            <path d="M0 20 L40 40 L40 70 L0 50 Z" fill="#64748b"/>
+                            <path d="M40 40 L80 20 L80 50 L40 70 Z" fill="#475569"/>
+                            <path d="M20 15 L60 35 L60 55 L20 35 Z" fill="#0f172a"/>
+                            <text x="10" y="90" text-anchor="middle">USUARIO (CLI)</text>
+                            <text x="10" y="105" text-anchor="middle" class="subtext">Petición Natural</text>
+                        </g>
+
+                        <g transform="translate(260, 240)">
+                            <path d="M0 20 L40 40 L80 20 L40 0 Z" fill="#60a5fa"/>
+                            <path d="M0 20 L40 40 L40 80 L0 60 Z" fill="#3b82f6"/>
+                            <path d="M40 40 L80 20 L80 60 L40 80 Z" fill="#2563eb"/>
+                            <path d="M40 40 L40 80 M0 20 L80 20 M20 10 L20 70 M60 30 L60 70" stroke="white" stroke-width="1" opacity="0.3"/>
+                            <text x="40" y="100" text-anchor="middle">PLANIFICADOR</text>
+                            <text x="40" y="115" text-anchor="middle" class="subtext">JSON Estructurado</text>
+                        </g>
+
+                        <g transform="translate(460, 140)">
+                            <path d="M0 20 L40 40 L80 20 L40 0 Z" fill="#e2e8f0"/>
+                            <path d="M0 20 L40 40 L40 80 L0 60 Z" fill="#94a3b8"/>
+                            <path d="M40 40 L80 20 L80 60 L40 80 Z" fill="#64748b"/>
+                            <path d="M50 45 L70 35 M50 55 L70 45 M50 65 L70 55" stroke="#f1f5f9" stroke-width="2"/>
+                            <text x="40" y="100" text-anchor="middle">CODIFICADOR</text>
+                            <text x="40" y="115" text-anchor="middle" class="subtext">Generación COBOL</text>
+                        </g>
+
+                        <g transform="translate(620, 240)">
+                            <path d="M0 20 L40 40 L80 20 L40 0 Z" fill="#334155"/>
+                            <path d="M0 20 L40 40 L40 100 L0 80 Z" fill="#1e293b"/>
+                            <path d="M40 40 L80 20 L80 80 L40 100 Z" fill="#0f172a"/>
+                            <circle cx="15" cy="40" r="3" fill="#ef4444">
+                                <animate attributeName="opacity" values="0.2;1;0.2" dur="1s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="15" cy="55" r="3" fill="#22c55e"/>
+                            <circle cx="15" cy="70" r="3" fill="#f59e0b"/>
+                            <text x="40" y="120" text-anchor="middle">VALIDADOR</text>
+                            <text x="40" y="135" text-anchor="middle" class="subtext">Mock / Mainframe</text>
+                        </g>
+
+                        <circle r="4" class="particle">
+                            <animateMotion dur="3s" repeatCount="indefinite">
+                                <mpath href="#p1"/>
+                            </animateMotion>
+                        </circle>
+                        
+                        <circle r="4" class="particle">
+                            <animateMotion dur="3s" begin="1s" repeatCount="indefinite">
+                                <mpath href="#p2"/>
+                            </animateMotion>
+                        </circle>
+
+                        <circle r="4" class="particle">
+                            <animateMotion dur="3s" begin="2s" repeatCount="indefinite">
+                                <mpath href="#p3"/>
+                            </animateMotion>
+                        </circle>
+
+                        <circle r="3" class="particle-error">
+                            <animateMotion dur="2s" begin="0s" repeatCount="indefinite">
+                                <mpath href="#p5"/>
+                            </animateMotion>
+                        </circle>
+                        
+                        <text x="370" y="170" class="subtext" fill="#ef4444" transform="rotate(-20 370,170)">Ciclo de Corrección</text>
+                        <text x="480" y="450" class="subtext" fill="#22c55e">Código Final Validado</text>
+                    </svg>
+                </div>
+
+                <div class="info-box">
+                    <p><strong>Funcionamiento del Ciclo Iterativo:</strong></p>
+                    <p style="margin-top: 1rem;">El sistema opera en un ciclo continuo donde el código se genera, se valida y, si es necesario, se refina automáticamente hasta completar la tarea con éxito. La flecha roja representa el <strong>ciclo de corrección</strong> que permite al sistema aprender de los errores y mejorar el código generado.</p>
+                </div>
+            </section>
+
+            <!-- Fases -->
+            <section id="fases">
+                <h2>Fases del Prototipo</h2>
+                <p>El prototipo se ha dividido en dos fases para una implementación gradual y validación de concepto.</p>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="date">9 de Diciembre 2024</span>
+                        <h4>Fase 1: Entrega Inicial</h4>
+                        <div class="info-box success">
+                            <p><strong>Componentes incluidos:</strong></p>
+                            <ul class="feature-list">
+                                <li>Agente Planificador funcionando</li>
+                                <li>Agente Codificador funcionando</li>
+                                <li>Agente Validador simulado (mock)</li>
+                                <li>Código fuente completo (LangChain + LangGraph)</li>
+                                <li>Interfaz CLI (Command Line Interface)</li>
+                            </ul>
+                            <p style="margin-top: 1rem;"><strong>Estado:</strong> Simula la conexión al mainframe de BCI para demostrar el flujo completo.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <span class="date">Próxima entrega</span>
+                        <h4>Fase 2: Validación Real</h4>
+                        <div class="info-box">
+                            <p><strong>Mejoras incluidas:</strong></p>
+                            <ul class="feature-list">
+                                <li>Agente Validador completamente funcional</li>
+                                <li>Conexión real al mainframe IBM de BCI vía Py3270</li>
+                                <li>Ejecución y validación de código en tiempo real</li>
+                                <li>Mantiene interfaz CLI</li>
+                                <li>Sistema de retroalimentación automática</li>
+                            </ul>
+                            <p style="margin-top: 1rem;"><strong>Tecnología:</strong> Py3270 es la herramienta más recomendada y óptima para este prototipo.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <span class="date">Post-prototipo</span>
+                        <h4>Producto Final</h4>
+                        <div class="info-box">
+                            <p><strong>Próximos pasos:</strong></p>
+                            <ul class="feature-list">
+                                <li>Levantamiento completo de arquitectura BCI</li>
+                                <li>Mapeo de librerías, copybooks y módulos</li>
+                                <li>Catalogación de base de datos Datacom y tablas</li>
+                                <li>Definición de interfaz final (GUI, chatbot web, etc.)</li>
+                                <li>Integración con herramientas corporativas</li>
+                            </ul>
+                            <p style="margin-top: 1rem; font-style: italic;">La interfaz final será definida según las necesidades específicas de BCI.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>¿Por qué no se entrega interfaz gráfica ahora?</h3>
+                <div class="info-box">
+                    <p>Para el producto final, el código será refactorizado para consumirse como una <strong>API REST</strong>. De esta forma, BCI podrá consumir la funcionalidad desde la interfaz que mejor se adapte a sus necesidades:</p>
+                    <ul class="feature-list">
+                        <li>Aplicación web corporativa</li>
+                        <li>Chatbot integrado</li>
+                        <li>Plugin para herramientas de desarrollo</li>
+                        <li>Sistema de tickets automatizado</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Mockups Gallery -->
+            <section id="mockups">
+                <h2>Galería de Mockups - Interfaz CLI</h2>
+                <p>Las siguientes imágenes muestran la interfaz de línea de comandos (CLI) del prototipo en funcionamiento, incluyendo el proceso de generación y corrección automática de código.</p>
+                
+                <div class="info-box warning">
+                    <p><strong>Nota importante sobre corrección de errores:</strong></p>
+                    <p style="margin-top: 1rem;">El prototipo está preparado para detectar y corregir automáticamente errores en la codificación. La IA no es 100% perfecta y puede cometer errores en la generación inicial, por lo que el sistema implementa un <strong>ciclo de autocorrección</strong> que refina el código hasta obtener un resultado válido.</p>
+                    <p style="margin-top: 0.5rem;">En los mockups se puede observar cómo el sistema identifica errores y los corrige automáticamente, demostrando el flujo completo de los tres agentes trabajando en conjunto.</p>
+                </div>
+
+                <div class="gallery-container">
+                    <div class="gallery-grid">
+                        <div class="gallery-item" onclick="openModal('https://raw.githubusercontent.com/soporteaiwis-lab/ada/main/1.png')">
+                            <img src="https://raw.githubusercontent.com/soporteaiwis-lab/ada/main/1.png" alt="Mockup 1 - Inicio de solicitud" loading="lazy">
+                            <div class="caption">
+                                <h4>Paso 1: Solicitud en Lenguaje Natural</h4>
+                                <p>El usuario ingresa el requerimiento en español a través de la interfaz CLI.</p>
+                            </div>
+                        </div>
+
+                        <div class="gallery-item" onclick="openModal('https://raw.githubusercontent.com/soporteaiwis-lab/ada/main/2.png')">
+                            <img src="https://raw.githubusercontent.com/soporteaiwis-lab/ada/main/2.png" alt="Mockup 2 - Planificación" loading="lazy">
+                            <div class="caption">
+                                <h4>Paso 2: Planificación del Código</h4>
+                                <p>El Agente Planificador convierte la solicitud en un plan técnico estructurado.</p>
+                            </div>
+                        </div>
+
+                        <div class="gallery-item" onclick="openModal('https://raw.githubusercontent.com/soporteaiwis-lab/ada/main/3.png')">
+                            <img src="https://raw.githubusercontent.com/soporteaiwis-lab/ada/main/3.png" alt="Mockup 3 - Generación de código" loading="lazy">
+                            <div class="caption">
+                                <h4>Paso 3: Generación y Detección de Error</h4>
+                                <p>El Agente Codificador genera el código COBOL y el Validador detecta un error que requiere corrección.</p>
+                            </div>
+                        </div>
+
+                        <div class="gallery-item" onclick="openModal('https://raw.githubusercontent.com/soporteaiwis-lab/ada/main/4.png')">
+                            <img src="https://raw.githubusercontent.com/soporteaiwis-lab/ada/main/4.png" alt="Mockup 4 - Corrección automática" loading="lazy">
+                            <div class="caption">
+                                <h4>Paso 4: Corrección Automática y Código Final</h4>
+                                <p>El sistema corrige automáticamente el error detectado y entrega el código COBOL validado y funcional.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Beneficios -->
+            <section id="beneficios">
+                <h2>Beneficios Potenciales</h2>
+                <p>Este experimento abre múltiples oportunidades de valor para BCI:</p>
+
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <h4>⚡ Aceleración del Desarrollo</h4>
+                        <p>Reducción significativa del tiempo para implementar nuevas funcionalidades o realizar modificaciones en sistemas mainframe.</p>
+                    </div>
+
+                    <div class="benefit-item">
+                        <h4>🎯 Democratización</h4>
+                        <p>Permite a desarrolladores con diferentes niveles de experiencia contribuir al ecosistema mainframe sin años de especialización.</p>
+                    </div>
+
+                    <div class="benefit-item">
+                        <h4>🤝 Mejor Comunicación</h4>
+                        <p>Profesionales del área comercial y de negocio pueden plasmar reglas de negocio directamente, mejorando la comprensión de requerimientos.</p>
+                    </div>
+
+                    <div class="benefit-item">
+                        <h4>✨ Calidad y Consistencia</h4>
+                        <p>Minimiza errores manuales y asegura el cumplimiento de estándares corporativos en el código generado.</p>
+                    </div>
+
+                    <div class="benefit-item">
+                        <h4>🚀 Copiloto para Expertos</h4>
+                        <p>Reduce tiempo de programación para expertos COBOL, ayudándoles a crear esqueletos de código eficazmente.</p>
+                    </div>
+
+                    <div class="benefit-item">
+                        <h4>📊 Optimización de Testing</h4>
+                        <p>Agiliza el ciclo de prueba y corrección, permitiendo validación automática del código generado.</p>
+                    </div>
+
+                    <div class="benefit-item">
+                        <h4>🔄 Autocorrección Inteligente</h4>
+                        <p>Sistema capaz de detectar y corregir sus propios errores, garantizando código funcional sin intervención manual.</p>
+                    </div>
+
+                    <div class="benefit-item">
+                        <h4>🔮 Evolución Tecnológica</h4>
+                        <p>Mayor resiliencia: facilita la evolución de sistemas legados y, a futuro, podría asistir en migraciones tecnológicas.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Alcance -->
+            <section id="alcance">
+                <h2>Alcance y Visión</h2>
+                
+                <h3>Prueba de Concepto</h3>
+                <div class="info-box success">
+                    <p><strong>El objetivo inmediato es demostrar que es posible programar COBOL con lenguaje natural.</strong></p>
+                    <p style="margin-top: 1rem;">Esta prueba de concepto permitirá evaluar la viabilidad técnica, los beneficios reales y el impacto en los equipos de desarrollo de BCI.</p>
+                </div>
+
+                <h3>Casos de Uso Identificados</h3>
+                
+                <h4>1. Para No Programadores</h4>
+                <ul class="feature-list">
+                    <li>Analistas de negocio pueden describir lógica sin conocer COBOL</li>
+                    <li>Equipos comerciales pueden prototipar soluciones rápidamente</li>
+                    <li>Reducción de la brecha entre negocio y tecnología</li>
+                </ul>
+
+                <h4>2. Para Programadores Junior</h4>
+                <ul class="feature-list">
+                    <li>Acceso más rápido a desarrollo mainframe</li>
+                    <li>Aprendizaje acelerado de mejores prácticas</li>
+                    <li>Menor tiempo de capacitación en COBOL</li>
+                </ul>
+
+                <h4>3. Para Expertos COBOL</h4>
+                <ul class="feature-list">
+                    <li>Copiloto que reduce tiempo en tareas repetitivas</li>
+                    <li>Generación rápida de estructuras base</li>
+                    <li>Mejor visión de requerimientos antes de codificar</li>
+                </ul>
+
+                <h4>4. Para Consultores y Líderes Técnicos</h4>
+                <ul class="feature-list">
+                    <li>Mayor claridad en requerimientos desde el inicio</li>
+                    <li>Código base para ajustar y optimizar</li>
+                    <li>Facilita revisiones y ajustes finales</li>
+                </ul>
+
+                <h3>Proyección a Futuro</h3>
+                <div class="info-box">
+                    <p><strong>Este experimento es el punto de partida para múltiples oportunidades:</strong></p>
+                    <ul class="feature-list">
+                        <li><strong>Modernización gradual:</strong> Preparar el camino para migración a nuevas tecnologías</li>
+                        <li><strong>Conocimiento institucional:</strong> Capturar y documentar lógica de negocio compleja</li>
+                        <li><strong>Reducción de riesgos:</strong> Disminuir dependencia de conocimiento crítico concentrado</li>
+                        <li><strong>Agilidad operativa:</strong> Responder más rápido a cambios regulatorios y de negocio</li>
+                        <li><strong>Innovación continua:</strong> Base para futuros desarrollos con IA en el banco</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modal for Image Zoom -->
+    <div id="imageModal" class="modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <img id="modalImage" src="" alt="Mockup ampliado">
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p><strong>ADA LTDA</strong> - Transformación Digital en Chile</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Especialistas en IA, Automatización y Soluciones para el Sector Financiero</p>
+        <p style="margin-top: 1rem; font-size: 0.85rem; opacity: 0.8;">CEO: Julio Sepúlveda | Cliente: Banco BCI</p>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        function closeMenuMobile() {
+            if (window.innerWidth <= 1024) {
+                const sidebar = document.getElementById('sidebar');
+                sidebar.classList.remove('active');
+            }
+        }
+
+        // Modal functions
+        function openModal(imageSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.classList.add('active');
+            modalImg.src = imageSrc;
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('active');
+        }
+
+        // Active nav link on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.sidebar nav a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 100)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').substring(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
