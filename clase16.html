@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADA | AIWIS - Resumen Clase 16</title>
+    <style>
+        :root {
+            /* Semana 4: Tono Azul Real/Violeta para nivel avanzado */
+            --primary: #4338ca; 
+            --secondary: #312e81;
+            --accent: #6366f1;
+            --bg: #eef2ff;
+            --text: #1e1b4b;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        /* Header Dashboard */
+        header {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 40px 20px;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 { margin: 0; font-size: 2.5em; letter-spacing: -1px; }
+        .meta-info {
+            margin-top: 10px;
+            font-size: 1.1em;
+            opacity: 0.9;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.9em;
+        }
+        
+        /* Video Section */
+        .video-cta {
+            background: var(--card-bg);
+            margin: -20px auto 30px;
+            width: 80%;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+        }
+        .btn-video {
+            background-color: #ef4444; /* Red for play button */
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        .btn-video:hover { transform: scale(1.05); }
+
+        /* Content Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-5px); }
+        .card h3 { color: var(--secondary); margin-top: 0; display: flex; align-items: center; gap: 10px; }
+        .icon { font-size: 1.5em; }
+        
+        /* Highlight Box */
+        .highlight-box {
+            background: linear-gradient(to right, #e0e7ff, #c7d2fe);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            border: 1px solid #818cf8;
+        }
+        .highlight-title { font-weight: bold; color: var(--secondary); margin-bottom: 10px; display: block; }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #64748b;
+            font-size: 0.9em;
+            padding-bottom: 20px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8em; }
+            .video-cta { width: 90%; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Programa de Adopción de IA Corporativa</h1>
+    <div class="meta-info">
+        <span class="badge">📅 24 Nov 2025</span>
+        <span class="badge">🚀 Semana 04</span>
+        <span class="badge">🎓 Clase 16</span>
+    </div>
+    <p style="margin-top:15px; font-weight: 300;">Automatización Avanzada: Google Drive y Datos Binarios</p>
+</header>
+
+<div class="container">
+
+    <div class="video-cta">
+        <p><strong>📹 Grabación de la Sesión Disponible</strong></p>
+        <p>Aprende cómo procesar archivos reales dentro de tus flujos de IA.</p>
+        <a href="https://drive.google.com/file/d/18M0J2gTStoRFRLS17Xt_gReISoE26NeF/view?usp=sharing" target="_blank" class="btn-video">
+            Ver Clase 16 en Google Drive
+        </a>
+    </div>
+
+    <div class="highlight-box">
+        <span class="highlight-title">💡 Idea Central de la Sesión</span>
+        <p>En el inicio de la Semana 4, dimos un paso gigante: manipular archivos. Se discutió cómo conectar <strong>Google Drive</strong> para "descargar" información, no para guardarla en el disco duro, sino para pasarla como <strong>Binary Data</strong> a través del flujo de automatización, permitiendo que la IA "lea" documentos.</p>
+    </div>
+
+    <div class="grid">
+        
+        <div class="card">
+            <h3><span class="icon">☁️</span> Conexión a Drive</h3>
+            <p>Rafael y aiwis explicaron el primer paso crítico: establecer el puente.</p>
+            <ul>
+                <li><strong>Connect the drive:</strong> Vincular la cuenta de Google al flujo.</li>
+                <li><strong>Credentials:</strong> Reiteración de la seguridad. Sin las credenciales correctas, el flujo no puede entrar a la carpeta.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">⬇️</span> Descargar (Download)</h3>
+            <p>La acción específica dentro del nodo de Drive.</p>
+            <ul>
+                <li><strong>Get a file:</strong> Localizar el archivo específico que queremos procesar.</li>
+                <li><strong>Download the file:</strong> Esta acción trae el contenido del archivo a la memoria temporal del flujo.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">0️⃣1️⃣</span> Datos Binarios</h3>
+            <p>Un concepto técnico fundamental introducido por aiwis.</p>
+            <blockquote>
+                "Binary data" - Para la automatización, un archivo (PDF, Imagen, Doc) es un flujo de datos binarios que debe ser manejado antes de que la IA pueda leer el texto.
+            </blockquote>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">⚡</span> El Disparador (Trigger)</h3>
+            <p>El inicio de todo proceso.</p>
+            <ul>
+                <li><strong>Trigger:</strong> Se mencionó nuevamente como el evento que despierta al sistema (ej: "Cuando se sube un nuevo archivo a esta carpeta...").</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <p>Generado por GENERA TEXTOS PORTAL IA | Basado en notas de Gemini y Cronograma Oficial</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADA | AIWIS - Resumen Clase 14</title>
+    <style>
+        :root {
+            --primary: #0891b2; /* Cyan oscuro para tecnología y flujos */
+            --secondary: #164e63;
+            --accent: #22d3ee;
+            --bg: #ecfeff;
+            --text: #1e293b;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        /* Header Dashboard */
+        header {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 40px 20px;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 { margin: 0; font-size: 2.5em; letter-spacing: -1px; }
+        .meta-info {
+            margin-top: 10px;
+            font-size: 1.1em;
+            opacity: 0.9;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.9em;
+        }
+        
+        /* Video Section */
+        .video-cta {
+            background: var(--card-bg);
+            margin: -20px auto 30px;
+            width: 80%;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+        }
+        .btn-video {
+            background-color: #0ea5e9; /* Sky blue */
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        .btn-video:hover { transform: scale(1.05); }
+
+        /* Content Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-5px); }
+        .card h3 { color: var(--secondary); margin-top: 0; display: flex; align-items: center; gap: 10px; }
+        .icon { font-size: 1.5em; }
+        
+        /* Highlight Box */
+        .highlight-box {
+            background: linear-gradient(to right, #cffafe, #a5f3fc);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            border: 1px solid #67e8f9;
+        }
+        .highlight-title { font-weight: bold; color: var(--secondary); margin-bottom: 10px; display: block; }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #64748b;
+            font-size: 0.9em;
+            padding-bottom: 20px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8em; }
+            .video-cta { width: 90%; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Programa de Adopción de IA Corporativa</h1>
+    <div class="meta-info">
+        <span class="badge">📅 20 Nov 2025</span>
+        <span class="badge">🚀 Semana 03</span>
+        <span class="badge">🎓 Clase 14</span>
+    </div>
+    <p style="margin-top:15px; font-weight: 300;">Automatización: Workflows, Agentes y n8n</p>
+</header>
+
+<div class="container">
+
+    <div class="video-cta">
+        <p><strong>📹 Grabación de la Sesión Disponible</strong></p>
+        <p>Aprende a conectar nodos y crear flujos automáticos con n8n.</p>
+        <a href="https://drive.google.com/file/d/1KfQelfUt97xzTq-X24YPMSnkb_vx9v-7/view?usp=sharing" target="_blank" class="btn-video">
+            Ver Clase 14 en Google Drive
+        </a>
+    </div>
+
+    <div class="highlight-box">
+        <span class="highlight-title">💡 Idea Central de la Sesión</span>
+        <p>Pasamos de escribir en un chat a diseñar <strong>procesos</strong>. Se presentó la herramienta <strong>n8n</strong> como el motor para conectar aplicaciones (Gmail, Drive) mediante "Nodos" y "Triggers", permitiendo crear <strong>Agentes</strong> que trabajan automáticamente sin nuestra intervención constante.</p>
+    </div>
+
+    <div class="grid">
+        
+        <div class="card">
+            <h3><span class="icon">🔄</span> El Workflow (Flujo de Trabajo)</h3>
+            <p>Se definió el concepto de pasar de una tarea aislada a una secuencia lógica.</p>
+            <ul>
+                <li><strong>Secuencia:</strong> Una serie de pasos ordenados que la IA ejecuta.</li>
+                <li><strong>Conexión:</strong> La clave está en cómo un paso alimenta al siguiente ("Connecting", "Node").</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">🛠️</span> La Herramienta: n8n</h3>
+            <p>Rafael y aiwis discutieron el uso de esta plataforma visual.</p>
+            <ul>
+                <li><strong>Visual:</strong> Una interfaz donde conectas "cajitas" (nodos) con líneas.</li>
+                <li><strong>Integración:</strong> Capacidad de hablar con otras apps como Google Drive y Gmail.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">🤖</span> ¿Qué es un Agente?</h3>
+            <p>La evolución del Chatbot.</p>
+            <blockquote>
+                "Agent" - A diferencia de un chatbot que solo habla, un agente <strong>hace</strong> cosas (ej: lee un correo y guarda un archivo).
+            </blockquote>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">⚡</span> Trigger (Disparador)</h3>
+            <p>Concepto técnico fundamental mencionado en la clase:</p>
+            <ul>
+                <li><strong>El Gatillo:</strong> ¿Qué inicia el proceso? (Ej: "Cuando llega un correo nuevo...").</li>
+                <li><strong>Automático:</strong> Una vez disparado, el agente ejecuta el resto sin ayuda.</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <p>Generado por GENERA TEXTOS PORTAL IA | Basado en notas de Gemini y Cronograma Oficial</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADA | AIWIS - Resumen Clase 11</title>
+    <style>
+        :root {
+            --primary: #059669; /* Verde Esmeralda para Semana 3 */
+            --secondary: #065f46;
+            --accent: #10b981;
+            --bg: #f0fdf4;
+            --text: #1e293b;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        /* Header Dashboard */
+        header {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 40px 20px;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 { margin: 0; font-size: 2.5em; letter-spacing: -1px; }
+        .meta-info {
+            margin-top: 10px;
+            font-size: 1.1em;
+            opacity: 0.9;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.9em;
+        }
+        
+        /* Video Section */
+        .video-cta {
+            background: var(--card-bg);
+            margin: -20px auto 30px;
+            width: 80%;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+        }
+        .btn-video {
+            background-color: #dc2626; /* Red for play button */
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        .btn-video:hover { transform: scale(1.05); }
+
+        /* Content Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-5px); }
+        .card h3 { color: var(--secondary); margin-top: 0; display: flex; align-items: center; gap: 10px; }
+        .icon { font-size: 1.5em; }
+        
+        /* Highlight Box */
+        .highlight-box {
+            background: linear-gradient(to right, #d1fae5, #a7f3d0);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            border: 1px solid #6ee7b7;
+        }
+        .highlight-title { font-weight: bold; color: var(--secondary); margin-bottom: 10px; display: block; }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #64748b;
+            font-size: 0.9em;
+            padding-bottom: 20px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8em; }
+            .video-cta { width: 90%; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Programa de Adopción de IA Corporativa</h1>
+    <div class="meta-info">
+        <span class="badge">📅 17 Nov 2025</span>
+        <span class="badge">🚀 Semana 03</span>
+        <span class="badge">🎓 Clase 11</span>
+    </div>
+    <p style="margin-top:15px; font-weight: 300;">Ingeniería de Prompts II: Estructura, Contexto y Formato</p>
+</header>
+
+<div class="container">
+
+    <div class="video-cta">
+        <p><strong>📹 Grabación de la Sesión Disponible</strong></p>
+        <p>Repasa las técnicas de estructuración de prompts discutidas en clase.</p>
+        <a href="https://drive.google.com/file/d/1tVqzEqSAkhZPReW_8VYhi0eV0qblJdJF/view?usp=sharing" target="_blank" class="btn-video">
+            Ver Clase 11 en Google Drive
+        </a>
+    </div>
+
+    <div class="highlight-box">
+        <span class="highlight-title">💡 Idea Central de la Sesión</span>
+        <p>En esta sesión de la Semana 3, avanzamos más allá de los roles básicos. Se discutió cómo "armar" un prompt como si fuera una receta de cocina: definiendo claramente los ingredientes (<strong>Contexto</strong>), los pasos (<strong>Instrucción</strong>) y la presentación del plato (<strong>Formato de Salida</strong>).</p>
+    </div>
+
+    <div class="grid">
+        
+        <div class="card">
+            <h3><span class="icon">🗺️</span> El Contexto es Rey</h3>
+            <p>Se enfatizó que la IA no puede adivinar lo que no se le dice explícitamente.</p>
+            <ul>
+                <li><strong>Antecedentes:</strong> Dar información previa ("Soy una empresa de retail...", "Tengo un equipo de 5 personas...").</li>
+                <li><strong>Objetivo:</strong> Explicar <em>para qué</em> queremos la respuesta.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">⚡</span> La Instrucción Precisa</h3>
+            <p>Diferencia entre pedir "algo" y pedir una acción concreta.</p>
+            <ul>
+                <li><strong>Verbos de Acción:</strong> Usar palabras como "Analiza", "Resume", "Crea", "Lista".</li>
+                <li><strong>Evitar Ambigüedad:</strong> Ser específico evita respuestas genéricas.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">📊</span> Formato de Salida</h3>
+            <p>Uno de los puntos clave de la sesión fue controlar cómo recibimos la información.</p>
+            <blockquote>
+                "Entrégame el resultado en una tabla con columnas X e Y" o "Dame una lista con viñetas".
+            </blockquote>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">🔄</span> Ajuste Fino</h3>
+            <p>Continuando con la lógica de la semana anterior:</p>
+            <ul>
+                <li><strong>Iteración:</strong> Si el formato no es el correcto, pedirle que lo cambie ("Ahora pónmelo en un código CSV").</li>
+                <li><strong>Validación:</strong> Revisar siempre que la IA haya seguido todas las restricciones del prompt.</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <p>Generado por GENERA TEXTOS PORTAL IA | Basado en notas de Gemini y Cronograma Oficial </p>
+</footer>
+
+</body>
+</html>

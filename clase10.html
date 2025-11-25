@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academia de Automatización Enterprise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Poppins:wght@500;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        glass: 'rgba(255, 255, 255, 0.05)',
+                        n8n: '#ff6b6b',
+                        langchain: '#2d3436',
+                        active: '#38bdf8'
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 3s infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0f172a;
+            color: white;
+            overflow-x: hidden; /* Evitar scroll horizontal */
+        }
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        .nav-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-btn.active {
+            color: #38bdf8;
+            border-bottom-color: #38bdf8;
+            background: rgba(56, 189, 248, 0.1);
+        }
+        .tab-content { display: none; animation: fadeIn 0.5s ease; }
+        .tab-content.active { display: block; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .code-snippet {
+            font-family: 'Fira Code', monospace;
+            background: #111;
+            border-radius: 6px;
+            padding: 12px;
+            border-left: 4px solid #ff6b6b;
+        }
+        
+        /* Estilo para el diagrama de agente */
+        .agent-step {
+            position: relative;
+            padding-left: 20px;
+        }
+        .agent-step::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 8px;
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: #38bdf8;
+        }
+        .agent-line {
+            position: absolute;
+            left: 4px; top: 18px;
+            width: 2px; height: 100%;
+            background: rgba(56, 189, 248, 0.3);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Header Fijo -->
+    <header class="sticky top-0 z-50 glass-card border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 bg-gradient-to-br from-pink-500 to-orange-400 rounded-lg flex items-center justify-center mr-3">
+                        <i data-lucide="bot" class="text-white w-5 h-5"></i>
+                    </div>
+                    <span class="font-display font-bold text-xl tracking-tight">Auto<span class="text-pink-500">Mate</span> Academy</span>
+                </div>
+                
+                <!-- Navegación Desktop -->
+                <nav class="hidden md:flex space-x-1">
+                    <button onclick="switchTab('intro')" class="nav-btn active px-3 py-2 text-sm font-medium rounded-t-md flex items-center gap-2">
+                        <i data-lucide="rocket" class="w-4 h-4"></i> Inicio
+                    </button>
+                    <button onclick="switchTab('tools')" class="nav-btn px-3 py-2 text-sm font-medium rounded-t-md flex items-center gap-2">
+                        <i data-lucide="wrench" class="w-4 h-4"></i> Herramientas
+                    </button>
+                    <button onclick="switchTab('agents')" class="nav-btn px-3 py-2 text-sm font-medium rounded-t-md flex items-center gap-2">
+                        <i data-lucide="bot-message-square" class="w-4 h-4"></i> Agentes IA
+                    </button>
+                    <button onclick="switchTab('langgraph')" class="nav-btn px-3 py-2 text-sm font-medium rounded-t-md flex items-center gap-2">
+                        <i data-lucide="brain-circuit" class="w-4 h-4"></i> El Cerebro
+                    </button>
+                    <button onclick="switchTab('code')" class="nav-btn px-3 py-2 text-sm font-medium rounded-t-md flex items-center gap-2">
+                        <i data-lucide="code-2" class="w-4 h-4"></i> Laboratorio
+                    </button>
+                </nav>
+            </div>
+        </div>
+        <!-- Nav Móvil simple -->
+        <div class="md:hidden flex justify-around py-2 border-t border-white/5 text-xs overflow-x-auto">
+            <button onclick="switchTab('intro')" class="p-2 text-gray-300 hover:text-white whitespace-nowrap">Inicio</button>
+            <button onclick="switchTab('agents')" class="p-2 text-gray-300 hover:text-white whitespace-nowrap">Agentes</button>
+            <button onclick="switchTab('langgraph')" class="p-2 text-gray-300 hover:text-white whitespace-nowrap">Cerebro</button>
+            <button onclick="switchTab('code')" class="p-2 text-gray-300 hover:text-white whitespace-nowrap">Código</button>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 py-8 w-full">
+
+        <!-- PESTAÑA 1: INTRODUCCIÓN -->
+        <div id="intro" class="tab-content active">
+            <div class="text-center py-12">
+                <h1 class="text-4xl md:text-6xl font-display font-bold mb-6">
+                    Automatización <span class="bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-yellow-400">Enterprise</span>
+                </h1>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto mb-8">
+                    Bienvenidos a la clase avanzada. Hoy dejamos de jugar con juguetes y empezamos a construir fábricas reales.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <div class="glass-card p-8 rounded-2xl">
+                    <h3 class="text-2xl font-bold text-pink-400 mb-4 flex items-center gap-2">
+                        <i data-lucide="toy-brick" class="w-6 h-6"></i> Nivel Principiante
+                    </h3>
+                    <p class="text-gray-300 mb-4">
+                        Haces un script que envía un email. Si falla, te avisa a ti. Es como construir un castillo de arena: rápido, pero frágil.
+                    </p>
+                    <div class="bg-red-500/10 text-red-200 p-3 rounded border border-red-500/20 text-sm">
+                        🚫 Problema: Si llegan 1,000 emails a la vez, tu script explota.
+                    </div>
+                </div>
+
+                <div class="glass-card p-8 rounded-2xl border-t-4 border-t-green-400">
+                    <h3 class="text-2xl font-bold text-green-400 mb-4 flex items-center gap-2">
+                        <i data-lucide="factory" class="w-6 h-6"></i> Nivel Enterprise
+                    </h3>
+                    <p class="text-gray-300 mb-4">
+                        Construyes una fábrica. Tienes seguridad en la puerta, cintas transportadoras (colas), y robots de reparación automática.
+                    </p>
+                    <div class="bg-green-500/10 text-green-200 p-3 rounded border border-green-500/20 text-sm">
+                        ✅ Solución: N8N maneja la carga y LangChain pone la inteligencia.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PESTAÑA 2: HERRAMIENTAS -->
+        <div id="tools" class="tab-content">
+            <h2 class="text-3xl font-bold mb-8 text-center">La Caja de Herramientas</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- N8N -->
+                <div class="glass-card p-6 rounded-xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-pink-500 blur-3xl opacity-20"></div>
+                    <div class="w-12 h-12 bg-pink-500/20 rounded-lg flex items-center justify-center mb-4 text-2xl">🧩</div>
+                    <h3 class="text-xl font-bold text-white">N8N</h3>
+                    <p class="text-sm text-pink-400 font-mono mb-4">El Orquestador</p>
+                    <p class="text-gray-400 text-sm mb-4">Es el tablero de juego. Conecta aplicaciones visualmente.</p>
+                </div>
+                <!-- LangChain -->
+                <div class="glass-card p-6 rounded-xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-blue-500 blur-3xl opacity-20"></div>
+                    <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mb-4 text-2xl">🦜</div>
+                    <h3 class="text-xl font-bold text-white">LangChain</h3>
+                    <p class="text-sm text-blue-400 font-mono mb-4">Las Piezas</p>
+                    <p class="text-gray-400 text-sm mb-4">Son los bloques de construcción de IA. Conecta con LLMs.</p>
+                </div>
+                <!-- LangGraph -->
+                <div class="glass-card p-6 rounded-xl relative overflow-hidden ring-1 ring-purple-500/50">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-purple-500 blur-3xl opacity-20"></div>
+                    <div class="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mb-4 text-2xl">🧠</div>
+                    <h3 class="text-xl font-bold text-white">LangGraph</h3>
+                    <p class="text-sm text-purple-400 font-mono mb-4">El Cerebro Cíclico</p>
+                    <p class="text-gray-400 text-sm mb-4">Permite memoria y bucles de decisión.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PESTAÑA 3: AGENTES IA (NUEVA) -->
+        <div id="agents" class="tab-content">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold mb-4">Agentes IA: Los Trabajadores Autónomos</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    La gran revolución no es solo generar texto, es <strong>ejecutar tareas</strong>.
+                </p>
+            </div>
+
+            <!-- Comparativa Tren vs Taxi -->
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <!-- Chain -->
+                <div class="glass-card p-6 rounded-xl border-l-4 border-gray-500">
+                    <h3 class="text-xl font-bold text-gray-300 mb-2 flex items-center gap-2">
+                        <i data-lucide="train-track" class="w-5 h-5"></i> "Chain" (Cadena)
+                    </h3>
+                    <p class="text-sm text-gray-400 mb-4">Como un tren en las vías.</p>
+                    <div class="bg-black/20 p-4 rounded-lg text-center text-sm font-mono text-gray-500">
+                        Inicio &rarr; Paso A &rarr; Paso B &rarr; Fin
+                    </div>
+                    <p class="text-xs text-gray-500 mt-3">
+                        Si hay un obstáculo en la vía, el tren se detiene. No puede desviarse.
+                    </p>
+                </div>
+
+                <!-- Agent -->
+                <div class="glass-card p-6 rounded-xl border-l-4 border-blue-500 bg-blue-500/5">
+                    <h3 class="text-xl font-bold text-blue-400 mb-2 flex items-center gap-2">
+                        <i data-lucide="bot" class="w-5 h-5"></i> "Agent" (Agente)
+                    </h3>
+                    <p class="text-sm text-gray-300 mb-4">Como un taxista con GPS.</p>
+                    <div class="bg-black/20 p-4 rounded-lg text-sm font-mono text-blue-300 relative overflow-hidden">
+                        <div class="absolute top-2 right-2 opacity-20"><i data-lucide="map" class="w-8 h-8"></i></div>
+                        <div class="mb-1">1. ¿Destino? (Objetivo)</div>
+                        <div class="mb-1">2. ¿Hay tráfico? (Análisis)</div>
+                        <div>3. Calcular nueva ruta (Acción)</div>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-3">
+                        El agente tiene <strong>Herramientas</strong> y decide cuál usar y cuándo.
+                    </p>
+                </div>
+            </div>
+
+            <!-- El Loop del Agente -->
+            <div class="glass-card p-8 rounded-2xl">
+                <h3 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <i data-lucide="refresh-ccw" class="text-green-400"></i> El Ciclo de Pensamiento (ReAct)
+                </h3>
+                <p class="text-gray-400 mb-6 text-sm">
+                    Ejemplo: Un usuario pregunta <em>"¿Quién es el presidente de Francia y cuál es su edad al cuadrado?"</em>
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Visualización del Loop -->
+                    <div class="relative pl-4 border-l border-dashed border-gray-700 space-y-6">
+                        
+                        <div class="relative">
+                            <div class="absolute -left-[25px] bg-purple-500 w-4 h-4 rounded-full mt-1"></div>
+                            <h4 class="text-purple-400 font-bold text-sm">1. Thought (Pensamiento)</h4>
+                            <p class="text-xs text-gray-300 bg-white/5 p-2 rounded mt-1">
+                                "Necesito saber quién es el presidente primero."
+                            </p>
+                        </div>
+
+                        <div class="relative">
+                            <div class="absolute -left-[25px] bg-yellow-500 w-4 h-4 rounded-full mt-1"></div>
+                            <h4 class="text-yellow-400 font-bold text-sm">2. Action (Acción)</h4>
+                            <p class="text-xs text-gray-300 bg-white/5 p-2 rounded mt-1 flex items-center gap-2">
+                                <i data-lucide="search" class="w-3 h-3"></i> Usar Herramienta: <code>GoogleSearch("Presidente Francia")</code>
+                            </p>
+                        </div>
+
+                        <div class="relative">
+                            <div class="absolute -left-[25px] bg-green-500 w-4 h-4 rounded-full mt-1"></div>
+                            <h4 class="text-green-400 font-bold text-sm">3. Observation (Observación)</h4>
+                            <p class="text-xs text-gray-300 bg-white/5 p-2 rounded mt-1">
+                                Resultado: "Emmanuel Macron, 46 años."
+                            </p>
+                        </div>
+
+                        <div class="relative">
+                            <div class="absolute -left-[25px] bg-purple-500 w-4 h-4 rounded-full mt-1"></div>
+                            <h4 class="text-purple-400 font-bold text-sm">4. Thought (Pensamiento - Loop)</h4>
+                            <p class="text-xs text-gray-300 bg-white/5 p-2 rounded mt-1">
+                                "Ahora tengo la edad (46). Necesito calcular el cuadrado."
+                            </p>
+                        </div>
+                        
+                         <div class="relative">
+                            <div class="absolute -left-[25px] bg-yellow-500 w-4 h-4 rounded-full mt-1"></div>
+                            <h4 class="text-yellow-400 font-bold text-sm">5. Action (Acción)</h4>
+                            <p class="text-xs text-gray-300 bg-white/5 p-2 rounded mt-1 flex items-center gap-2">
+                                <i data-lucide="calculator" class="w-3 h-3"></i> Usar Herramienta: <code>Calculator(46^2)</code>
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- Caja de Herramientas -->
+                    <div class="bg-white/5 rounded-xl p-6 border border-white/10">
+                        <h4 class="text-center font-bold mb-4 text-gray-300">🧰 Tools (Herramientas)</h4>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="p-3 bg-black/30 rounded flex flex-col items-center justify-center hover:bg-blue-500/20 transition cursor-pointer group">
+                                <i data-lucide="globe" class="mb-2 text-blue-400 group-hover:scale-110 transition"></i>
+                                <span class="text-xs text-gray-400">Web Search</span>
+                            </div>
+                            <div class="p-3 bg-black/30 rounded flex flex-col items-center justify-center hover:bg-green-500/20 transition cursor-pointer group">
+                                <i data-lucide="database" class="mb-2 text-green-400 group-hover:scale-110 transition"></i>
+                                <span class="text-xs text-gray-400">SQL DB</span>
+                            </div>
+                            <div class="p-3 bg-black/30 rounded flex flex-col items-center justify-center hover:bg-orange-500/20 transition cursor-pointer group">
+                                <i data-lucide="calculator" class="mb-2 text-orange-400 group-hover:scale-110 transition"></i>
+                                <span class="text-xs text-gray-400">Calculator</span>
+                            </div>
+                            <div class="p-3 bg-black/30 rounded flex flex-col items-center justify-center hover:bg-pink-500/20 transition cursor-pointer group">
+                                <i data-lucide="mail" class="mb-2 text-pink-400 group-hover:scale-110 transition"></i>
+                                <span class="text-xs text-gray-400">Gmail API</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-center text-gray-500 mt-4">
+                            El Agente decide cuál usar según lo que necesite.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PESTAÑA 4: LANGGRAPH -->
+        <div id="langgraph" class="tab-content">
+            <div class="flex flex-col md:flex-row gap-10 items-center mb-10">
+                <div class="flex-1">
+                    <h2 class="text-3xl font-bold mb-4">¿Por qué necesitamos grafos?</h2>
+                    <h3 class="text-xl text-purple-400 mb-4">La Analogía del Chef 👨‍🍳</h3>
+                    <p class="text-gray-300 mb-4 leading-relaxed">
+                        Un flujo normal es como seguir una receta a ciegas. <strong>LangGraph</strong> es como un Chef profesional:
+                        Prueba, corrige (Loop) y sirve solo cuando está perfecto.
+                    </p>
+                </div>
+                <div class="flex-1 bg-black/30 p-6 rounded-2xl border border-white/10 flex justify-center">
+                    <!-- SVG Animado del Ciclo -->
+                    <svg width="300" height="300" viewBox="0 0 300 300">
+                        <defs>
+                            <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                                <path d="M0,0 L0,6 L9,3 z" fill="#a855f7" />
+                            </marker>
+                        </defs>
+                        <circle cx="150" cy="50" r="40" fill="#2d3436" stroke="#a855f7" stroke-width="2"/>
+                        <text x="150" y="55" text-anchor="middle" fill="white" font-size="12">Pensar</text>
+                        <circle cx="240" cy="150" r="40" fill="#2d3436" stroke="#a855f7" stroke-width="2"/>
+                        <text x="240" y="155" text-anchor="middle" fill="white" font-size="12">Actuar</text>
+                        <circle cx="60" cy="150" r="40" fill="#2d3436" stroke="#a855f7" stroke-width="2"/>
+                        <text x="60" y="155" text-anchor="middle" fill="white" font-size="12">Criticar</text>
+                        <path d="M185 65 Q 240 80 240 110" fill="none" stroke="#a855f7" stroke-width="2" marker-end="url(#arrow)" class="animate-pulse"/>
+                        <path d="M240 190 Q 150 260 60 190" fill="none" stroke="#a855f7" stroke-width="2" marker-end="url(#arrow)" />
+                        <path d="M60 110 Q 60 80 115 65" fill="none" stroke="#a855f7" stroke-width="2" marker-end="url(#arrow)" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- PESTAÑA 5: LABORATORIO DE CÓDIGO -->
+        <div id="code" class="tab-content">
+            <h2 class="text-3xl font-bold mb-6">Laboratorio de Flujos</h2>
+            <p class="mb-8 text-gray-400">Veamos cómo se traduce la teoría en realidad.</p>
+
+            <!-- Ejemplo 1 -->
+            <div class="mb-10">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="bg-blue-500 text-xs font-bold px-2 py-1 rounded text-white">CASO 1</span>
+                    <h3 class="text-xl font-bold text-white">Chatbot de Soporte (Con Memoria)</h3>
+                </div>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="glass-card p-4 rounded-lg">
+                        <h4 class="text-pink-400 font-bold mb-2 text-sm">En N8N (La Estructura)</h4>
+                        <div class="code-snippet text-xs text-gray-300 overflow-x-auto">
+{
+  "nodes": [
+    {
+      "name": "Webhook Entrada",
+      "type": "n8n-nodes-base.webhook"
+    },
+    {
+      "name": "Agente LangGraph",
+      "type": "n8n-nodes-base.code"
+    }
+  ]
+}
+                        </div>
+                    </div>
+                    <div class="glass-card p-4 rounded-lg">
+                        <h4 class="text-purple-400 font-bold mb-2 text-sm">En Python (La Lógica Interna)</h4>
+                        <div class="code-snippet text-xs text-gray-300 overflow-x-auto">
+# Agente que decide si responder o escalar
+workflow = StateGraph(ChatState)
+workflow.add_node("analizar", analyze_sentiment)
+workflow.add_conditional_edges(
+    "analizar",
+    lambda x: "humano" if x['sentiment'] == "angry" else "responder"
+)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="border-t border-white/5 py-8 mt-8 glass-card">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-gray-500 text-sm">
+                Generado para tu Webinar sobre Automatización · <span class="text-pink-500">N8N</span> + <span class="text-blue-500">LangChain</span> + <span class="text-purple-500">Agentes</span>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Inicializar Iconos
+        lucide.createIcons();
+
+        // Lógica de Pestañas
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('active');
+                el.classList.remove('text-sky-400');
+                el.classList.remove('bg-sky-500/10');
+            });
+
+            document.getElementById(tabId).classList.add('active');
+            
+            // Activar botón correspondiente (búsqueda simple)
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(btn => {
+                if(btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(tabId)) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // --- Background Animation ---
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.2;
+                this.vy = (Math.random() - 0.5) * 0.2;
+                this.size = Math.random() * 2;
+                this.alpha = Math.random() * 0.5;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) this.reset();
+            }
+            draw() {
+                ctx.fillStyle = `rgba(148, 163, 184, ${this.alpha})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for(let i=0; i<60; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>

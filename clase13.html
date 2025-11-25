@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz: Adopción de IA - Clase 12</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #7c2d12, #431407); /* Tonos terracota oscuros */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .quiz-container {
+            background-color: #ffffff;
+            color: #333;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        h2 { color: #c2410c; margin-bottom: 20px; }
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #e2e8f0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #fb923c;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .question {
+            font-size: 1.2em;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .btn-option {
+            background-color: #f1f5f9;
+            border: 2px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        .btn-option:hover {
+            background-color: #ffedd5;
+            border-color: #fdba74;
+        }
+        .btn-option.correct {
+            background-color: #dcfce7;
+            border-color: #22c55e;
+            color: #15803d;
+        }
+        .btn-option.wrong {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+            color: #b91c1c;
+        }
+        .feedback {
+            margin-top: 20px;
+            font-weight: bold;
+            min-height: 24px;
+        }
+        .btn-next {
+            margin-top: 25px;
+            background-color: #c2410c;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            display: none; /* Hidden initially */
+        }
+        .btn-next:hover { background-color: #9a3412; }
+        
+        .result-screen { display: none; }
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            background: #c2410c;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 0 auto 20px;
+        }
+        .recommendation { color: #64748b; margin-top: 15px; }
+
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div id="quiz-screen">
+        <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+        <div class="question" id="question-text">Cargando pregunta...</div>
+        <div class="options" id="options-container">
+            </div>
+        <div class="feedback" id="feedback-text"></div>
+        <button class="btn-next" id="next-btn" onclick="nextQuestion()">Siguiente Pregunta ➜</button>
+    </div>
+
+    <div id="result-screen" class="result-screen">
+        <h2>Resultados Finales</h2>
+        <div class="score-circle" id="final-score">0/6</div>
+        <p id="result-message"></p>
+        <p class="recommendation" id="recommendation-text"></p>
+        <button class="btn-next" style="display:inline-block;" onclick="location.reload()">Intentar de nuevo</button>
+    </div>
+</div>
+
+<script>
+    // Preguntas basadas en la transcripción de la Clase 12
+    const questions = [
+        {
+            question: "¿Qué significa 'Zero-shot prompting' según lo discutido en clase?",
+            options: ["Disparar a cero grados", "Pedir a la IA que realice una tarea sin darle ningún ejemplo previo", "Usar la IA sin conexión a internet", "Reiniciar la IA a cero"],
+            correct: 1,
+            feedback: "¡Correcto! Zero-shot es confiar en el entrenamiento base del modelo sin darle guías adicionales."
+        },
+        {
+            question: "¿En qué consiste la técnica 'Few-shot prompting'?",
+            options: ["En darle a la IA pocos segundos para responder", "En proveer algunos ejemplos (shots) de lo que queremos para guiar el modelo", "En escribir prompts muy cortos", "En usar pocas palabras"],
+            correct: 1,
+            feedback: "¡Exacto! 'Few-shot' implica dar unos pocos ejemplos (pregunta/respuesta) para que la IA entienda el patrón."
+        },
+        {
+            question: "¿Qué término utilizó el grupo para referirse a explicar el razonamiento paso a paso?",
+            options: ["Chain of Thought (Cadena de Pensamiento)", "Brainstorming rápido", "Deep dreaming", "Thought loop"],
+            correct: 0,
+            feedback: "¡Muy bien! 'Chain of Thought' fue mencionado por Pedro y aiwis como técnica clave."
+        },
+        {
+            question: "¿Qué nombre de modelo específico se mencionó asociado a 'Deep learning' o búsqueda profunda?",
+            options: ["Deep Seek", "Super Find", "Mega Search", "Ultra Bot"],
+            correct: 0,
+            feedback: "¡Correcto! Se mencionó 'Deep seek' en el contexto de modelos avanzados."
+        },
+        {
+            question: "Según Rafael Valdés, ¿qué tipo de modelo es importante en este contexto?",
+            options: ["Graphic model", "Reasoning model (Modelo de razonamiento)", "Gaming model", "Business model"],
+            correct: 1,
+            feedback: "¡Así es! Rafael hizo hincapié en el 'Reasoning model' para tareas complejas."
+        },
+        {
+            question: "¿Cuál es el beneficio principal de usar 'Chain of Thought'?",
+            options: ["Hace que la IA responda más rápido", "Permite ver y corregir la lógica paso a paso, reduciendo errores", "Ahorra tokens siempre", "No sirve para nada"],
+            correct: 1,
+            feedback: "¡Exacto! Al desglosar el pensamiento, se mejora la precisión lógica."
+        }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+        const q = questions[currentQuestion];
+        document.getElementById("question-text").innerText = q.question;
+        document.getElementById("feedback-text").innerText = "";
+        document.getElementById("next-btn").style.display = "none";
+        
+        // Update Progress
+        const progressPercent = ((currentQuestion) / questions.length) * 100;
+        document.getElementById("progress").style.width = progressPercent + "%";
+
+        const optionsDiv = document.getElementById("options-container");
+        optionsDiv.innerHTML = "";
+
+        // Shuffle options
+        let optionButtons = [];
+        q.options.forEach((opt, index) => {
+            const btn = document.createElement("button");
+            btn.className = "btn-option";
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(index, btn);
+            optionButtons.push(btn);
+        });
+
+        optionButtons.sort(() => Math.random() - 0.5);
+        optionButtons.forEach(btn => optionsDiv.appendChild(btn));
+    }
+
+    function checkAnswer(selectedIndex, btnElement) {
+        const opts = document.querySelectorAll(".btn-option");
+        opts.forEach(o => o.disabled = true);
+
+        const q = questions[currentQuestion];
+        
+        if (selectedIndex === q.correct) {
+            btnElement.classList.add("correct");
+            document.getElementById("feedback-text").innerText = q.feedback;
+            document.getElementById("feedback-text").style.color = "#15803d";
+            score++;
+        } else {
+            btnElement.classList.add("wrong");
+            opts.forEach(o => {
+                if(o.innerText === q.options[q.correct]) o.classList.add("correct");
+            });
+            document.getElementById("feedback-text").innerText = "Incorrecto. " + q.feedback;
+            document.getElementById("feedback-text").style.color = "#b91c1c";
+        }
+        document.getElementById("next-btn").style.display = "inline-block";
+    }
+
+    function nextQuestion() {
+        currentQuestion++;
+        if (currentQuestion < questions.length) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        document.getElementById("quiz-screen").style.display = "none";
+        document.getElementById("result-screen").style.display = "block";
+        document.getElementById("final-score").innerText = score + "/" + questions.length;
+        
+        let msg = "";
+        let rec = "";
+        
+        if (score === 6) {
+            msg = "¡Maestro del Prompting! 🎓";
+            rec = "Entiendes perfectamente las técnicas avanzadas. ¡Estás listo para diseñar prompts complejos!";
+        } else if (score >= 4) {
+            msg = "¡Muy buen trabajo! 👍";
+            rec = "Tienes claros los conceptos. Practica creando prompts 'Few-shot' para perfeccionar.";
+        } else {
+            msg = "A repasar conceptos 📚";
+            rec = "Revisa el video de la Clase 12 para entender mejor la diferencia entre Zero-shot y Few-shot.";
+        }
+        
+        document.getElementById("result-message").innerText = msg;
+        document.getElementById("recommendation-text").innerText = rec;
+    }
+
+    loadQuestion();
+
+</script>
+
+</body>
+</html>

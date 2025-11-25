@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz: Adopción de IA - Clase 15</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #064e3b, #022c22); /* Verde oscuro laboratorio */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .quiz-container {
+            background-color: #ffffff;
+            color: #333;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        h2 { color: #059669; margin-bottom: 20px; }
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #e2e8f0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #34d399;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .question {
+            font-size: 1.2em;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .btn-option {
+            background-color: #f1f5f9;
+            border: 2px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        .btn-option:hover {
+            background-color: #d1fae5;
+            border-color: #6ee7b7;
+        }
+        .btn-option.correct {
+            background-color: #dcfce7;
+            border-color: #22c55e;
+            color: #15803d;
+        }
+        .btn-option.wrong {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+            color: #b91c1c;
+        }
+        .feedback {
+            margin-top: 20px;
+            font-weight: bold;
+            min-height: 24px;
+        }
+        .btn-next {
+            margin-top: 25px;
+            background-color: #059669;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            display: none; /* Hidden initially */
+        }
+        .btn-next:hover { background-color: #047857; }
+        
+        .result-screen { display: none; }
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            background: #059669;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 0 auto 20px;
+        }
+        .recommendation { color: #64748b; margin-top: 15px; }
+
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div id="quiz-screen">
+        <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+        <div class="question" id="question-text">Cargando pregunta...</div>
+        <div class="options" id="options-container">
+            </div>
+        <div class="feedback" id="feedback-text"></div>
+        <button class="btn-next" id="next-btn" onclick="nextQuestion()">Siguiente Pregunta ➜</button>
+    </div>
+
+    <div id="result-screen" class="result-screen">
+        <h2>Resultados Finales</h2>
+        <div class="score-circle" id="final-score">0/6</div>
+        <p id="result-message"></p>
+        <p class="recommendation" id="recommendation-text"></p>
+        <button class="btn-next" style="display:inline-block;" onclick="location.reload()">Intentar de nuevo</button>
+    </div>
+</div>
+
+<script>
+    // Preguntas basadas en la Clase 15 (Webhooks, JSON, Credenciales)
+    const questions = [
+        {
+            question: "¿Qué elemento actúa como el 'timbre' o disparador para recibir datos externos en el flujo?",
+            options: ["El cable HDMI", "El Webhook", "El botón de encendido", "El teclado"],
+            correct: 1,
+            feedback: "¡Correcto! El Webhook es la URL que escucha y recibe datos para iniciar el proceso."
+        },
+        {
+            question: "¿En qué formato se estructuran comúnmente los datos que viajan por el flujo?",
+            options: ["MP3", "JSON", "JPG", "DOCX"],
+            correct: 1,
+            feedback: "¡Exacto! JSON es el formato estándar de texto (clave: valor) para el intercambio de datos."
+        },
+        {
+            question: "¿Para qué sirve una 'Test URL' en el Webhook?",
+            options: ["Para ver películas", "Para probar el flujo manualmente y detectar errores", "Para enviar virus", "Para apagar el sistema"],
+            correct: 1,
+            feedback: "¡Muy bien! La Test URL se usa durante el diseño para verificar que todo funciona antes de automatizar."
+        },
+        {
+            question: "¿Qué se necesita configurar para que n8n pueda acceder a tu cuenta de Gmail o Drive de forma segura?",
+            options: ["Credentials (Credenciales)", "Una foto de perfil", "Tu dirección de casa", "El historial de búsqueda"],
+            correct: 0,
+            feedback: "¡Correcto! Las credenciales (generalmente OAuth o API Keys) son vitales para la seguridad y permisos."
+        },
+        {
+            question: "¿Qué acción específica en Google Drive se mencionó en la clase?",
+            options: ["Borrar todo", "Upload file (Subir archivo)", "Cambiar el color del logo", "Formatear el disco"],
+            correct: 1,
+            feedback: "¡Así es! Se mostró cómo el flujo podía automatizar la subida de archivos ('Upload file')."
+        },
+        {
+            question: "Una vez que el flujo está listo y probado, ¿qué tipo de URL se debe usar para que funcione siempre?",
+            options: ["Production URL", "Broken URL", "Fake URL", "Beta URL"],
+            correct: 0,
+            feedback: "¡Exacto! La Production URL es la dirección definitiva para que el agente trabaje automáticamente."
+        }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+        const q = questions[currentQuestion];
+        document.getElementById("question-text").innerText = q.question;
+        document.getElementById("feedback-text").innerText = "";
+        document.getElementById("next-btn").style.display = "none";
+        
+        // Update Progress
+        const progressPercent = ((currentQuestion) / questions.length) * 100;
+        document.getElementById("progress").style.width = progressPercent + "%";
+
+        const optionsDiv = document.getElementById("options-container");
+        optionsDiv.innerHTML = "";
+
+        // Shuffle options
+        let optionButtons = [];
+        q.options.forEach((opt, index) => {
+            const btn = document.createElement("button");
+            btn.className = "btn-option";
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(index, btn);
+            optionButtons.push(btn);
+        });
+
+        optionButtons.sort(() => Math.random() - 0.5);
+        optionButtons.forEach(btn => optionsDiv.appendChild(btn));
+    }
+
+    function checkAnswer(selectedIndex, btnElement) {
+        const opts = document.querySelectorAll(".btn-option");
+        opts.forEach(o => o.disabled = true);
+
+        const q = questions[currentQuestion];
+        
+        if (selectedIndex === q.correct) {
+            btnElement.classList.add("correct");
+            document.getElementById("feedback-text").innerText = q.feedback;
+            document.getElementById("feedback-text").style.color = "#15803d";
+            score++;
+        } else {
+            btnElement.classList.add("wrong");
+            opts.forEach(o => {
+                if(o.innerText === q.options[q.correct]) o.classList.add("correct");
+            });
+            document.getElementById("feedback-text").innerText = "Incorrecto. " + q.feedback;
+            document.getElementById("feedback-text").style.color = "#b91c1c";
+        }
+        document.getElementById("next-btn").style.display = "inline-block";
+    }
+
+    function nextQuestion() {
+        currentQuestion++;
+        if (currentQuestion < questions.length) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        document.getElementById("quiz-screen").style.display = "none";
+        document.getElementById("result-screen").style.display = "block";
+        document.getElementById("final-score").innerText = score + "/" + questions.length;
+        
+        let msg = "";
+        let rec = "";
+        
+        if (score === 6) {
+            msg = "¡Ingeniero de Integración! 👷‍♂️";
+            rec = "Has dominado la conexión de Webhooks y APIs. ¡Tu flujo está listo para producción!";
+        } else if (score >= 4) {
+            msg = "¡Buen trabajo! 👍";
+            rec = "Entiendes la lógica de la integración. Recuerda la diferencia entre Test y Production URL.";
+        } else {
+            msg = "Revisión necesaria 🛠️";
+            rec = "Mira el video de la Clase 15 nuevamente para entender mejor cómo funcionan los Webhooks y el JSON.";
+        }
+        
+        document.getElementById("result-message").innerText = msg;
+        document.getElementById("recommendation-text").innerText = rec;
+    }
+
+    loadQuestion();
+
+</script>
+
+</body>
+</html>

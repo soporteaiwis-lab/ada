@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADA | AIWIS - Resumen Clase 12</title>
+    <style>
+        :root {
+            --primary: #c2410c; /* Naranja quemado para diferenciar técnicas avanzadas */
+            --secondary: #9a3412;
+            --accent: #fb923c;
+            --bg: #fff7ed;
+            --text: #1e293b;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        /* Header Dashboard */
+        header {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 40px 20px;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 { margin: 0; font-size: 2.5em; letter-spacing: -1px; }
+        .meta-info {
+            margin-top: 10px;
+            font-size: 1.1em;
+            opacity: 0.9;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.9em;
+        }
+        
+        /* Video Section */
+        .video-cta {
+            background: var(--card-bg);
+            margin: -20px auto 30px;
+            width: 80%;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+        }
+        .btn-video {
+            background-color: #ea580c;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        .btn-video:hover { transform: scale(1.05); }
+
+        /* Content Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-5px); }
+        .card h3 { color: var(--secondary); margin-top: 0; display: flex; align-items: center; gap: 10px; }
+        .icon { font-size: 1.5em; }
+        
+        /* Highlight Box */
+        .highlight-box {
+            background: linear-gradient(to right, #ffedd5, #fed7aa);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            border: 1px solid #fdba74;
+        }
+        .highlight-title { font-weight: bold; color: var(--secondary); margin-bottom: 10px; display: block; }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #64748b;
+            font-size: 0.9em;
+            padding-bottom: 20px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8em; }
+            .video-cta { width: 90%; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Programa de Adopción de IA Corporativa</h1>
+    <div class="meta-info">
+        <span class="badge">📅 18 Nov 2025</span>
+        <span class="badge">🚀 Semana 03</span>
+        <span class="badge">🎓 Clase 12</span>
+    </div>
+    <p style="margin-top:15px; font-weight: 300;">Técnicas Avanzadas: Zero-shot, Few-shot y Chain of Thought</p>
+</header>
+
+<div class="container">
+
+    <div class="video-cta">
+        <p><strong>📹 Grabación de la Sesión Disponible</strong></p>
+        <p>Profundiza en las estrategias de razonamiento ("Reasoning Models") vistas en clase.</p>
+        <a href="https://drive.google.com/file/d/1Q0wES03jrwPj31czR4XfNnBQwlHlsh0y/view?usp=sharing" target="_blank" class="btn-video">
+            Ver Clase 12 en Google Drive
+        </a>
+    </div>
+
+    <div class="highlight-box">
+        <span class="highlight-title">💡 Idea Central de la Sesión</span>
+        <p>Esta clase marcó la transición de "dar órdenes" a "guiar el pensamiento". Se discutió cómo mejorar drásticamente las respuestas de la IA proporcionando ejemplos (<strong>Few-shot</strong>) o pidiendo explícitamente que desglose su lógica paso a paso (<strong>Chain of Thought</strong>), conceptos clave mencionados por aiwis y Rafael Valdés.</p>
+    </div>
+
+    <div class="grid">
+        
+        <div class="card">
+            <h3><span class="icon">🎯</span> Zero-shot Prompting</h3>
+            <p>Es el método más común: preguntar directamente sin dar ejemplos previos.</p>
+            <ul>
+                <li><strong>Definición:</strong> Pedir a la IA que realice una tarea confiando solo en su entrenamiento previo.</li>
+                <li><strong>Uso:</strong> Ideal para tareas simples o conocimiento general.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">📝</span> Few-shot Prompting</h3>
+            <p>La técnica para "enseñar" el formato deseado.</p>
+            <ul>
+                <li><strong>Estrategia:</strong> Dar uno o dos ejemplos (shots) de Pregunta -> Respuesta ideal dentro del prompt.</li>
+                <li><strong>Resultado:</strong> La IA imita el patrón y la lógica de los ejemplos dados.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">⛓️</span> Chain of Thought</h3>
+            <p>Pedro y aiwis discutieron esta técnica vital para problemas complejos.</p>
+            <ul>
+                <li><strong>Concepto:</strong> "Cadena de Pensamiento". Pedirle a la IA que explique su razonamiento paso a paso antes de dar la respuesta final.</li>
+                <li><strong>Beneficio:</strong> Reduce alucinaciones y errores lógicos.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">🧠</span> Modelos de Razonamiento</h3>
+            <p>Se mencionaron tecnologías específicas enfocadas en la lógica profunda.</p>
+            <ul>
+                <li><strong>DeepSeek:</strong> Mencionado como un ejemplo de modelo con capacidades de búsqueda profunda o razonamiento.</li>
+                <li><strong>Reasoning Model:</strong> Rafael destacó la importancia de modelos que "piensan" (Deep Learning).</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <p>Generado por GENERA TEXTOS PORTAL IA | Basado en notas de Gemini y Cronograma Oficial</p>
+</footer>
+
+</body>
+</html>
