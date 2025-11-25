@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADA Ltda - Portal de Adopción IA | AIWIS</title>
+    
+    <!-- MEJORA: Importar una fuente moderna (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --azul-principal: #1e40af;
@@ -18,6 +24,10 @@
             --blanco: #ffffff;
             --negro: #0f172a;
             --borde: #e5e7eb;
+            
+            /* MEJORA: Variables RGB para sombras/brillos */
+            --azul-claro-rgb: 59, 130, 246;
+            --violeta-claro-rgb: 139, 92, 246;
         }
 
         * {
@@ -27,11 +37,31 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            /* MEJORA: Fuente moderna y un fondo más dinámico */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0f172a;
+            background-image: radial-gradient(at 0% 0%, hsla(222, 70%, 40%, 0.3) 0px, transparent 50%),
+                              radial-gradient(at 100% 0%, hsla(264, 82%, 60%, 0.2) 0px, transparent 50%),
+                              radial-gradient(at 0% 100%, hsla(215, 41%, 15%, 0.5) 0px, transparent 50%);
             min-height: 100vh;
             line-height: 1.6;
             color: var(--blanco);
+        }
+
+        /* === MEJORA: Animaciones === */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInModal {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         /* === PANTALLA DE LOGIN === */
@@ -41,7 +71,9 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            /* MEJORA: Fondo de overlay más sutil */
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.9) 100%);
+            backdrop-filter: blur(10px); /* Desenfoque sobre el fondo del body */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -54,13 +86,16 @@
 
         .login-box {
             background: rgba(255,255,255,0.05);
+            /* MEJORA: desenfoque más pronunciado */
             backdrop-filter: blur(20px);
             border-radius: 20px;
             padding: 3rem;
             max-width: 450px;
             width: 90%;
             box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15); /* Borde más nítido */
+            /* MEJORA: Animación de entrada */
+            animation: fadeIn 0.5s ease-out;
         }
 
         .login-logo {
@@ -103,7 +138,8 @@
             background: rgba(255,255,255,0.05);
             color: var(--blanco);
             font-size: 1rem;
-            transition: all 0.3s;
+            /* MEJORA: Transición suave */
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             font-family: inherit;
         }
 
@@ -113,6 +149,8 @@
             outline: none;
             border-color: var(--azul-claro);
             background: rgba(255,255,255,0.1);
+            /* MEJORA: Sombra de foco */
+            box-shadow: 0 0 15px rgba(var(--azul-claro-rgb), 0.3);
         }
         
         .form-group select option {
@@ -129,13 +167,16 @@
             font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
+            /* MEJORA: Transición suave */
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             margin-top: 1rem;
         }
 
         .login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+            /* MEJORA: Efecto de "levantar" más pronunciado */
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(var(--azul-claro-rgb), 0.4);
+            filter: brightness(1.1);
         }
 
         .login-error {
@@ -153,8 +194,9 @@
 
         /* === NAVEGACIÓN === */
         .navbar {
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
+            /* MEJORA: Más transparente y con más desenfoque */
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             padding: 1rem 2rem;
             position: sticky;
@@ -197,20 +239,26 @@
             padding: 0.7rem 1.2rem;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s;
+            /* MEJORA: Transición suave */
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             color: rgba(255,255,255,0.8);
             text-decoration: none;
             font-weight: 500;
         }
 
         .nav-link:hover {
-            background: rgba(59, 130, 246, 0.2);
+            background: rgba(var(--azul-claro-rgb), 0.2);
             color: var(--blanco);
+            /* MEJORA: Efecto de escala */
+            transform: scale(1.05);
         }
 
         .nav-link.active {
             background: linear-gradient(135deg, var(--azul-claro), var(--violeta-claro));
             color: var(--blanco);
+            /* MEJORA: Brillo y escala para el item activo */
+            box-shadow: 0 4px 15px rgba(var(--violeta-claro-rgb), 0.3);
+            transform: scale(1.05);
         }
 
         .user-info {
@@ -221,6 +269,11 @@
             background: rgba(255,255,255,0.05);
             border-radius: 20px;
             border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .user-info:hover {
+            background: rgba(255,255,255,0.1);
         }
 
         .user-avatar {
@@ -245,6 +298,7 @@
 
         .logout-btn:hover {
             color: var(--rojo);
+            transform: scale(1.1) rotate(15deg); /* MEJORA: Efecto hover */
         }
 
         /* === CONTENEDOR PRINCIPAL === */
@@ -260,6 +314,8 @@
 
         .page-section.active {
             display: block;
+            /* MEJORA: Animación de entrada para secciones */
+            animation: fadeInUp 0.5s ease-out;
         }
 
         /* === PÁGINA INICIO LAYOUT === */
@@ -280,16 +336,18 @@
 
         .student-card {
             background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
+            /* MEJORA: Desenfoque y transición */
+            backdrop-filter: blur(16px);
             border-radius: 15px;
             padding: 1.5rem;
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.15);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .student-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            /* MEJORA: Efecto hover más pronunciado */
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
             border-color: var(--azul-claro);
         }
 
@@ -310,10 +368,12 @@
             justify-content: center;
             font-size: 1.5rem;
             font-weight: bold;
+            /* MEJORA: Sombra sutil */
+            box-shadow: 0 5px 15px rgba(var(--violeta-claro-rgb), 0.3);
         }
 
         .student-info h3 {
-            font-size: 1.1rem;
+            font-size: 1.2rem; /* MEJORA: Ligeramente más grande */
             margin-bottom: 0.3rem;
         }
 
@@ -393,19 +453,22 @@
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .fase-btn:hover {
-            background: rgba(59, 130, 246, 0.1);
+            background: rgba(var(--azul-claro-rgb), 0.1);
             border-color: var(--azul-claro);
             color: var(--blanco);
+            transform: translateY(-3px); /* MEJORA: Efecto hover */
         }
 
         .fase-btn.active {
             background: linear-gradient(135deg, var(--azul-claro), var(--violeta-claro));
             border-color: transparent;
             color: var(--blanco);
+            /* MEJORA: Brillo de botón activo */
+            box-shadow: 0 5px 20px rgba(var(--azul-claro-rgb), 0.4);
         }
 
         .fase-content {
@@ -431,19 +494,22 @@
             border-radius: 10px;
             color: rgba(255,255,255,0.7);
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .week-btn:hover {
-            background: rgba(59, 130, 246, 0.1);
+            background: rgba(var(--azul-claro-rgb), 0.1);
             border-color: var(--azul-claro);
             color: var(--blanco);
+            transform: translateY(-3px); /* MEJORA: Efecto hover */
         }
 
         .week-btn.active {
             background: var(--azul-claro);
             border-color: var(--azul-claro);
             color: var(--blanco);
+            /* MEJORA: Brillo de botón activo */
+            box-shadow: 0 0 15px rgba(var(--azul-claro-rgb), 0.5);
         }
 
         .week-content {
@@ -488,7 +554,7 @@
             font-size: 1.5rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -499,7 +565,7 @@
             background: var(--azul-claro);
             border-color: var(--azul-claro);
             transform: scale(1.15);
-            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 5px 20px rgba(var(--azul-claro-rgb), 0.4);
         }
 
         .carousel-nav-btn:active:not(:disabled) {
@@ -551,15 +617,17 @@
             background: rgba(255,255,255,0.05);
             border-radius: 12px;
             overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.15); /* Borde más nítido */
+            /* MEJORA: Desenfoque y transición */
+            backdrop-filter: blur(16px);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             cursor: pointer;
             flex-shrink: 0;
         }
 
         .video-card:hover {
             transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4); /* Sombra mejorada */
             border-color: var(--azul-claro);
             z-index: 10;
         }
@@ -568,7 +636,7 @@
             position: relative;
             width: 100%;
             height: 170px;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            background: linear-gradient(135deg, rgba(var(--azul-claro-rgb), 0.1), rgba(var(--violeta-claro-rgb), 0.1));
             display: flex;
             align-items: center;
             justify-content: center;
@@ -579,6 +647,11 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s ease; /* MEJORA: Zoom en thumbnail */
+        }
+        
+        .video-card:hover .video-thumbnail img {
+            transform: scale(1.05);
         }
 
         .play-button {
@@ -592,12 +665,13 @@
             justify-content: center;
             font-size: 1.5rem;
             color: var(--negro);
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* MEJORA: Transición */
         }
 
         .video-card:hover .play-button {
-            transform: scale(1.2);
+            transform: scale(1.15); /* MEJORA: Escala más grande */
             background: var(--blanco);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
         .video-progress {
@@ -627,6 +701,8 @@
             display: flex;
             align-items: center;
             gap: 0.3rem;
+            /* MEJORA: Sombra sutil */
+            box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
         }
 
         .video-info {
@@ -683,7 +759,7 @@
             text-decoration: none;
             font-weight: bold;
             font-size: 0.85rem;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
@@ -691,7 +767,8 @@
             background: var(--azul-claro);
             color: var(--blanco);
             border-color: var(--azul-claro);
-            transform: translateY(-2px);
+            transform: translateY(-3px); /* MEJORA: Efecto hover */
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
         }
 
         /* === MODAL DE CLASE === */
@@ -702,7 +779,9 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.9);
+            /* MEJORA: Fondo más sutil y con desenfoque */
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
             z-index: 2000;
             overflow-y: auto;
         }
@@ -712,16 +791,23 @@
             align-items: center;
             justify-content: center;
             padding: 2rem;
+            /* MEJORA: Animación de entrada */
+            animation: fadeIn 0.3s ease-out;
         }
 
         .modal-content {
-            background: rgba(15, 23, 42, 0.98);
+            /* MEJORA: Estilo "glassmorphism" para el modal */
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(20px);
             border-radius: 20px;
             max-width: 1200px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            /* MEJORA: Animación de entrada */
+            animation: fadeInModal 0.4s ease-out;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
         }
 
         .modal-header {
@@ -753,17 +839,39 @@
             color: var(--blanco);
             font-size: 1.5rem;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .close-modal:hover {
             background: var(--rojo);
-            transform: rotate(90deg);
+            /* MEJORA: Rotación más pronunciada */
+            transform: rotate(180deg) scale(1.1);
         }
 
         .modal-video {
             padding: 0 2rem;
             margin: 2rem 0;
+            /* MEJORA: Añadida altura mínima por si no hay video */
+            min-height: 300px; 
+        }
+        
+        /* MEJORA: Estilos para el placeholder de Google Meet */
+        .meet-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            text-align: center;
+            background: rgba(var(--azul-claro-rgb), 0.05);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+        
+        .meet-placeholder p {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 1.5rem;
         }
 
         .modal-video iframe {
@@ -835,6 +943,7 @@
             padding: 2rem;
             margin-bottom: 2rem;
             border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px); /* MEJORA: Añadido desenfoque */
         }
 
         .guide-section h2 {
@@ -857,11 +966,23 @@
         }
 
         .guide-day {
-            background: rgba(59, 130, 246, 0.1);
+            background: rgba(var(--azul-claro-rgb), 0.1);
             border-left: 4px solid var(--azul-claro);
             padding: 1rem;
             margin: 1rem 0;
             border-radius: 8px;
+            transition: all 0.3s ease; /* MEJORA: Transición */
+        }
+        
+        /* MEJORA: Estilo interactivo para la guía de estudios */
+        .guide-day.interactive {
+            cursor: pointer;
+        }
+        
+        .guide-day.interactive:hover {
+            background: rgba(var(--azul-claro-rgb), 0.2);
+            transform: scale(1.02); /* MEJORA: Efecto hover */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
         .guide-day strong {
@@ -873,10 +994,17 @@
         /* === FORMULARIO DE REPORTE === */
         .report-generator-card {
             background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(16px); /* MEJORA: Desenfoque */
             border-radius: 15px;
             padding: 2rem;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* MEJORA: Transición */
+        }
+        
+         .report-generator-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border-color: var(--azul-claro);
         }
         
         .report-generator-card h3 {
@@ -918,11 +1046,12 @@
             padding: 0.5rem 1rem;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease; /* MEJORA: Transición */
         }
         
         .filter-btn:hover {
             background: rgba(255,255,255,0.2);
+            transform: translateY(-2px); /* MEJORA: Efecto hover */
         }
         
         .filter-btn.active {
@@ -980,7 +1109,7 @@
 
         .delete-idea-btn:hover {
             color: var(--rojo);
-            transform: scale(1.1);
+            transform: scale(1.1) rotate(5deg); /* MEJORA: Efecto hover */
         }
         
         .report-buttons {
@@ -999,17 +1128,25 @@
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
         
         .report-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+            /* MEJORA: Mismo efecto que el botón de login */
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(var(--azul-claro-rgb), 0.4);
+            filter: brightness(1.1);
         }
         
         .report-btn.secondary {
             background: rgba(255,255,255,0.1);
             border: 1px solid var(--azul-claro);
+        }
+        
+        .report-btn.secondary:hover {
+            background: rgba(var(--azul-claro-rgb), 0.2);
+            box-shadow: 0 8px 20px rgba(var(--azul-claro-rgb), 0.3);
+            filter: brightness(1); /* Resetear filtro para botón secundario */
         }
 
         /* === TOAST NOTIFICATIONS === */
@@ -1024,11 +1161,13 @@
         }
 
         .toast {
-            background: rgba(15, 23, 42, 0.98);
+            /* MEJORA: Estilo "glassmorphism" */
+            background: rgba(30, 41, 59, 0.9);
+            backdrop-filter: blur(15px);
             border-radius: 12px;
             padding: 1rem 1.5rem;
             min-width: 300px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
@@ -1046,6 +1185,19 @@
                 opacity: 1;
             }
         }
+        
+        /* MEJORA: Keyframe de salida para toast */
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
 
         .toast.success {
             border-left: 4px solid var(--verde-exito);
@@ -1096,6 +1248,237 @@
             to { transform: rotate(360deg); }
         }
 
+        /* === MEJORA: Estilos para el Asistente IA (FAB y Modal) === */
+        
+        .gemini-fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--azul-claro), var(--violeta-claro));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--blanco);
+            font-size: 2rem;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(var(--violeta-claro-rgb), 0.4);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            z-index: 1050;
+            border: none;
+        }
+
+        .gemini-fab:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 15px 35px rgba(var(--violeta-claro-rgb), 0.5);
+        }
+        
+        /* Contenedor del Chat */
+        .chat-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            z-index: 1060;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .chat-modal-overlay.active {
+            display: block;
+        }
+
+        .chat-modal-content {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 90%;
+            max-width: 450px;
+            height: 70vh;
+            max-height: 600px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            /* Animación de entrada */
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.4s ease-out forwards;
+        }
+
+        .chat-modal-overlay.active .chat-modal-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chat-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h3 {
+            font-size: 1.1rem;
+            color: var(--blanco);
+        }
+
+        .close-chat-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.7);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .close-chat-btn:hover {
+            color: var(--rojo);
+            transform: rotate(90deg);
+        }
+        
+        .chat-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .chat-tab {
+            flex: 1;
+            padding: 0.8rem;
+            text-align: center;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .chat-tab:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .chat-tab.active {
+            color: var(--azul-claro);
+            border-bottom-color: var(--azul-claro);
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        /* Mensajes del chat */
+        .chat-message {
+            padding: 0.8rem 1.2rem;
+            border-radius: 12px;
+            max-width: 85%;
+            line-height: 1.6;
+            animation: fadeInUp 0.3s ease-out;
+        }
+        
+        .chat-message.user-message {
+            background: linear-gradient(135deg, var(--azul-claro), var(--violeta-claro));
+            color: var(--blanco);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .chat-message.model-message {
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.9);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .chat-message.model-message strong {
+            color: var(--azul-claro);
+        }
+        
+        .chat-message.model-message em {
+            color: var(--violeta-claro);
+            font-style: normal;
+        }
+
+        .chat-message p {
+            margin: 0;
+        }
+        
+        .chat-message.loading-message {
+            align-self: flex-start;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .chat-input-area {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .chat-form {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .chat-form textarea {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 10px;
+            border: 2px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: var(--blanco);
+            font-size: 0.9rem;
+            font-family: inherit;
+            resize: none;
+            transition: all 0.3s ease;
+        }
+        
+        .chat-form textarea:focus {
+            outline: none;
+            border-color: var(--azul-claro);
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .chat-send-btn {
+            padding: 0 1rem;
+            background: var(--azul-claro);
+            border: none;
+            border-radius: 10px;
+            color: var(--blanco);
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chat-send-btn:hover {
+            background: var(--violeta-claro);
+        }
+
+        .chat-send-btn:disabled {
+            background: rgba(255,255,255,0.2);
+            cursor: not-allowed;
+        }
+
+        /* === FIN ESTILOS ASISTENTE IA === */
+
         /* === RESPONSIVE === */
         @media (max-width: 1200px) {
             .home-layout {
@@ -1124,10 +1507,34 @@
 
             .modal-content {
                 margin: 1rem;
+                max-height: 95vh; /* Ajuste para móviles */
             }
 
             .modal-video iframe {
                 height: 300px;
+            }
+            
+            /* MEJORA: Ajuste de padding en móvil */
+            .modal-header, .modal-body {
+                padding: 1.5rem;
+            }
+            .modal-video {
+                padding: 0 1.5rem;
+            }
+            .modal-tabs {
+                padding: 0 1.5rem;
+            }
+            
+            /* MEJORA: Ajuste del chat modal en móvil */
+            .chat-modal-content {
+                bottom: 1rem;
+                right: 1rem;
+                width: calc(100% - 2rem);
+                max-height: 80vh;
+            }
+            .gemini-fab {
+                bottom: 1rem;
+                right: 1rem;
             }
         }
     </style>
@@ -1397,123 +1804,17 @@
         <section id="guia" class="page-section">
             <div class="study-guide">
                 <h1 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem; background: linear-gradient(135deg, var(--azul-claro), var(--violeta-claro)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                    📖 Guía de Estudios - Programa AIWIS
+                    📖 Guía de Estudios Interactiva
                 </h1>
-
-                <div class="guide-section">
-                    <h2>SEMANA 1: Fundamentos de IA y Productividad Inteligente</h2>
-                    
-                    <div class="guide-day">
-                        <strong>Lunes (Día 1): Introducción a la IA Corporativa</strong>
-                        Presentación del programa, objetivos y visión. ¿Qué es la IA y por qué es crucial para ADA? Establecemos las bases de nuestro viaje.
-                    </div>
-                    
-                    <div class="guide-day">
-                        <strong>Martes (Día 2): Dominando ChatGPT y Claude</strong>
-                        Aprenderás a usar las herramientas de IA más potentes del mercado para maximizar tu productividad diaria.
-                    </div>
-                    
-                    <div class="guide-day">
-                        <strong>Miércoles (Día 3): Ingeniería de Prompts Profesional</strong>
-                        Técnicas avanzadas de prompting para obtener resultados profesionales de los LLMs.
-                    </div>
-                    
-                    <div class="guide-day">
-                        <strong>Jueves (Día 4): IA para Desarrolladores I</strong>
-                        Introducción al desarrollo con IA: Copilot, Cursor y herramientas de código asistido.
-                    </div>
-                    
-                    <div class="guide-day">
-                        <strong>Viernes (Día 5): Automatización de Tareas Diarias</strong>
-                        Cómo automatizar tus tareas repetitivas usando IA y scripts simples.
+                
+                <!-- MEJORA: Contenedor dinámico para la guía de estudios -->
+                <div id="studyGuideContainer">
+                    <div class="loading" id="studyGuideLoading">
+                        <div class="spinner"></div>
+                        <span>Cargando guía interactiva...</span>
                     </div>
                 </div>
-
-                <div class="guide-section">
-                    <h2>SEMANA 2: IA Aplicada al Negocio y Ventas</h2>
-                    
-                    <div class="guide-day">
-                        <strong>Lunes (Día 1): IA en Azure Databricks</strong>
-                        Introducción a la plataforma Azure Databricks y casos de uso con IA.
-                    </div>
-                    
-                    <div class="guide-day">
-                        <strong>Martes (Día 2): Creacion de Gemas en Gemini | ideando Protipos para tu Empresa </strong>
-                        Ejercicio interactivo con alumnos para idear GEMAS que ayuden en analisis y diseño de sistemas.
-                    </div>
-                    
-                    <div class="guide-day">
-                        <strong>Miércoles (Día 3): Automatización Real con N8N: De la Teoría a la Producción (Webinar Especial)</strong>
-                        Webinar práctico sobre cómo crear automatizaciones reales que se usan en producción.
-                    </div>
-                    
-                    <div class="guide-day">
-                        <strong>Jueves (Día 4): IA Generativa de Audio y Videos </strong>
-                        Google AI Studio Nano Banana y Notebook LM.
-                    
-                    <div class="guide-day">
-                        <strong>Viernes (Día 5): Estrategias de Venta de Soluciones IA</strong>
-                        Cómo vender proyectos de IA a clientes: desde la prospección hasta el cierre.
-                    </div>
-                </div>
-
-                <div class="guide-section">
-                    <h2>SEMANA 3: Automatización Avanzada y Desarrollo de Propuestas</h2>
-                    
-                    <div class="guide-day">
-                        <strong>Lunes (Día 1): Arquitectura de Sistemas IA</strong>
-                        Diseño de arquitecturas escalables para soluciones de IA empresariales.
-                    </div>
-                    
-                    <div class="guide-day">
-                        <strong>Martes (Día 2): Agentes IA y LangChain</strong>
-                        Creación de agentes inteligentes que pueden ejecutar tareas complejas de forma autónoma.
-                    </div>
-                    
-                    <div class="guide-day">
-                        <strong>Miércoles (Día 3): Automatización Avanzada: Workflows Enterprise con N8N (Webinar Parte 2)</strong>
-                        Webinar avanzado sobre workflows empresariales con N8N.
-                    </div>
-                    
-                    <div class="guide-day">
-                        <strong>Jueves (Día 4): Workshop: Propuestas para Cliente BCI</strong>
-                        Workshop práctico desarrollando una propuesta real para el cliente BCI.
-                    </div>
-                    
-                    <div class="guide-day">
-                        <strong>Viernes (Día 5): Workshop: Automatizaciones Internas</strong>
-                        Identificación y desarrollo de automatizaciones para procesos internos de ADA.
-                    </div>
-                </div>
-
-                <div class="guide-section">
-                    <h2>SEMANA 4: Refinamiento y Selección de Proyecto Final</h2>
-                    
-                    <div class="guide-day">
-                        <strong>Lunes (Día 1): Detección de Oportunidades IA</strong>
-                        Metodología para identificar oportunidades de IA en cualquier negocio.
-                    </div>
-                    
-                    <div class="guide-day">
-                        <strong>Martes (Día 2): Design Thinking para Proyectos IA</strong>
-                        Aplicación de Design Thinking en el diseño de soluciones de IA.
-                    </div>
-                    
-                    <div class="guide-day">
-                        <strong>Miércoles (Día 3): Elaboración de Propuestas Comerciales</strong>
-                        Cómo estructurar propuestas comerciales ganadoras para proyectos de IA.
-                    </div>
-                    
-                    <div class="guide-day">
-                        <strong>Jueves (Día 4): Presentación Final de Propuestas</strong>
-                        Cada equipo presenta su propuesta de proyecto para recibir feedback.
-                    </div>
-                    
-                    <div class="guide-day">
-                        <strong>Viernes (Día 5): Selección de Proyecto Final</strong>
-                        Votación y selección del proyecto que se desarrollará en la Fase 2.
-                    </div>
-                </div>
+                
             </div>
         </section>
     </div>
@@ -1532,7 +1833,7 @@
                 <button class="close-modal" onclick="closeClassModal()">×</button>
             </div>
             
-            <div class="modal-video">
+            <div class="modal-video" id="modalVideoContainer">
                 <iframe id="modalVideo" allowfullscreen></iframe>
             </div>
             
@@ -1554,6 +1855,57 @@
 
     <!-- TOAST CONTAINER -->
     <div class="toast-container" id="toastContainer"></div>
+    
+    <!-- ======================================= -->
+    <!-- MEJORA: ASISTENTE IA FLOTANTE Y MODAL -->
+    <!-- ======================================= -->
+    
+    <!-- Botón Flotante (FAB) -->
+    <button class="gemini-fab" id="geminiFab" title="Asistente IA">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a9 9 0 0 1 9 9 9 9 0 0 1-9 9 9 9 0 0 1-9-9 9 9 0 0 1 9-9Z"/>
+            <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+            <path d="M19.07 4.93a9.96 9.96 0 0 0-2.02-2.02"/>
+            <path d="M4.93 4.93a9.96 9.96 0 0 0 2.02-2.02"/>
+            <path d="M19.07 19.07a9.96 9.96 0 0 0-2.02 2.02"/>
+            <path d="M4.93 19.07a9.96 9.96 0 0 0 2.02 2.02"/>
+        </svg>
+    </button>
+    
+    <!-- Modal del Chat -->
+    <div class="chat-modal-overlay" id="chatModalOverlay">
+        <div class="chat-modal-content" id="chatModalContent">
+            
+            <!-- Cabecera del Chat -->
+            <div class="chat-header">
+                <h3>Asistente IA</h3>
+                <button class="close-chat-btn" id="closeChatBtn" title="Cerrar">×</button>
+            </div>
+            
+            <!-- Pestañas del Chat -->
+            <div class="chat-tabs">
+                <button class="chat-tab active" id="chatTabTutor">📚 Asistente de Clases</button>
+                <button class="chat-tab" id="chatTabSorpresa">✨ Gemini Sorpresa</button>
+            </div>
+
+            <!-- Cuerpo del Chat (Mensajes) -->
+            <div class="chat-body" id="chatBody">
+                <!-- Los mensajes se insertarán aquí -->
+                <div class="chat-message model-message">
+                    <p>¡Hola! Soy tu asistente de IA. ¿Cómo puedo ayudarte hoy con el contenido del curso?</p>
+                </div>
+            </div>
+
+            <!-- Input del Chat -->
+            <div class="chat-input-area">
+                <form class="chat-form" id="chatForm">
+                    <textarea id="chatInput" placeholder="Escribe tu pregunta aquí..." rows="2"></textarea>
+                    <button type="submit" class="chat-send-btn" id="chatSendBtn" title="Enviar">➤</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- === FIN ASISTENTE IA === -->
 
     <script>
         // =====================================================
@@ -1668,6 +2020,11 @@
         let userProgress = {};
         let videosMap = {};
         let userIdeas = [];
+        
+        // MEJORA: Variables para el Asistente IA
+        let chatHistory = [];
+        let currentChatMode = 'tutor'; // 'tutor' o 'sorpresa'
+        let isAIAssistantLoading = false;
 
         // =====================================================
         // FUNCIONES DE AUTENTICACIÓN
@@ -1729,6 +2086,7 @@
             if (SPREADSHEET_ID && API_KEY) {
                 cargarDatosUsuarios().then(() => {
                     cargarVideos();
+                    renderizarGuiaEstudios(); // CORRECCIÓN: Renderizar guía después de cargar datos
                 });
             }
             
@@ -2022,43 +2380,64 @@
                     track.innerHTML = diasSemana.map(dia => {
                         const claseInfo = clasesData[semana][dia];
                         if (!claseInfo) return '';
-                        const videoKey = `1-${semana}-${dia}`;
-                        const videoData = videosMap[videoKey];
-                        const videoUrl = videoData ? videoData.url : '';
-                        const videoId = extraerVideoId(videoUrl);
-                        return crearVideoCard(semana, dia, claseInfo, videoId);
+                        // CORRECCIÓN: La lógica de videoID se simplifica.
+                        // La función crearVideoCard ahora solo necesita semana y dia.
+                        return crearVideoCard(semana, dia);
                     }).join('');
                 }
             }
         }
 
         function extraerVideoId(url) {
-            if (!url) return '';
+            if (!url) return { type: 'none' };
+            
+            // Patrones de YouTube
             const patterns = [ /youtube\.com\/embed\/([^?]+)/, /youtube\.com\/watch\?v=([^&]+)/, /youtu\.be\/([^?]+)/ ];
             for (const pattern of patterns) {
                 const match = url.match(pattern);
-                if (match) return match[1];
+                if (match && match[1]) {
+                    return { type: 'youtube', id: match[1] };
+                }
             }
-            return '';
+            
+            // MEJORA: Patrones de Google Meet / Drive
+            if (url.includes('meet.google.com') || url.includes('drive.google.com')) {
+                return { type: 'meet', url: url };
+            }
+
+            return { type: 'none' };
         }
 
-        function crearVideoCard(semana, dia, claseInfo, videoId) {
+        function crearVideoCard(semana, dia) {
+            // CORRECCIÓN: Lógica de video simplificada
+            const claseInfo = clasesData[semana][dia];
             const diaCapitalizado = dia.charAt(0).toUpperCase() + dia.slice(1);
-            const thumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : '';
-            const hasVideo = !!videoId;
-            const videoKey = `s${semana}-${dia}`;
-            const isCompleted = userProgress[videoKey] || false;
+            
+            const videoKey = `1-${semana}-${dia}`;
+            const videoData = videosMap[videoKey];
+            const videoUrl = videoData ? videoData.url : '';
+            const videoInfo = extraerVideoId(videoUrl);
+            
+            const thumbnailId = videoInfo.type === 'youtube' ? videoInfo.id : '';
+            const thumbnail = thumbnailId ? `https://img.youtube.com/vi/${thumbnailId}/maxresdefault.jpg` : '';
+            const hasVideo = videoInfo.type !== 'none';
+            
+            const progressKey = `s${semana}-${dia}`;
+            const isCompleted = userProgress[progressKey] || false;
             const classNumber = (semana - 1) * 5 + (diasSemana.indexOf(dia) + 1);
             const formattedClassNumber = String(classNumber).padStart(2, '0');
             const repoBaseUrl = 'https://raw.githack.com/soporteaiwis-lab/ada/main';
             const textoUrl = `${repoBaseUrl}/clase${formattedClassNumber}.html`;
             const quizUrl = `${repoBaseUrl}/quiz${formattedClassNumber}.html`;
-
+            
+            // CORRECCIÓN: Simplificado el onclick. Ya no se pasa el JSON.
             return `
-                <div class="video-card" onclick="openClassModal(${semana}, '${dia}', '${videoId}')">
+                <div class="video-card" onclick="openClassModal(${semana}, '${dia}')">
                     <div class="video-thumbnail">
-                        ${thumbnail ? `<img src="${thumbnail}" alt="${claseInfo.title}">` : '<span style="font-size: 3rem;">🎬</span>'}
-                        ${hasVideo ? '<div class="play-button">▶</div>' : ''}
+                        ${thumbnail ? `<img src="${thumbnail}" alt="${claseInfo.title}">` : (hasVideo ? '<span style="font-size: 3rem;">🖥️</span>' : '<span style="font-size: 3rem;">🎬</span>')}
+                        ${videoInfo.type === 'youtube' ? '<div class="play-button">▶</div>' : ''}
+                        ${videoInfo.type === 'meet' ? '<div class="play-button" style="font-size: 1rem; padding: 0.5rem; width: 70px; height: 70px; text-align: center; line-height: 1.2;">Abrir Meet</div>' : ''}
+                        
                         ${hasVideo ? `
                             <div class="video-progress">
                                 <input type="checkbox" class="progress-checkbox" ${isCompleted ? 'checked' : ''} onchange="marcarProgreso(event, ${semana}, '${dia}')" onclick="event.stopPropagation()">
@@ -2083,6 +2462,56 @@
         }
 
         // =====================================================
+        // MEJORA: RENDERIZADO DE GUÍA DE ESTUDIOS INTERACTIVA
+        // =====================================================
+        
+        function getTituloSemana(semana) {
+            const titulos = [
+                "Fundamentos de IA y Productividad Inteligente",
+                "IA Aplicada al Negocio y Ventas",
+                "Automatización Avanzada y Desarrollo de Propuestas",
+                "Refinamiento y Selección de Proyecto Final"
+            ];
+            return titulos[semana - 1] || `Semana ${semana}`;
+        }
+
+        function renderizarGuiaEstudios() {
+            const container = document.getElementById('studyGuideContainer');
+            if (!container) return;
+            
+            let html = '';
+            for (let semana = 1; semana <= 4; semana++) {
+                html += `<div class="guide-section">`;
+                html += `<h2>SEMANA ${semana}: ${getTituloSemana(semana)}</h2>`;
+                
+                diasSemana.forEach(dia => {
+                    const claseInfo = clasesData[semana][dia];
+                    if (!claseInfo) return;
+                    
+                    // Comprobar si hay video para este día
+                    const videoKey = `1-${semana}-${dia}`;
+                    const videoData = videosMap[videoKey];
+                    const hasVideo = videoData && videoData.url;
+                    
+                    // Añadir onclick solo si hay video
+                    const onclickAttr = hasVideo ? `onclick="openClassModal(${semana}, '${dia}')"` : '';
+                    const classAttr = hasVideo ? 'guide-day interactive' : 'guide-day';
+                    const titleAttr = hasVideo ? 'title="Ver clase"' : '';
+                    
+                    html += `
+                        <div class="${classAttr}" ${onclickAttr} ${titleAttr}>
+                            <strong>${dia.charAt(0).toUpperCase() + dia.slice(1)}: ${claseInfo.title}</strong>
+                            ${claseInfo.desc}
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+            container.innerHTML = html;
+        }
+
+
+        // =====================================================
         // FUNCIONES DE CARRUSEL Y MODAL
         // =====================================================
         function scrollCarousel(carouselId, direction) {
@@ -2093,15 +2522,44 @@
             }
         }
 
-        async function openClassModal(semana, dia, videoId) {
+        async function openClassModal(semana, dia) {
+            // CORRECCIÓN: Lógica de modal simplificada
             const modal = document.getElementById('classModal');
             const claseInfo = clasesData[semana][dia];
-            document.getElementById('modalVideo').src = videoId ? `https://www.youtube.com/embed/${videoId}` : '';
+            const modalVideoContainer = document.getElementById('modalVideoContainer');
+            
+            // CORRECCIÓN: Obtener la info del video aquí, no desde un string
+            const videoKey = `1-${semana}-${dia}`;
+            const videoData = videosMap[videoKey];
+            const videoUrl = videoData ? videoData.url : '';
+            const videoInfo = extraerVideoId(videoUrl);
+
+            if (videoInfo.type === 'youtube') {
+                modalVideoContainer.innerHTML = '<iframe id="modalVideo" allowfullscreen></iframe>';
+                document.getElementById('modalVideo').src = `https://www.youtube.com/embed/${videoInfo.id}`;
+            } else if (videoInfo.type === 'meet') {
+                modalVideoContainer.innerHTML = `
+                    <div class="meet-placeholder">
+                        <p>Esta clase es una grabación de Google Meet o Drive.</p>
+                        <a href="${videoInfo.url}" target="_blank" rel="noopener noreferrer" class="login-btn" style="padding: 1rem 2rem;">
+                            Abrir grabación en pestaña nueva ↗
+                        </a>
+                    </div>`;
+            } else {
+                 modalVideoContainer.innerHTML = `
+                    <div class="meet-placeholder">
+                        <p>El video para esta clase aún no está disponible.</p>
+                    </div>`;
+            }
+            
             document.getElementById('modalTitle').textContent = claseInfo.title;
             document.getElementById('modalWeek').textContent = `📅 Semana ${semana}`;
             document.getElementById('modalDay').textContent = `🗓️ ${dia.charAt(0).toUpperCase() + dia.slice(1)}`;
             document.getElementById('modalDescription').innerHTML = `<p>${claseInfo.desc}</p>`;
+            
+            // Cargar transcripción y activar modal
             await cargarTranscripcion(semana, dia);
+            switchTab('description'); // Asegurarse de empezar en la pestaña de descripción
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -2109,7 +2567,20 @@
         function closeClassModal() {
             const modal = document.getElementById('classModal');
             modal.classList.remove('active');
-            document.getElementById('modalVideo').src = '';
+            
+            // CORRECCIÓN: Detener el video de forma segura y restaurar el contenedor
+            const modalVideoContainer = document.getElementById('modalVideoContainer');
+            
+            // Detener cualquier iframe que pueda estar allí
+            const iframe = modalVideoContainer.querySelector('iframe');
+            if (iframe) {
+                iframe.src = ''; // Detiene la reproducción
+            }
+            
+            // Restaurar el contenedor a su estado original (vacío con un iframe)
+            // para que esté listo para el próximo video.
+            modalVideoContainer.innerHTML = '<iframe id="modalVideo" allowfullscreen></iframe>';
+
             document.body.style.overflow = 'auto';
         }
 
@@ -2292,6 +2763,164 @@
         }
 
         // =====================================================
+        // MEJORA: LÓGICA DEL ASISTENTE IA
+        // =====================================================
+        
+        const systemPromptTutor = `
+            Eres un asistente de IA experto y amigable, especializado en el "Programa de Adopción IA Corporativa de ADA Ltda."
+            Tu misión es actuar como un tutor para los estudiantes (que son empleados de la empresa).
+            El contenido del curso cubre: Fundamentos de IA, ChatGPT, Claude, Ingeniería de Prompts, IA para Desarrolladores (Copilot), Automatización (N8N), IA en Azure Databricks, Gemini, IA Generativa (Audio/Video), Estrategias de Venta de IA, Arquitectura de Sistemas IA, LangChain, y Design Thinking para IA.
+            Tu nivel debe ser accesible, "desde cero", explicando conceptos complejos de forma simple.
+            Responde amigablemente, usando emojis 📚🚀💡, y enfócate siempre en cómo la IA puede ayudar en el contexto corporativo de ADA.
+            Si no sabes una respuesta, admítelo y ofrece buscar información general.
+            NO des opiniones personales.
+        `;
+
+        const systemPromptSorpresa = `
+            ¡Eres "Gemini Sorpresa" ✨! Tu trabajo es motivar y entretener a los alumnos del programa de IA de ADA.
+            Puedes contar chistes cortos sobre tecnología, proponer juegos rápidos (ej. "adivina el concepto de IA"), o hacer preguntas sorprendentes y divertidas sobre IA, el futuro, o la creatividad.
+            Tu tono es juguetón, entusiasta y un poco caótico, pero siempre positivo. ¡Usa muchos emojis! 🥳🤩🤖🎉
+            Mantén las respuestas cortas y al grano.
+        `;
+
+        function openChatModal() {
+            document.getElementById('chatModalOverlay').classList.add('active');
+            document.getElementById('chatInput').focus();
+        }
+
+        function closeChatModal() {
+            document.getElementById('chatModalOverlay').classList.remove('active');
+        }
+
+        function switchChatMode(mode) {
+            if (currentChatMode === mode) return;
+            
+            currentChatMode = mode;
+            chatHistory = [];
+            const chatBody = document.getElementById('chatBody');
+            
+            document.getElementById('chatTabTutor').classList.toggle('active', mode === 'tutor');
+            document.getElementById('chatTabSorpresa').classList.toggle('active', mode === 'sorpresa');
+            
+            if (mode === 'tutor') {
+                chatBody.innerHTML = '<div class="chat-message model-message"><p>¡Hola! Soy tu asistente de clases 📚. Pregúntame sobre el contenido del curso.</p></div>';
+                document.getElementById('chatInput').placeholder = "Pregunta sobre IA, prompts, N8N...";
+            } else {
+                chatBody.innerHTML = '<div class="chat-message model-message"><p>¡Hola! Soy Gemini Sorpresa ✨. ¿Listo para un juego o una pregunta divertida sobre IA? 🥳</p></div>';
+                document.getElementById('chatInput').placeholder = "Pide un chiste, un juego...";
+            }
+        }
+
+        async function handleChatSubmit(event) {
+            event.preventDefault();
+            if (isAIAssistantLoading) return;
+
+            const chatInput = document.getElementById('chatInput');
+            const userPrompt = chatInput.value.trim();
+            if (!userPrompt) return;
+
+            isAIAssistantLoading = true;
+            document.getElementById('chatSendBtn').disabled = true;
+            
+            addMessageToChat('user', userPrompt);
+            chatInput.value = '';
+            
+            // Mostrar indicador de "escribiendo"
+            const loadingMessage = document.createElement('div');
+            loadingMessage.className = 'chat-message loading-message';
+            loadingMessage.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; margin: 0;"></div> <p>Pensando...</p>';
+            document.getElementById('chatBody').appendChild(loadingMessage);
+            document.getElementById('chatBody').scrollTop = document.getElementById('chatBody').scrollHeight;
+
+            try {
+                const modelResponse = await callGeminiAPI(userPrompt);
+                document.getElementById('chatBody').removeChild(loadingMessage); // Quitar "escribiendo"
+                addMessageToChat('model', modelResponse);
+            } catch (error) {
+                console.error("Error llamando a la API de Gemini:", error);
+                document.getElementById('chatBody').removeChild(loadingMessage); // Quitar "escribiendo"
+                addMessageToChat('model', '❌ Lo siento, no pude conectarme con el asistente. Por favor, intenta de nuevo más tarde.');
+            } finally {
+                isAIAssistantLoading = false;
+                document.getElementById('chatSendBtn').disabled = false;
+                chatInput.focus();
+            }
+        }
+
+        function addMessageToChat(role, text) {
+            const chatBody = document.getElementById('chatBody');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${role}-message`;
+            
+            // Formatear Markdown básico
+            let formattedText = text.replace(/\n/g, '<br>');
+            formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Negrita
+            formattedText = formattedText.replace(/\*(.*?)\*/g, '<em>$1</em>'); // Cursiva
+
+            messageDiv.innerHTML = `<p>${formattedText}</p>`;
+            chatBody.appendChild(messageDiv);
+            
+            // Auto-scroll
+            chatBody.scrollTop = chatBody.scrollHeight;
+            
+            // Actualizar historial si es del modelo
+            if (role === 'user') {
+                chatHistory.push({ role: "user", parts: [{ text: text }] });
+            } else {
+                chatHistory.push({ role: "model", parts: [{ text: text }] });
+            }
+        }
+
+        async function callGeminiAPI(userPrompt) {
+            const systemPrompt = currentChatMode === 'tutor' ? systemPromptTutor : systemPromptSorpresa;
+            
+            const payload = {
+                contents: [
+                    ...chatHistory,
+                    { role: "user", parts: [{ text: userPrompt }] }
+                ],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                }
+            };
+            
+            const apiKey = ""; // La clave será proporcionada por el entorno
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+            const response = await fetchWithRetry(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error de la API: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            
+            if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts[0].text) {
+                return result.candidates[0].content.parts[0].text;
+            } else {
+                throw new Error("Respuesta de la API inesperada o vacía.");
+            }
+        }
+        
+        // Función de reintento con backoff exponencial para la API
+        async function fetchWithRetry(url, options, retries = 3, delay = 1000) {
+            try {
+                return await fetch(url, options);
+            } catch (err) {
+                if (retries > 0) {
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    return fetchWithRetry(url, options, retries - 1, delay * 2);
+                } else {
+                    throw err;
+                }
+            }
+        }
+
+        // =====================================================
         // NAVEGACIÓN Y INICIALIZACIÓN
         // =====================================================
         function showPage(pageId) {
@@ -2333,17 +2962,41 @@
             cargarUsuariosLogin();
             if (verificarUsuario()) {
                 if (SPREADSHEET_ID && API_KEY) {
-                    cargarDatosUsuarios().then(cargarVideos);
+                    // CORRECCIÓN: Encadenar promesas para asegurar el orden de carga
+                    cargarDatosUsuarios().then(() => {
+                        cargarVideos().then(() => {
+                            // Renderizar la guía solo después de que videosMap esté lleno
+                            renderizarGuiaEstudios();
+                        });
+                    });
                 } else {
                     document.getElementById('studentsLoading').innerHTML = '<p>⚠️ Configura tu Google Sheets API</p>';
                     document.getElementById('classesLoading').innerHTML = '<p>⚠️ Configura tu Google Sheets API</p>';
+                    document.getElementById('studyGuideContainer').innerHTML = '<p>⚠️ Configura tu Google Sheets API</p>';
                 }
                 loadIdeas();
                 setTimeout(() => showToast('success', '¡Bienvenido/a!', `Hola ${currentUser.nombre.split(' ')[0]}, es un placer verte de nuevo 👋`), 500);
             }
+            
+            // MEJORA: Event listeners del Asistente IA
+            document.getElementById('geminiFab').addEventListener('click', openChatModal);
+            document.getElementById('closeChatBtn').addEventListener('click', closeChatModal);
+            document.getElementById('chatModalOverlay').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('chatModalOverlay')) {
+                    closeChatModal();
+                }
+            });
+            document.getElementById('chatTabTutor').addEventListener('click', () => switchChatMode('tutor'));
+            document.getElementById('chatTabSorpresa').addEventListener('click', () => switchChatMode('sorpresa'));
+            document.getElementById('chatForm').addEventListener('submit', handleChatSubmit);
         });
 
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeClassModal(); });
+        document.addEventListener('keydown', (e) => { 
+            if (e.key === 'Escape') {
+                closeClassModal();
+                closeChatModal(); // MEJORA: Cerrar también el chat con Escape
+            }
+        });
     </script>
 </body>
 </html>
