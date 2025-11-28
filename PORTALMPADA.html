@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADA LTDA - Portal v2.8 (AI Powered)</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons (Iconos modernos) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // =====================================================================
+        // CONFIGURACIÓN FIREBASE (GENÉRICA)
+        // =====================================================================
+        const firebaseConfig = JSON.parse(window.__firebase_config || '{}');
+        const appId = window.__app_id || 'ada-project-default';
+        
+        let app, db, auth;
+        let currentUser = null;
+
+        // 1. PROYECTOS BASE (ESTÁTICOS)
+        const staticProjects = [
+            { id: 's1', student: "Pedro Pablo Concha", title: "Formateador Ancho Fijo", type: "APP", url: "https://gemini.google.com/share/1a1bc98d902e", desc: "Herramienta para formatear texto y datos con ancho fijo de manera automática.", icon: "file-code", isStatic: true },
+            { id: 's2', student: "Pablo Retamal", title: "Medicamento Bioequivalente", type: "GEMA", url: "https://gemini.google.com/gem/1ef8359f8afb?usp=sharing", desc: "Asistente IA para encontrar alternativas bioequivalentes de medicamentos.", icon: "pill", isStatic: true },
+            { id: 's3', student: "Raul Alarcon", title: "Generador de FD COBOL", type: "APP", url: "https://gemini.google.com/share/f329524f8e7b", desc: "Automatización para crear descripciones de archivos (FD) en lenguaje COBOL.", icon: "binary", isStatic: true },
+            { id: 's4', student: "Hugo Zapata", title: "COBOL Analizador", type: "GEMA", url: "https://gemini.google.com/gem/1N3UR8YEX0-2V-mPuZ3A8BOReqWQWxT5E?usp=sharing", desc: "Gema especializada en el análisis y comprensión de código legacy COBOL.", icon: "search-code", isStatic: true },
+            { id: 's5', student: "Rafael Valdes", title: "Análisis Estructuras COBOL", type: "APP", url: "https://gemini.google.com/share/f0f774a0d45b", desc: "Herramienta para desglosar y entender estructuras de archivos complejos.", icon: "database", isStatic: true },
+            { id: 's6', student: "Andrea Martinez", title: "Ahorro Aplicación", type: "GEMA", url: "https://gemini.google.com/share/0610b2ec3d2f", desc: "Sistema interactivo con Canvas para planificación de ahorros y finanzas.", icon: "piggy-bank", isStatic: true },
+            { id: 's7', student: "Julio Sepulveda", title: "Organizador de Fotos", type: "APP", url: "https://gemini.google.com", desc: "Solución para categorizar y organizar bibliotecas fotográficas.", icon: "image", isStatic: true },
+            { id: 's8', student: "Crizla Urrutia", title: "Generador Data Reporter", type: "APP", url: "https://gemini.google.com/share/c083f93bbad8", desc: "Generación automatizada de reportes basados en datos de entrada.", icon: "bar-chart-3", isStatic: true }
+        ];
+
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+        } catch (e) {
+            console.warn("Firebase Init Error:", e);
+        }
+
+        // =====================================================================
+        // INTEGRACIÓN GEMINI API
+        // =====================================================================
+        const apiKey = ""; // Se inyecta en tiempo de ejecución
+
+        async function callGeminiAPI(prompt) {
+            if (!apiKey) {
+                alert("API Key no configurada o no disponible en este entorno.");
+                return null;
+            }
+            
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }]
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) throw new Error(`Error API: ${response.status}`);
+                
+                const data = await response.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || "No se pudo generar respuesta.";
+            } catch (error) {
+                console.error("Gemini Error:", error);
+                return null;
+            }
+        }
+
+        // Función para mejorar texto de bitácora
+        window.improveBitacoraText = async function() {
+            const textarea = document.querySelector('textarea[name="message"]');
+            const currentText = textarea.value.trim();
+            const btn = document.getElementById('btn-ai-bitacora');
+
+            if (!currentText) return alert("Escribe algo primero para que la IA lo mejore.");
+
+            const prompt = `Actúa como un líder técnico experto. Reescribe el siguiente reporte de avance para una bitácora de desarrollo, haciéndolo sonar más profesional, técnico y conciso, pero manteniendo el sentido original: "${currentText}"`;
+
+            // UI Loading
+            const originalBtnContent = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-3 h-3 mr-1 animate-spin"></i> Pensando...`;
+            lucide.createIcons();
+
+            const result = await callGeminiAPI(prompt);
+            
+            if (result) {
+                textarea.value = result.trim();
+            } else {
+                alert("Hubo un problema al conectar con Gemini.");
+            }
+
+            // Restore UI
+            btn.disabled = false;
+            btn.innerHTML = originalBtnContent;
+            lucide.createIcons();
+        };
+
+        // Función para sugerir descripción de proyecto
+        window.suggestProjectDesc = async function() {
+            const titleInput = document.querySelector('input[name="p_title"]');
+            const descTextarea = document.querySelector('textarea[name="p_desc"]');
+            const btn = document.getElementById('btn-ai-project');
+            const title = titleInput.value.trim();
+
+            if (!title) return alert("Escribe un título primero.");
+
+            const prompt = `Genera una descripción breve, atractiva y profesional (máximo 2 frases) para un proyecto de software llamado "${title}". El contexto es una empresa de innovación tecnológica.`;
+
+            // UI Loading
+            const originalBtnContent = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-3 h-3 mr-1 animate-spin"></i> Generando...`;
+            lucide.createIcons();
+
+            const result = await callGeminiAPI(prompt);
+
+            if (result) {
+                descTextarea.value = result.trim();
+            } else {
+                alert("Hubo un problema al conectar con Gemini.");
+            }
+
+            // Restore UI
+            btn.disabled = false;
+            btn.innerHTML = originalBtnContent;
+            lucide.createIcons();
+        };
+
+
+        // =====================================================================
+        // AUTH & INIT
+        // =====================================================================
+        async function initAuth() {
+            if (!auth) return;
+            
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user;
+                const statusEl = document.getElementById('dbStatus');
+                if (user) {
+                    if(statusEl) statusEl.innerHTML = '<span class="flex items-center text-green-500 text-xs font-bold"><i data-lucide="sparkles" class="w-3 h-3 mr-1"></i> Gemini AI Ready</span>';
+                    lucide.createIcons();
+                    setupBitacoraListener();
+                    setupProjectsListener();
+                } else {
+                    if(statusEl) statusEl.innerHTML = '<span class="text-red-500 text-xs">Desconectado</span>';
+                }
+            });
+
+            try {
+                if (window.__initial_auth_token) await signInWithCustomToken(auth, window.__initial_auth_token);
+                else await signInAnonymously(auth);
+            } catch (error) { console.error("Auth Error:", error); }
+        }
+
+        // =====================================================================
+        // LOGICA DE PROYECTOS
+        // =====================================================================
+        let globalProjects = [];
+        let currentFilter = 'ALL';
+
+        function setupProjectsListener() {
+            if (!db) return;
+            const collectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'ada_projects_dynamic');
+            
+            onSnapshot(collectionRef, (snapshot) => {
+                const dynamicProjects = [];
+                snapshot.forEach(doc => {
+                    dynamicProjects.push({ id: doc.id, ...doc.data(), isStatic: false });
+                });
+                dynamicProjects.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+                globalProjects = [...dynamicProjects, ...staticProjects];
+                renderProjects(globalProjects);
+            });
+        }
+
+        window.setFilter = function(filterType) {
+            currentFilter = filterType;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.dataset.filter === filterType) {
+                    btn.classList.add('bg-brand-100', 'text-brand-700', 'border-brand-300', 'dark:bg-brand-900', 'dark:text-brand-200');
+                    btn.classList.remove('bg-white', 'text-slate-600', 'border-slate-200', 'dark:bg-slate-800', 'dark:text-slate-400');
+                } else {
+                    btn.classList.remove('bg-brand-100', 'text-brand-700', 'border-brand-300', 'dark:bg-brand-900', 'dark:text-brand-200');
+                    btn.classList.add('bg-white', 'text-slate-600', 'border-slate-200', 'dark:bg-slate-800', 'dark:text-slate-400');
+                }
+            });
+            renderProjects(globalProjects);
+        };
+
+        window.saveNewProject = async function(e) {
+            e.preventDefault();
+            if (!currentUser) return alert("Esperando conexión...");
+
+            const form = e.target;
+            const btn = form.querySelector('button[type="submit"]');
+
+            try {
+                btn.disabled = true;
+                btn.innerHTML = "Guardando...";
+
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'ada_projects_dynamic'), {
+                    title: form.p_title.value,
+                    student: form.p_student.value,
+                    type: form.p_type.value,
+                    url: form.p_url.value,
+                    desc: form.p_desc.value,
+                    icon: form.p_icon.value,
+                    createdAt: serverTimestamp(),
+                    userId: currentUser.uid
+                });
+
+                window.closeProjectModal();
+                form.reset();
+                alert("¡Proyecto agregado exitosamente!");
+
+            } catch (err) {
+                console.error(err);
+                alert("Error al guardar: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = "Guardar Proyecto";
+            }
+        };
+
+        window.renderProjects = function(list) {
+            const grid = document.getElementById('projectsGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const searchTerm = document.getElementById('projectSearch')?.value.toLowerCase().trim() || '';
+            let filtered = list;
+            
+            if (searchTerm) {
+                filtered = filtered.filter(p => 
+                    p.title.toLowerCase().includes(searchTerm) || 
+                    p.student.toLowerCase().includes(searchTerm) || 
+                    p.type.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            if (currentFilter !== 'ALL') {
+                filtered = filtered.filter(p => p.type === currentFilter);
+            }
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-10 text-slate-500"><i data-lucide="search-x" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>No se encontraron proyectos.</p></div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            filtered.forEach(p => {
+                const isGema = p.type === 'GEMA';
+                const cardClass = isGema ? 'gem-card' : 'app-card';
+                const typeBadgeColor = isGema ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+                const btnColor = isGema ? 'bg-purple-600 hover:bg-purple-700' : 'bg-brand-600 hover:bg-brand-700';
+                const typeIcon = isGema ? 'gem' : 'layout';
+                const newBadge = !p.isStatic ? `<span class="absolute top-3 right-3 bg-yellow-400 text-yellow-900 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm uppercase tracking-wider">Nuevo</span>` : '';
+
+                const card = document.createElement('div');
+                card.className = `relative group bg-white dark:bg-cardbg rounded-xl shadow-md hover:shadow-xl transition-all duration-300 flex flex-col h-full overflow-hidden ${cardClass} animate-fade-in`;
+                
+                card.innerHTML = `
+                    ${newBadge}
+                    <div class="p-6 flex-grow flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200">
+                                <i data-lucide="${p.icon || 'box'}" class="w-8 h-8"></i>
+                            </div>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${typeBadgeColor}">
+                                <i data-lucide="${typeIcon}" class="w-3 h-3 mr-1"></i> ${p.type}
+                            </span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1 line-clamp-1" title="${p.title}">${p.title}</h3>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Por: ${p.student}</p>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 flex-grow mb-4 line-clamp-3">${p.desc}</p>
+                        <a href="${p.url}" target="_blank" rel="noopener noreferrer" 
+                           class="mt-auto w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white ${btnColor} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition-colors">
+                            Abrir Proyecto <i data-lucide="external-link" class="w-4 h-4 ml-2"></i>
+                        </a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        // =====================================================================
+        // BITÁCORA v2
+        // =====================================================================
+        function setupBitacoraListener() {
+            const listContainer = document.getElementById('bitacoraList');
+            if(!listContainer || !db) return;
+            const collectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'ada_bitacora_v2');
+            
+            onSnapshot(collectionRef, (snapshot) => {
+                const entries = [];
+                snapshot.forEach(doc => entries.push({ id: doc.id, ...doc.data() }));
+                entries.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+                
+                listContainer.innerHTML = '';
+                if (entries.length === 0) {
+                    listContainer.innerHTML = `<div class="text-center py-10 text-gray-400"><i data-lucide="server" class="w-12 h-12 mx-auto mb-2 opacity-50"></i><p>Bitácora limpia.</p></div>`;
+                    lucide.createIcons(); return;
+                }
+                entries.forEach(renderBitacoraEntry);
+                lucide.createIcons();
+            });
+        }
+
+        function renderBitacoraEntry(entry) {
+            const listContainer = document.getElementById('bitacoraList');
+            const date = entry.timestamp ? new Date(entry.timestamp.seconds * 1000).toLocaleString() : '...';
+            let typeClass = 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
+            let iconName = 'file-text';
+            if (entry.type === 'Gema') { typeClass = 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'; iconName = 'gem'; }
+            if (entry.type === 'App') { typeClass = 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'; iconName = 'layout'; }
+            if (entry.type === 'Mejora') { typeClass = 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'; iconName = 'arrow-up-circle'; }
+            if (entry.type === 'Bug') { typeClass = 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'; iconName = 'bug'; }
+
+            const el = document.createElement('div');
+            el.className = 'bg-white dark:bg-slate-800 p-4 rounded-lg shadow border-l-4 border-accent mb-3 animate-fade-in';
+            el.innerHTML = `
+                <div class="flex justify-between items-start mb-2">
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-slate-800 dark:text-slate-100 text-sm uppercase tracking-wide">${entry.author || 'Anónimo'}</span>
+                        <span class="px-2 py-0.5 rounded-full text-xs font-medium flex items-center gap-1 ${typeClass}"><i data-lucide="${iconName}" class="w-3 h-3"></i> ${entry.type}</span>
+                    </div>
+                    <span class="text-xs text-slate-400">${date}</span>
+                </div>
+                <p class="text-slate-600 dark:text-slate-300 whitespace-pre-wrap">${entry.message}</p>
+            `;
+            listContainer.appendChild(el);
+        }
+
+        window.addBitacora = async function(e) {
+            e.preventDefault();
+            if (!currentUser) return alert("Conectando...");
+            const form = e.target;
+            const btn = form.querySelector('button[type="submit"]');
+            try {
+                btn.disabled = true; btn.innerText = "Guardando...";
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'ada_bitacora_v2'), {
+                    author: form.author.value, type: form.type.value, message: form.message.value,
+                    timestamp: serverTimestamp(), userId: currentUser.uid, appVersion: '2.8-ai'
+                });
+                form.message.value = '';
+            } catch (err) { alert("Error: " + err.message); } 
+            finally { btn.disabled = false; btn.innerText = 'Registrar'; lucide.createIcons(); }
+        };
+
+        // UI Helpers
+        window.openProjectModal = function() {
+            document.getElementById('projectModal').classList.remove('hidden');
+        };
+        window.closeProjectModal = function() {
+            document.getElementById('projectModal').classList.add('hidden');
+        };
+
+        initAuth();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('projectSearch');
+            if (searchInput) {
+                searchInput.addEventListener('input', () => {
+                    renderProjects(globalProjects);
+                });
+            }
+        });
+    </script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#f0f9ff', 100: '#e0f2fe', 300: '#7dd3fc', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1', 900: '#0c4a6e' },
+                        accent: '#6366f1',
+                        darkbg: '#0f172a',
+                        cardbg: '#1e293b',
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        .gem-card { border-top: 4px solid #a855f7; }
+        .app-card { border-top: 4px solid #0ea5e9; }
+        .modal-backdrop { background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(2px); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-darkbg dark:text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center gap-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-accent rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg">A</div>
+                        <div>
+                            <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-600 to-accent">ADA LTDA</h1>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Portal Corporativo <span class="text-brand-500 font-bold">v2.8</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div id="dbStatus" class="hidden sm:block"><span class="text-gray-400 text-xs">Iniciando...</span></div>
+                    <button id="themeToggle" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-600 dark:text-slate-300">
+                        <i data-lucide="moon" class="w-5 h-5 hidden dark:block"></i>
+                        <i data-lucide="sun" class="w-5 h-5 block dark:hidden"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenedor Principal -->
+    <div class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        
+        <!-- Tabs -->
+        <div class="border-b border-slate-200 dark:border-slate-700 mb-8">
+            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                <button onclick="switchTab('portfolio')" id="tab-portfolio" class="border-brand-500 text-brand-600 dark:text-brand-400 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2 active-tab">
+                    <i data-lucide="grid" class="w-4 h-4"></i> Portafolio
+                </button>
+                <button onclick="switchTab('bitacora')" id="tab-bitacora" class="border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2">
+                    <i data-lucide="book-open" class="w-4 h-4"></i> Bitácora
+                </button>
+            </nav>
+        </div>
+
+        <!-- VISTA 1: PORTAFOLIO -->
+        <div id="view-portfolio" class="animate-fade-in">
+            <div class="mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="text-center md:text-left">
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Proyectos Finales</h2>
+                    <p class="text-slate-500 dark:text-slate-400 mt-1">Ecosistema de soluciones ADA LTDA.</p>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center">
+                    
+                    <!-- NUEVO: FILTROS -->
+                    <div class="flex bg-white dark:bg-slate-800 rounded-lg p-1 shadow-sm border border-slate-200 dark:border-slate-700">
+                        <button onclick="setFilter('ALL')" data-filter="ALL" class="filter-btn px-3 py-1.5 text-xs font-medium rounded-md transition-colors bg-brand-100 text-brand-700 border border-brand-300 dark:bg-brand-900 dark:text-brand-200">Todos</button>
+                        <button onclick="setFilter('APP')" data-filter="APP" class="filter-btn px-3 py-1.5 text-xs font-medium rounded-md transition-colors bg-white text-slate-600 border border-transparent hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700">Apps</button>
+                        <button onclick="setFilter('GEMA')" data-filter="GEMA" class="filter-btn px-3 py-1.5 text-xs font-medium rounded-md transition-colors bg-white text-slate-600 border border-transparent hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700">Gemas</button>
+                    </div>
+
+                    <!-- Buscador -->
+                    <div class="relative flex-grow md:flex-grow-0 md:w-56">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i data-lucide="search" class="h-4 w-4 text-gray-400"></i>
+                        </div>
+                        <input type="text" id="projectSearch" 
+                            class="block w-full pl-9 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-1 focus:ring-brand-500 focus:outline-none" 
+                            placeholder="Buscar...">
+                    </div>
+                    
+                    <!-- Botón Agregar -->
+                    <button onclick="window.openProjectModal()" class="flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg shadow text-sm font-medium transition-colors whitespace-nowrap">
+                        <i data-lucide="plus" class="w-4 h-4"></i> Nuevo
+                    </button>
+                </div>
+            </div>
+
+            <div id="projectsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Se llenará dinámicamente -->
+                <div class="col-span-full text-center py-10">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-500 mx-auto"></div>
+                    <p class="mt-2 text-slate-500 text-sm">Sincronizando con la nube...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA 2: BITÁCORA -->
+        <div id="view-bitacora" class="hidden animate-fade-in">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Formulario -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white dark:bg-cardbg rounded-xl shadow-lg p-6 sticky top-24">
+                        <h3 class="text-lg font-bold mb-4 flex items-center gap-2 text-slate-800 dark:text-white">
+                            <i data-lucide="pen-tool" class="w-5 h-5 text-accent"></i> Registro Bitácora
+                        </h3>
+                        <form onsubmit="window.addBitacora(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Colaborador</label>
+                                <select name="author" class="w-full rounded-md border-slate-300 dark:border-slate-600 dark:bg-slate-700 shadow-sm p-2.5 dark:text-white" required>
+                                    <option value="" disabled selected>Selecciona tu nombre...</option>
+                                    <option value="Andrea Martínez">Andrea Martínez</option>
+                                    <option value="Armin Salazar">Armin Salazar (Mentor)</option>
+                                    <option value="Crizla Urrutia">Crizla Urrutia</option>
+                                    <option value="Doris Macaya">Doris Macaya</option>
+                                    <option value="Erika Chiappa">Erika Chiappa</option>
+                                    <option value="Hugo Zapata">Hugo Zapata</option>
+                                    <option value="Julio Sepulveda">Julio Sepulveda</option>
+                                    <option value="Pablo Retamal">Pablo Retamal</option>
+                                    <option value="Pedro Concha">Pedro Concha</option>
+                                    <option value="Rafael Valdés">Rafael Valdés</option>
+                                    <option value="Raul Alarcon">Raul Alarcon</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tipo</label>
+                                <select name="type" class="w-full rounded-md border-slate-300 dark:border-slate-600 dark:bg-slate-700 shadow-sm p-2.5 dark:text-white">
+                                    <option value="Idea">💡 Idea</option>
+                                    <option value="Mejora">⚡ Mejora</option>
+                                    <option value="Bug">🐞 Error</option>
+                                    <option value="Gema">💎 Gema</option>
+                                    <option value="App">📱 App</option>
+                                </select>
+                            </div>
+                            <div>
+                                <div class="flex justify-between items-center mb-1">
+                                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">Mensaje</label>
+                                    <button type="button" id="btn-ai-bitacora" onclick="window.improveBitacoraText()" class="text-xs flex items-center gap-1 text-brand-600 hover:text-brand-800 dark:text-brand-400 dark:hover:text-brand-300 bg-brand-50 dark:bg-brand-900/30 px-2 py-0.5 rounded transition-colors" title="Reescribir con IA">
+                                        <i data-lucide="sparkles" class="w-3 h-3"></i> Mejorar redacción
+                                    </button>
+                                </div>
+                                <textarea name="message" rows="4" class="w-full rounded-md border-slate-300 dark:border-slate-600 dark:bg-slate-700 shadow-sm p-2.5 dark:text-white" required placeholder="Escribe tu avance aquí..."></textarea>
+                            </div>
+                            <button type="submit" class="w-full flex justify-center py-2 px-4 rounded-md shadow-sm text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 transition-colors">
+                                <i data-lucide="send" class="w-4 h-4 mr-2"></i> Registrar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <!-- Lista -->
+                <div class="lg:col-span-2">
+                    <div id="bitacoraList" class="space-y-4"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL DE NUEVO PROYECTO (v2.6) -->
+    <div id="projectModal" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg transform transition-all animate-fade-in">
+            <div class="flex justify-between items-center p-6 border-b border-slate-200 dark:border-slate-700">
+                <h3 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    Nuevo Proyecto
+                </h3>
+                <button onclick="window.closeProjectModal()" class="text-slate-400 hover:text-slate-500 dark:hover:text-slate-300">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <form onsubmit="window.saveNewProject(event)" class="p-6 space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Título</label>
+                        <input type="text" name="p_title" class="w-full rounded-md border-slate-300 dark:border-slate-600 dark:bg-slate-700 shadow-sm p-2.5 dark:text-white" required placeholder="Ej: Calculadora...">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Alumno</label>
+                        <select name="p_student" class="w-full rounded-md border-slate-300 dark:border-slate-600 dark:bg-slate-700 shadow-sm p-2.5 dark:text-white" required>
+                            <option value="" disabled selected>Selecciona...</option>
+                            <option value="Andrea Martínez">Andrea Martínez</option>
+                            <option value="Armin Salazar">Armin Salazar</option>
+                            <option value="Crizla Urrutia">Crizla Urrutia</option>
+                            <option value="Doris Macaya">Doris Macaya</option>
+                            <option value="Erika Chiappa">Erika Chiappa</option>
+                            <option value="Hugo Zapata">Hugo Zapata</option>
+                            <option value="Julio Sepulveda">Julio Sepulveda</option>
+                            <option value="Pablo Retamal">Pablo Retamal</option>
+                            <option value="Pedro Concha">Pedro Concha</option>
+                            <option value="Rafael Valdés">Rafael Valdés</option>
+                            <option value="Raul Alarcon">Raul Alarcon</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tipo</label>
+                        <select name="p_type" class="w-full rounded-md border-slate-300 dark:border-slate-600 dark:bg-slate-700 shadow-sm p-2.5 dark:text-white">
+                            <option value="APP">Aplicación</option>
+                            <option value="GEMA">Gema IA</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Icono</label>
+                        <select name="p_icon" class="w-full rounded-md border-slate-300 dark:border-slate-600 dark:bg-slate-700 shadow-sm p-2.5 dark:text-white">
+                            <option value="code">Código</option>
+                            <option value="bot">Robot / IA</option>
+                            <option value="database">Base de Datos</option>
+                            <option value="file-text">Archivo</option>
+                            <option value="image">Imagen</option>
+                            <option value="bar-chart-3">Gráfico</option>
+                            <option value="pill">Salud</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">URL (Gemini/Link)</label>
+                    <input type="url" name="p_url" placeholder="https://..." class="w-full rounded-md border-slate-300 dark:border-slate-600 dark:bg-slate-700 shadow-sm p-2.5 dark:text-white" required>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">Descripción</label>
+                        <button type="button" id="btn-ai-project" onclick="window.suggestProjectDesc()" class="text-xs flex items-center gap-1 text-brand-600 hover:text-brand-800 dark:text-brand-400 dark:hover:text-brand-300 bg-brand-50 dark:bg-brand-900/30 px-2 py-0.5 rounded transition-colors" title="Generar con IA">
+                            <i data-lucide="sparkles" class="w-3 h-3"></i> Sugerir con IA
+                        </button>
+                    </div>
+                    <textarea name="p_desc" rows="3" class="w-full rounded-md border-slate-300 dark:border-slate-600 dark:bg-slate-700 shadow-sm p-2.5 dark:text-white" required placeholder="Breve descripción..."></textarea>
+                </div>
+
+                <div class="pt-2 flex justify-end gap-3">
+                    <button type="button" onclick="window.closeProjectModal()" class="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium">Guardar Proyecto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 mt-auto py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-center md:text-left">
+                <p class="text-sm text-slate-500">© 2025 ADA LTDA. Todos los derechos reservados.</p>
+                <p class="text-xs text-slate-400 mt-1">Desarrollado en colaboración con AIWIS Consultora IA & TI</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="https://github.com/soporteaiwis-lab/ada" target="_blank" class="text-slate-400 hover:text-brand-500"><i data-lucide="github" class="w-5 h-5"></i></a>
+                <a href="https://www.ada.cl" target="_blank" class="text-slate-400 hover:text-brand-500"><i data-lucide="globe" class="w-5 h-5"></i></a>
+                <span class="text-xs text-slate-300 border border-slate-700 px-2 py-1 rounded ml-2">v2.8</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // UI Logic
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        }
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        window.switchTab = function(tabName) {
+            const activeClass = "border-brand-500 text-brand-600 dark:text-brand-400";
+            const inactiveClass = "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300";
+            document.getElementById('view-portfolio').classList.toggle('hidden', tabName !== 'portfolio');
+            document.getElementById('view-bitacora').classList.toggle('hidden', tabName !== 'bitacora');
+            const btnPort = document.getElementById('tab-portfolio');
+            const btnBit = document.getElementById('tab-bitacora');
+            if(tabName === 'portfolio') {
+                btnPort.className = btnPort.className.replace(inactiveClass, "") + activeClass;
+                btnBit.className = btnBit.className.replace(activeClass, "") + inactiveClass;
+            } else {
+                btnPort.className = btnPort.className.replace(activeClass, "") + inactiveClass;
+                btnBit.className = btnBit.className.replace(inactiveClass, "") + activeClass;
+            }
+        };
+    </script>
+</body>
+</html>
